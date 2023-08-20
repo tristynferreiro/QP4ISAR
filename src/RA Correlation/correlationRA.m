@@ -1,4 +1,4 @@
-function [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles)
+function [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles, ref_profile_number)
 % Implements a simple correlation range-alignment algorithm. 
     % This approach aligns all profiles based on the a selected reference 
     % profile. We align the profiles based on the peak values in each 
@@ -10,14 +10,14 @@ function [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles)
     shifts = zeros(size(HRR_profiles,1),1);
 
     % Autocorrelation, choosing the 1st profile to be the reference profile:
-    refHRRProfile= HRR_profiles(1,:);
+    refHRRProfile= HRR_profiles(ref_profile_number,:);
     CorrelationOut = xcorr(abs(refHRRProfile), abs(refHRRProfile));
     PeakIndexRef = find(CorrelationOut==max(CorrelationOut));
-    RA_HRR_profiles(1,:) = refHRRProfile;
+    %RA_HRR_profiles(ref_profile_number,:) = refHRRProfile;
     
     % Now begin alignment with all other profiles:
     [rows] = size(HRR_profiles);
-    for indx = 2:rows % profile 1 is out reference
+    for indx = 1:rows % profile 1 is out reference
         rangeProfile = HRR_profiles(indx,:); % Get range profile
         % Calculate correlation
         CorrelationOut = xcorr(abs(refHRRProfile), abs(rangeProfile));

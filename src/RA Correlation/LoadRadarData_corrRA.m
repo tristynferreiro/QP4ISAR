@@ -50,7 +50,7 @@ colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')
 title('Unfocused ISAR Image (no RA, no AF)'); axis xy; colormap('jet')
 %% Range Alignment of Profiles 
 % Range Align the HRR profiles using correlation method
-[RA_HRR_profiles,shifts] = correlationRA(HRR_profiles);
+[RA_HRR_profiles,shifts] = correlationRA(HRR_profiles,1);
 
 % Plot range-aligned HRR Profiles
 figure; imagesc(sb_HRR.G1.xaxis_downrange_m, 1:size(RA_HRR_profiles,1), ...
