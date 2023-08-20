@@ -7,7 +7,7 @@ function [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles)
     % needs to be shifted in order to align with the reference profile.
 
     RA_HRR_profiles = HRR_profiles;
-    shifts = zeros(size(HRR_profiles));
+    shifts = zeros(size(HRR_profiles,1),1);
 
     % Autocorrelation, choosing the 1st profile to be the reference profile:
     refHRRProfile= HRR_profiles(1,:);
@@ -26,6 +26,7 @@ function [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles)
         % Calculate shift between ref peak and this range profile peak
         shift = PeakIndex - PeakIndexRef;
         shifts(indx)=shift;
+
         % Shift range profile to align with ref
         shiftedRangeProfile = circshift(rangeProfile,shift);
         % Add shifted profile to array
