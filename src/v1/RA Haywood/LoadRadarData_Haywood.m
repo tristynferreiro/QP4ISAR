@@ -49,8 +49,9 @@ figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );
 colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
 title('Unfocused ISAR Image (no RA, no AF)'); axis xy; colormap('jet')
 %% Range Alignment of Profiles 
-% Range Align the HRR profiles using correlation method
-[RA_HRR_profiles,shifts] = correlationRA(HRR_profiles,1);
+% Range Align the HRR profiles using Haywood method
+ref_profile_number = 1;
+RA_HRR_profiles = haywoodRA(HRR_profiles, ref_profile_number);
 
 % Plot range-aligned HRR Profiles
 figure; imagesc(sb_HRR.G1.xaxis_downrange_m, 1:size(RA_HRR_profiles,1), ...
@@ -60,12 +61,6 @@ ylabel('Profile Number');
 title('Subset of HRR profiles (RA, no AF)');
 colormap('jet');
 colorbar;
-
-% Plot Step Function
-figure; plot(1:size(RA_HRR_profiles,1),shifts)
-xlabel('Profile Number');
-ylabel('Number of bin shifts')
-title('Bin shifts per Range Profile');
 
 %% Plot range-aligned ISAR image - no autofocus
 % apply hamming window function
