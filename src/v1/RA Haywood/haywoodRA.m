@@ -1,4 +1,4 @@
-function [RA_HRR_profiles] = haywoodRA(HRR_profiles, ref_profile_number)
+function [RA_HRR_profiles] = HaywoodRA(HRR_profiles, ref_profile_number)
 % Implements the Haywood range-alignment algorithm
     % This approach uses the correlation RA algorithm but incorporates
     % phase adjustment to achieve better range-alignment.

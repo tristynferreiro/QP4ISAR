@@ -51,7 +51,7 @@ title('Unfocused ISAR Image (no RA, no AF)'); axis xy; colormap('jet')
 %% Range Alignment of Profiles 
 % Range Align the HRR profiles using Haywood method
 ref_profile_number = 1;
-RA_HRR_profiles = haywoodRA(HRR_profiles, ref_profile_number);
+RA_HRR_profiles = HaywoodRA(HRR_profiles, ref_profile_number);
 
 % Plot range-aligned HRR Profiles
 figure; imagesc(sb_HRR.G1.xaxis_downrange_m, 1:size(RA_HRR_profiles,1), ...
