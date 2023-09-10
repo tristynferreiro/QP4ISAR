@@ -66,13 +66,18 @@ colorbar;
 % apply hamming window function
 window = hamming(size(ProfilesToProcess,1));
 
-ISAR_image = fftshift(fft(RA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
+ISAR_image_RA = fftshift(fft(RA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
 
-ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image, 35);    % Limit dynamic range of ISAR image 
+ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image_RA, 35); % Limit dynamic range of ISAR image 
 
 % Plot RA ISAR image
 figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );                                
 colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
 title('ISAR Image (RA, no AF)'); axis xy; colormap('jet')
-
+%% Contrast comparison
+contrast_beforeRA = imageContrast(ISAR_image);
+contrast_afterRA = imageContrast(ISAR_image_RA);
+% Calculate focus improvement factor
+change_in_contrast = contrast_afterRA/contrast_beforeRA;
+fprintf("The contrast improvement factor after RA is %.4f",change_in_contrast)
 
