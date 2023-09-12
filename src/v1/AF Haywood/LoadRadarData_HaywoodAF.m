@@ -48,60 +48,92 @@ ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image, 35);    % Limit 
 figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );                                
 colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
 title('Unfocused ISAR Image (no RA, no AF)'); axis xy; colormap('jet')
-%% Range Alignment of Profiles 
-% Range Align the HRR profiles using Haywood method
+%% Simple correlation Range Alignment of Profiles 
+% Range Align the HRR profiles using correlation method
 ref_profile_number = 1;
-RA_HRR_profiles = HaywoodRA(HRR_profiles, ref_profile_number);
+[corrRA_HRR_profiles,shifts] = correlationRA(HRR_profiles,ref_profile_number);
 
-% Plot range-aligned HRR Profiles
-figure; imagesc(sb_HRR.G1.xaxis_downrange_m, 1:size(RA_HRR_profiles,1), ...
-    20*log10(abs(RA_HRR_profiles))); 
-xlabel('Range (m)');
-ylabel('Profile Number');
-title('Subset of HRR profiles (RA, no AF)');
-colormap('jet');
-colorbar;
-
-%% Plot range-aligned ISAR image - no autofocus
+% Plot simple correlation range-aligned ISAR image - no autofocus
 % apply hamming window function
-[numProfiles,numRangeBins] = size(RA_HRR_profiles);
+[numProfiles,numRangeBins] = size(corrRA_HRR_profiles);
 window = repmat(hamming(numProfiles),1,numRangeBins);
 
-ISAR_image_RA = fftshift(fft(RA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
+ISAR_image_corrRA = fftshift(fft(corrRA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
 
-ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image_RA, 35); % Limit dynamic range of ISAR image 
+ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image_corrRA, 35);    % Limit dynamic range of ISAR image 
 
 % Plot RA ISAR image
 figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );                                
 colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
-title('ISAR Image (RA, no AF)'); axis xy; colormap('jet')
+title('ISAR Image (corr RA, no AF)'); axis xy; colormap('jet')
 %% Contrast comparison
 contrast_beforeRA = imageContrast(ISAR_image);
-contrast_afterRA = imageContrast(ISAR_image_RA);
+contrast_afterRA = imageContrast(ISAR_image_corrRA);
 % Calculate focus improvement factor
-change_in_contrast = contrast_afterRA/contrast_beforeRA;
-fprintf("The contrast improvement factor after RA is %.4f",change_in_contrast)
-%% Autofocus of Profiles
-% Apply Haywood autofocus to the RA HRR profiles using
-AF_RA_HRR_profiles = HaywoodAF(RA_HRR_profiles);
+contrast_improvement = contrast_afterRA/contrast_beforeRA;
+fprintf("\nThe contrast improvement factor after simple corr RA is %.4f",contrast_improvement)
+%% Haywood Range Alignment of Profiles 
+% Range Align the HRR profiles using Haywood method
+ref_profile_number = 1;
+HaywoodRA_HRR_profiles = HaywoodRA(HRR_profiles, ref_profile_number);
 
-%% Plot focused ISAR image - no autofocus
+% Plot Haywood range-aligned ISAR image - no autofocus
 % apply hamming window function
-[numProfiles,numRangeBins] = size(AF_RA_HRR_profiles);
 window = repmat(hamming(numProfiles),1,numRangeBins);
 
-focused_ISAR_image = fftshift(fft(AF_RA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
+ISAR_image_HaywoodRA = fftshift(fft(HaywoodRA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
 
-focused_ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(focused_ISAR_image, 35); % Limit dynamic range of ISAR image 
+ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image_HaywoodRA, 35); % Limit dynamic range of ISAR image 
 
 % Plot RA ISAR image
+figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );                                
+colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
+title('ISAR Image (Haywood RA, no AF)'); axis xy; colormap('jet')
+%% Contrast comparison
+contrast_beforeRA = imageContrast(ISAR_image);
+contrast_afterRA = imageContrast(ISAR_image_HaywoodRA);
+% Calculate focus improvement factor
+contrast_improvement = contrast_afterRA/contrast_beforeRA;
+fprintf("\nThe contrast improvement factor after Haywood RA is %.4f",contrast_improvement)
+%% Autofocus of Profiles
+% Apply Haywood autofocus to the RA HRR profiles using
+AF_corrRA_HRR_profiles = HaywoodAF(corrRA_HRR_profiles);
+AF_HaywoodRA_HRR_profiles = HaywoodAF(HaywoodRA_HRR_profiles);
+
+%% Plot focused ISAR image
+% apply hamming window function
+window = repmat(hamming(numProfiles),1,numRangeBins);
+
+focused_corrRA_ISAR_image = fftshift(fft(AF_corrRA_HRR_profiles .*window,[],1),1); % Apply FFT in the slow-time dimension                    
+
+focused_ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(focused_corrRA_ISAR_image, 35); % Limit dynamic range of ISAR image 
+
+% Plot AF (corr RA) ISAR image
 figure; imagesc( Range_axis, DopplerAxis_Hz, focused_ISAR_image_dB );                                
 colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
-title('ISAR Image (RA, AF)'); axis xy; colormap('jet')
+title('ISAR Image (corr RA, AF)'); axis xy; colormap('jet')
+
+% apply hamming window function
+window = repmat(hamming(numProfiles),1,numRangeBins);
+
+focused_HaywoodRA_ISAR_image = fftshift(fft(AF_HaywoodRA_HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
+
+focused_ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(focused_HaywoodRA_ISAR_image, 35); % Limit dynamic range of ISAR image 
+
+% Plot AF (Haywood RA) ISAR image
+figure; imagesc( Range_axis, DopplerAxis_Hz, focused_ISAR_image_dB );                                
+colorbar; xlabel('Range(m)'); axis ij; ylabel('Doppler frequency (Hz)')                                           
+title('ISAR Image (Haywood RA, AF)'); axis xy; colormap('jet')
 %% Contrast comparison
 contrast_before = imageContrast(ISAR_image);
-contrast_afterAF = imageContrast(focused_ISAR_image);
+contrast_afterAF = imageContrast(focused_corrRA_ISAR_image);
 % Calculate focus improvement factor
-change_in_contrast = contrast_afterAF/contrast_before;
-fprintf("\nThe contrast improvement factor after AF is %.4f",change_in_contrast)
+contrast_improvement = contrast_afterAF/contrast_before;
+fprintf("\nThe contrast improvement factor after Haywood AF (corr RA) is %.4f",contrast_improvement)
+
+contrast_before = imageContrast(ISAR_image);
+contrast_afterAF = imageContrast(focused_HaywoodRA_ISAR_image);
+% Calculate focus improvement factor
+contrast_improvement = contrast_afterAF/contrast_before;
+fprintf("\nThe contrast improvement factor after Haywood AF (Haywood RA) is %.4f",contrast_improvement)
 

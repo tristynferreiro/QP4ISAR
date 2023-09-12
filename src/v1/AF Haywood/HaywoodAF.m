@@ -12,7 +12,9 @@ amplitudeVariance = (1/(numProfiles-1))*var(abs(RA_HRRP), [],1); % 1xM matrix
 powerScatterer = sum(abs(RA_HRRP).^2,1);
 averagePowerScatterer = mean(powerScatterer);
 % find possible scatterers where power of scatterer > average power
-candidateScatterersIdx = find(powerScatterer>averagePowerScatterer); % array of matches
+scalingFactor = 1;
+candidateScatterersIdx = find(powerScatterer>scalingFactor*averagePowerScatterer); % array of matches
+%disp(candidateScatterersIdx)
 
 % Criteria 2: candidate with minimum variance is dominant scatterer (DS) - Eq A.9 of Zyweck's appendix
 [~,varianceDSidx] = min(amplitudeVariance(candidateScatterersIdx)); % returns index of match in candidateScatterersIdx
@@ -20,9 +22,7 @@ DSidx = candidateScatterersIdx(varianceDSidx); % range bin number of DS
 
 % Step 3: Calculate phase differences between reference and other profiles - Eq A.11 of Zyweck's appendix
 phaseHistoryDS = angle(RA_HRRP(:,DSidx)); % N x 1 matrix
-disp(DSidx)
-% phase_ref = abs(RA_HRRP(:,DSidx)); 
-% phase_diff = abs(RA_HRRP) - phase_ref; % Gives Nx1 array
+%disp(DSidx)
 
 % Step 4: apply phase differences to each HRRP - Eq A.12 of Zyweck's appendix
 complexConjugateDS = exp(-1i*phaseHistoryDS);
