@@ -1,6 +1,8 @@
 function [AF_RA_HRRP] = YuanAF(RA_HRRP)
 % Implements the Yuan autofocus algorithm
     % This approach is based on the dominant scatterer algorithm (DSA). 
+    % This version considers all possible scatterers from all profiles
+    % (even ones in which the target does not feature in).
 
 numRangeBins = size(RA_HRRP,2);
 
@@ -9,18 +11,9 @@ amplitudeMean = mean(abs(RA_HRRP),1);
 amplitudeVariance = var(abs(RA_HRRP),1);
 
 % Step 2:  find candidate scatterers: 
-% Power threshold to remove noise
-powerScatterer = sum(abs(RA_HRRP).^2,1);
-averagePowerScatterer = mean(powerScatterer);
-% find possible scatterers where power of scatterer > average power
-scalingFactor = 1;
-noNoiseScatterers = find(powerScatterer>scalingFactor*averagePowerScatterer); % array of matches
-
 % Yuan's candidate scatterers with var/(var+mean) < 0.16
 criteria = amplitudeVariance./(amplitudeVariance+amplitudeMean.^2);
-noNoiseCriteria=criteria(noNoiseScatterers);
-idx  = find(noNoiseCriteria< 0.16); % profile numbers
-candidateScatterersIdx = noNoiseScatterers(idx);
+candidateScatterersIdx  = find(criteria< 0.16); % profile numbers
 
 % Step 3:  Choose smallest 11 (preferred) but can choose number between 6-18
 numScatterers = 11; % ideally 11 otherwise value in range 6-18
