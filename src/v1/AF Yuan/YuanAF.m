@@ -9,6 +9,13 @@ amplitudeMean = mean(abs(RA_HRRP),1);
 amplitudeVariance = var(abs(RA_HRRP),1);
 
 % Step 2:  find candidate scatterers: 
+% % Power threshold to remove noise
+% powerScatterer = sum(abs(RA_HRRP).^2,1);
+% averagePowerScatterer = mean(powerScatterer);
+% % find possible scatterers where power of scatterer > average power
+% scalingFactor = 1;
+% noNoiseScatterers = find(powerScatterer>scalingFactor*averagePowerScatterer); % array of matches
+
 % Yuan's candidate scatterers with var/(var+mean) < 0.16
 criteria = amplitudeVariance./(amplitudeVariance+amplitudeMean.^2);
 candidateScatterersIdx  = find(criteria < 0.16); % profile numbers
@@ -20,7 +27,7 @@ DSidx = candidateScatterersIdx(candidateScatterersIdx_min);
 
 % Step 4:  Determine constant phase shift for N pulses
 refBins = RA_HRRP(1,DSidx); % reference profile
-product_vector = conj(refBins).* RA_HRRP(:,candidateScatterersIdx_min);
+product_vector = conj(refBins).* RA_HRRP(:,DSidx);
 phaseShifts = angle(mean(product_vector,2)); % we want the average phase difference
 
 % Step 5:  Apply phase shift
