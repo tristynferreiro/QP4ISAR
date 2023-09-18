@@ -58,6 +58,9 @@ RangeAxis = (0:1:(N-1))*Range_Resolution;
 
 figure;
 plot(RangeAxis, 20*log(abs(HRR_Profile)))
+xlabel('Range (m)');
+ylabel('Voltage (dB)');
+title('HRR Profiles');
 grid on;
 
 
