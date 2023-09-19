@@ -1,4 +1,4 @@
-close all; clear all; clc; 
+% close all; clear all; clc; 
 
 %% Load CSIR dataset 
 
@@ -24,12 +24,14 @@ HRR_profiles = circshift(HRRProfilesAll(StartProfile:StopProfile, :), [0 50 ]);
 ref_profile_number =1;
 
 % f = @() correlationRA(HRR_profiles,ref_profile_number); % handle to function
-% timeit(f)
+% % timeit(f)
 % f = @() HaywoodRA(HRR_profiles, ref_profile_number); % handle to function
 % timeit(f)
 
-[RA_HRR_profiles_corr,shifts] = correlationRA(HRR_profiles,ref_profile_number);
-
+%[RA_HRR_profiles_hay] = correlationRA_v0(HRR_profiles,ref_profile_number);
+tic
+[RA_HRR_profiles_hay] = HaywoodRA_v0(HRR_profiles,ref_profile_number);
+toc
 %RA_HRR_profiles_haywood = HaywoodRA(HRR_profiles, ref_profile_number);
 %% Autofocus of Profiles
 % Apply AF to the RA HRR profiles using
