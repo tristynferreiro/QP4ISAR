@@ -6,6 +6,7 @@ close all; clear all; clc;
 
 load('DAP_2010-10-14_09-43-33_010_zayaan_inbound_singlebin_P455_G1_sb_HRR.mat');
 HRRProfilesAll = sb_HRR.G1.HRR_NoMC_calib.';
+HRRProfilesAll = HRRProfilesAll(2400:end,:);
 ProfileRepetitionFreq =  1/sb_HRR.G1.pattern_time; 
 NumRangeBins = size(HRRProfilesAll,1);
 NumOfProfiles = size(HRRProfilesAll,2);
@@ -19,7 +20,8 @@ title('All HRR profiles');
 colormap('jet');
 colorbar;
 
-%% Slide window through all profiles (create frames)
+%% 1 Slide window through all profiles (create frames)
+ISAR_image_128=0;
 % Step 1: Define parameters
 CPTWL = 128;
 overlap = 0.5 * CPTWL;
@@ -48,9 +50,9 @@ for framenum = 1: num_frames
     % apply hamming window function
     window = hamming(size(ProfilesToProcess,1));
 
-    ISAR_image = fftshift(fft(HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
+    ISAR_image_128 = fftshift(fft(HRR_profiles.*window,[],1),1); % Apply FFT in the slow-time dimension                    
 
-    ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image, 35);    % Limit dynamic range of ISAR image 
+    ISAR_image_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_image_128, 35);    % Limit dynamic range of ISAR image 
 
     % Plot unfocused ISAR image
     figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );                                
@@ -58,6 +60,7 @@ for framenum = 1: num_frames
     title('Unfocused ISAR Image (no RA, no AF)'); axis xy; colormap('jet')
    
 end
+
 
 
 
