@@ -2,10 +2,9 @@ function [AF_RA_HRRP] = HaywoodAF(RA_HRRP)
 % Implements the Haywood autofocus algorithm
     % This approach is based on the dominant scatterer algorithm (DSA). 
 
-[numProfiles,numRangeBins] = size(RA_HRRP);
-
+numRangeBins = size(RA_HRRP,2);
 % Step 1: Calculate Eq A.8 of Zyweck's appendix - amplitude variance
-amplitudeVariance = (1/(numProfiles-1))*var(abs(RA_HRRP), [],1); % 1xM matrix
+amplitudeVariance = var(abs(RA_HRRP), 1); % 1xM matrix
 
 % Step 2: Identify scatterer (range bin) that satifies the dominant scatterer criteris. This is the minimum amplitude varying range bin in each range bin row
 % Criteria 1: power of scatterer>average power - Eq A.10 of Zyweck's appendix
