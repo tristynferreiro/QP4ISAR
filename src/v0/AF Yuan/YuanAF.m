@@ -2,43 +2,43 @@ function [AF_RA_HRRP] = YuanAF(RA_HRRP)
 % Implements the Yuan autofocus algorithm
     % This approach is based on the dominant scatterer algorithm (DSA). 
 
-numRangeBins = size(RA_HRRP,2);
+    num_range_bins = size(RA_HRRP,2);
+    
+    %% Step 1: Calculate mean and variance
+    amplitude_mean = mean(abs(RA_HRRP),1);
+    amplitude_variance = var(abs(RA_HRRP),1);
+    
+    %% Step 2:  find candidate scatterers: 
+    % Threshold to get target profiles
+    no_noise_scatterers = find(amplitude_mean.^2>mean(amplitude_mean.^2));
+    no_noise_scatterers = min(no_noise_scatterers):max(no_noise_scatterers);
+    
+    % Plot chosen HRRP profiles based on thresholding
+    % test_HRRP = zeros(size(RA_HRRP,1), size(RA_HRRP,2));
+    % test_HRRP(:,noNoiseScatterers) = RA_HRRP(:,noNoiseScatterers);
+    % figure; imagesc(20*log10(abs(test_HRRP))); colormap('jet');
+    % figure; imagesc(20*log10(abs(RA_HRRP))); colormap('jet');
+    
+    % Identify candidate scatterers using Yuan's threshold
+    criteria = amplitude_variance./(amplitude_variance+amplitude_mean.^2);
+    criteria=criteria(no_noise_scatterers);
+    idx  = find(criteria< 0.16); % profile numbers
+    candidate_scatterers_idx = no_noise_scatterers(idx);
+    
+    %% Step 3:  Choose smallest 11 (preferred) but can choose number between 6-18
+    num_scatterers = 6; % ideally 11 otherwise value in range 6-18
+    [~,candidate_scatterers_idx_min] = mink(criteria(candidate_scatterers_idx), num_scatterers);
+    DS_idx = candidate_scatterers_idx(candidate_scatterers_idx_min); % get range bin numbers
+    
+    %% Step 4:  Determine constant phase shift for N pulses
+    ref_bins = RA_HRRP(1,DS_idx); % reference profile
+    product_vector = conj(ref_bins).* RA_HRRP(:,DS_idx);
+    % calculate average phase difference across all range bins in each profile
+    phase_shifts = angle(mean(product_vector,2)); 
 
-%% Step 1: Calculate mean and variance
-amplitudeMean = mean(abs(RA_HRRP),1);
-amplitudeVariance = var(abs(RA_HRRP),1);
-
-%% Step 2:  find candidate scatterers: 
-% Threshold to get target profiles
-noNoiseScatterers = find(amplitudeMean>mean(amplitudeMean));
-noNoiseScatterers = min(noNoiseScatterers):max(noNoiseScatterers);
-
-% Plot chosen HRRP profiles based on thresholding
-test_HRRP = zeros(size(RA_HRRP,1), size(RA_HRRP,2));
-test_HRRP(:,noNoiseScatterers) = RA_HRRP(:,noNoiseScatterers);
-figure; imagesc(20*log10(abs(test_HRRP))); colormap('jet');
-figure; imagesc(20*log10(abs(RA_HRRP))); colormap('jet');
-
-% Yuan's candidate scatterers with var/(var+mean) < 0.16
-criteria = amplitudeVariance./(amplitudeVariance+amplitudeMean.^2);
-noNoiseCriteria=criteria(noNoiseScatterers);
-idx  = find(noNoiseCriteria< 0.16); % profile numbers
-candidateScatterersIdx = noNoiseScatterers(idx);
-
-%% Step 3:  Choose smallest 11 (preferred) but can choose number between 6-18
-numScatterers = 6; % ideally 11 otherwise value in range 6-18
-[~,candidateScatterersIdx_min] = mink(criteria(candidateScatterersIdx), numScatterers);
-DSidx = candidateScatterersIdx(candidateScatterersIdx_min); % get range bin numbers
-
-%% Step 4:  Determine constant phase shift for N pulses
-refBins = RA_HRRP(1,DSidx); % reference profile
-product_vector = conj(refBins).* RA_HRRP(:,DSidx);
-% we want the average phase difference across all range bins in each profile
-phaseShifts = angle(mean(product_vector,2)); 
-
-%% Step 5:  Apply phase shift
-compensationAngle = exp(-1i*phaseShifts);
-compensationMatrix = repmat(compensationAngle,1,numRangeBins);
-AF_RA_HRRP = RA_HRRP.*compensationMatrix;
+    %% Step 5:  Apply phase shift
+    compensation_angle = exp(-1i*phase_shifts);
+    compensation_matrix = repmat(compensation_angle,1,num_range_bins);
+    AF_RA_HRRP = RA_HRRP.*compensation_matrix;
 
 end
