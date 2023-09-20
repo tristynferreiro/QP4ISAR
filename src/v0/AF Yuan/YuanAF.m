@@ -21,8 +21,8 @@ function [AF_RA_HRRP] = YuanAF(RA_HRRP)
     
     % Identify candidate scatterers using Yuan's threshold
     criteria = amplitude_variance./(amplitude_variance+amplitude_mean.^2);
-    criteria=criteria(no_noise_scatterers);
-    idx  = find(criteria< 0.16); % profile numbers
+    no_noise_criteria=criteria(no_noise_scatterers);
+    idx  = find(no_noise_criteria< 0.16); % profile numbers
     candidate_scatterers_idx = no_noise_scatterers(idx);
     
     %% Step 3:  Choose smallest 11 (preferred) but can choose number between 6-18
