@@ -5,33 +5,27 @@ function [RA_HRRP,shifts] = correlationRA(HRRP, ref_HRRP_num)
     % profile and use correlation to discover the location of the peaks. 
     % This location corresponds to the number of range bins the profile 
     % needs to be shifted in order to align with the reference profile.
-
-    RA_HRRP = HRRP;
-    shifts = zeros(size(HRRP,1),1);
-
-    %% Step 1: Autocorrelation, using the reference profile
-    ref_HRRP= HRRP(ref_HRRP_num,:);
-    corr_out = xcorr(abs(ref_HRRP));
-    [~,peak_index_ref] = max(corr_out);
     
-    %% Step 2: Range Alignment using ref profile
-    rows = size(HRRP);
+    %% Step 1 : get reference profile
+    ref_HRRP= HRRP(ref_HRRP_num,:);
+   
+    %% Step 2: Compute the shift values between all profiles and the ref
+    % compute correlation values
+    correlation = xcorr2(abs(HRRP),abs(ref_HRRP));
 
+     % Find index of peak correlation values
+    [~,peak_index] = max(correlation,[],2);
+
+    % Calculate shifs between ref peak and all profile peaks
+    shifts = peak_index(1) - peak_index;
+    
+    %% Step 3: Range Alignment using ref profile
+    %RA_HRRP = circshift(HRRP,shifts');
+    RA_HRRP = HRRP;
+    rows = size(HRRP,1);
     for indx = 1:rows
-        % Get range profile
-        range_profile = HRRP(indx,:); 
-        
-        % Calculate correlation
-        corr_out = xcorr(abs(ref_HRRP), abs(range_profile));
-        
-        % Find index of peak correlation value
-        [~,peak_index] = max(corr_out);
-      
-        % Calculate shift between ref peak and this range profile peak
-        shift = peak_index - peak_index_ref;
-        shifts(indx)=shift;
-
         % Shift range profile to align with ref and add to array
-        RA_HRRP(indx,:) = circshift(range_profile,shift);
+        RA_HRRP(indx,:) = circshift(HRRP(indx,:),shifts(indx));
     end
+
 end
