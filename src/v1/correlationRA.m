@@ -18,12 +18,12 @@ function [RA_HRRP,shifts] = correlationRA(HRRP, ref_HRRP_num)
 
     % Calculate shifs between ref peak and all profile peaks
     shifts = peak_index(1) - peak_index;
-    
+   
     %% Step 3: Range Alignment using ref profile
     %RA_HRRP = circshift(HRRP,shifts');
     RA_HRRP = HRRP;
-    rows = size(HRRP,1);
-    for indx = 1:rows
+    num_profiles = size(HRRP,1);
+    for indx = 1:num_profiles
         % Shift range profile to align with ref and add to array
         RA_HRRP(indx,:) = circshift(HRRP(indx,:),shifts(indx));
     end
