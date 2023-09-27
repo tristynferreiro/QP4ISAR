@@ -24,12 +24,12 @@ s = polyval(coefficients,numProfiles); % smoothed values
 % hold off
 
 %% Step 3: Perform Haywood's Range alignment
-[profiles,bins]=size(HRR_profiles);
+[~,bins]=size(HRR_profiles);
 
 m = 0:1:bins-1;
 
 for i = 1: profiles
-    phi = exp(-1i*(2*pi*s(i)*m)/profiles);
+    phi = exp(-1i*(2*pi*s(i)*m)/bins);
     %disp(RangeProfiles(i,:))
     RA_HRR_profiles(i,:) = ifft(phi.*fft(HRR_profiles(i,:)));
     %disp(abs(shifted))

@@ -28,7 +28,8 @@ function [RA_HRRP] = HaywoodRA(HRRP, ref_HRRP_num)
     %% Step 3: Perform Haywood's Range alignment
     m = 0:1:num_range_bins-1;
     % calculate phase correction angle - Eq A.6 of Zyweck's appendix
-    phase = exp(-1i*(2*pi*smoothed_coefficients'.*m)/num_profiles);
+    phase = exp(-1i*(2*pi*smoothed_coefficients'.*m)/num_range_bins);
     % Apply correction angle to profiles - - Eq A.5 of Zyweck's appendix
+    %RA_HRRP = ifft(phase.*fft(HRRP,num_profiles,1),num_profiles,1);
     RA_HRRP = ifft(phase.*fft(HRRP,num_range_bins,2),num_range_bins,2);
 end
