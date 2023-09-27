@@ -27,7 +27,7 @@ disp(['Range resolution = ' num2str(roundn(Range_Resolution,-3)) ' m']);
 disp(['Unambiguous Range = ' num2str(roundn(Unambiguous_range,0)) ' m']);
 disp(' ');
 
-TgtVelocity_ms = 1; 
+TgtVelocity_ms = -1; 
 RotRate_deg_s = 6;
 % Scatterer local co-ordinates
 % Each row has two elements: [x-cord y-cord]  
@@ -99,7 +99,7 @@ end
 
 %% Get HRR Profiles
 HRR_Profile = (ifft(RxNoise,[], 2));
-RangeAxis = (0:1:(N-1))*C/(2*N*DeltaF);
+RangeAxis = (0:1:(N-1))*C/(2*N*DeltaF); 
 
 % Plot HRR profiles
 figure;
@@ -132,16 +132,16 @@ ref_profile_number =1;
 [corr_RA_HRR_profiles] = correlationRA(HRR_Profile,ref_profile_number);
 
 % Plot HRR profiles
-figure;
-linear_dB = Normalise_limitDynamicRange_ISAR_dB(corr_RA_HRR_profiles,35);
-imagesc(RangeAxis, 1:M, linear_dB);
-xlabel('Range (m)');
-ylabel('Profile Number');
-title('Correlation Range-aligned HRR Profiles');
-colormap('jet');
-colorbar;
+% figure;
+% linear_dB = Normalise_limitDynamicRange_ISAR_dB(corr_RA_HRR_profiles,35);
+% imagesc(RangeAxis, 1:M, linear_dB);
+% xlabel('Range (m)');
+% ylabel('Profile Number');
+% title('Correlation Range-aligned HRR Profiles');
+% colormap('jet');
+% colorbar;
 
-[haywood_RA_HRR_profiles] = HaywoodRA(HRR_Profile,ref_profile_number);
+[haywood_RA_HRR_profiles] = HaywoodRA_v0(HRR_Profile,ref_profile_number);
 % Plot HRR profiles
 figure;
 linear_dB = Normalise_limitDynamicRange_ISAR_dB(haywood_RA_HRR_profiles,35);
@@ -154,7 +154,7 @@ colorbar;
 
 % Plot ISAR image
 WindowMatrix = repmat(hamming(M),1, N);
-ISAR_linear = fftshift(fft(corr_RA_HRR_profiles.*WindowMatrix, [], 1),1);
+ISAR_linear = fftshift(fft(haywood_RA_HRR_profiles.*WindowMatrix, [], 1),1);
 ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
 FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
 
@@ -162,26 +162,26 @@ figure;
 imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
 xlabel('Range (m)');
 ylabel('Doppler frquency (Hz)');
-title('ISAR image');
+title('Haywood Range-aligned ISAR image');
 colorbar;
 colormap('jet');
 axis xy;
 
 %% Autofocus of Profiles
 %Apply Haywood autofocus to the RA HRR profiles using
-% AF_corrRA_HRR_profiles = YuanAF(corr_RA_HRR_profiles);
-% 
-% % Plot ISAR image
-% WindowMatrix = repmat(hamming(M),1, N);
-% ISAR_linear = fftshift(fft(AF_corrRA_HRR_profiles.*WindowMatrix, [], 1),1);
-% ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
-% FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
-% 
-% figure;
-% imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-% xlabel('Range (m)');
-% ylabel('Doppler frquency (Hz)');
-% title('Focused ISAR image');
-% colorbar;
-% colormap('jet');
-% axis xy;
+AF_corrRA_HRR_profiles = HaywoodAF(corr_RA_HRR_profiles);
+
+% Plot ISAR image
+WindowMatrix = repmat(hamming(M),1, N);
+ISAR_linear = fftshift(fft(AF_corrRA_HRR_profiles.*WindowMatrix, [], 1),1);
+ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
+FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
+
+figure;
+imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+xlabel('Range (m)');
+ylabel('Doppler frquency (Hz)');
+title('Focused ISAR image');
+colorbar;
+colormap('jet');
+axis xy;
