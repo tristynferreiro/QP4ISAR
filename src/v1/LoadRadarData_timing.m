@@ -1,4 +1,4 @@
-% close all; clear all; clc; 
+%close all; clear all; clc; 
 
 %% Load CSIR dataset 
 
@@ -19,18 +19,23 @@ DopplerAxis_Hz = (-ProfilesToProcess/2:1:ProfilesToProcess/2-1)*ProfileRepetitio
 
 HRR_profiles = circshift(HRRProfilesAll(StartProfile:StopProfile, :), [0 50 ]);
 
+test_prof =HRRProfilesAll(StartProfile:StopProfile, :);
+% figure; imagesc(Range_axis, 1:size(HRR_profiles,1), 20*log10(abs(HRR_profiles)));
+% figure; imagesc(Range_axis, 1:size(test_prof,1), 20*log10(abs(test_prof)));
+
 %% Range Alignment of Profiles 
 % Range Align the HRR profiles using correlation method
 ref_profile_number =1;
 
 % f = @() correlationRA(HRR_profiles,ref_profile_number); % handle to function
-% % timeit(f)
+% timeit(f)
 % f = @() HaywoodRA(HRR_profiles, ref_profile_number); % handle to function
 % timeit(f)
 
-%[RA_HRR_profiles_hay] = correlationRA_v0(HRR_profiles,ref_profile_number);
+%[RA_HRR_profiles_hay] = HaywoodRA(HRR_profiles,ref_profile_number);
 tic
-[RA_HRR_profiles_hay] = HaywoodRA_v0(HRR_profiles,ref_profile_number);
+[RA_HRR_profiles_corr] = HaywoodRA(HRR_profiles,ref_profile_number);
+%figure; imagesc(Range_axis, 1:size(RA_HRR_profiles_corr,1), 20*log10(abs(RA_HRR_profiles_corr)));
 toc
 %RA_HRR_profiles_haywood = HaywoodRA(HRR_profiles, ref_profile_number);
 %% Autofocus of Profiles
@@ -38,8 +43,11 @@ toc
 
 % f = @() HaywoodAF(RA_HRR_profiles_corr); % handle to function
 % timeit(f)
+tic
+[AF_RA_HRR_profiles_corr] = HaywoodAF(RA_HRR_profiles_corr);
+toc
 
-% f = @() YuanAF(RA_HRR_profiles_corr); % handle to function
+% f = @() HaywoodAF(RA_HRR_profiles_corr); % handle to function
 % timeit(f)
 
 
