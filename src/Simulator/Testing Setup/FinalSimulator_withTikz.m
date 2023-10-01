@@ -66,10 +66,10 @@ amplitudes = max_amplitude * exp(-(distances.^2) / (2 * std^2));
 Scatterer_axy_local(:, 3) = amplitudes;
 Scatterer_axy_local(14, 3) = 1000;
 
-figure; scatter(Scatterer_axy_local(:,1),Scatterer_axy_local(:,2))
-xlabel('x-coordinate');
-ylabel('y-coordinate');
-title('Target Scatterers');
+% figure; scatter(Scatterer_axy_local(:,1),Scatterer_axy_local(:,2))
+% xlabel('x-coordinate');
+% ylabel('y-coordinate');
+% title('Target Scatterers');
 % matlab2tikz() % Save the figure as LaTeX compatible plot
 
 %% 4 Simulation
@@ -117,14 +117,14 @@ HRR_profiles = (ifft(RxNoise,[], 2));
 RangeAxis = (0:1:(N-1))*C/(2*N*DeltaF); 
 
 % Plot HRR profiles
-figure;
-linear_dB = Normalise_limitDynamicRange_ISAR_dB(HRR_profiles,35);
-imagesc(RangeAxis, 1:M, linear_dB);
-xlabel('Range (m)');
-ylabel('Profile Number');
-title('Unaligned HRR Profiles');
-colormap('jet');
-colorbar;
+% figure;
+% linear_dB = Normalise_limitDynamicRange_ISAR_dB(HRR_profiles,35);
+% imagesc(RangeAxis, 1:M, linear_dB);
+% xlabel('Range (m)');
+% ylabel('Profile Number');
+% title('Unaligned HRR Profiles');
+% colormap('jet');
+% colorbar;
 % matlab2tikz() % Save the figure as LaTeX compatible plot
 
 % Plot unfocused ISAR image
@@ -133,28 +133,28 @@ ISAR_linear = fftshift(fft(HRR_profiles.*WindowMatrix, [], 1),1);
 ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,40);
 FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
 
-figure;
-imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-xlabel('Range (m)');
-ylabel('Doppler frquency (Hz)');
-title('Unfocused ISAR image');
-colorbar;
-colormap('jet');
-axis xy;
+% figure;
+% imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+% xlabel('Range (m)');
+% ylabel('Doppler frquency (Hz)');
+% title('Unfocused ISAR image');
+% colorbar;
+% colormap('jet');
+% axis xy;
 %matlab2tikz() % Save the figure as LaTeX compatible plot
 
-%% 6 Range Alignment of Profiles 
-% Range Align the HRR profiles using user selected algorithm
+%% 6 Range Alignment of Profiles
 if(RA_selection ~= 0)
+    % Range Align the HRR profiles using user selected algorithm
     ref_profile_number =1;
     if(RA_selection == 1)
             [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles,ref_profile_number);
             % Plot Step Function
-            figure; plot(1:size(RA_HRR_profiles,1),shifts)
-            xlabel('Profile Number');
-            ylabel('Number of bin shifts')
-            title('Bin shifts per Range Profile');
-            %matlab2tikz() % Save the figure as LaTeX compatible plot
+            % figure; plot(1:size(RA_HRR_profiles,1),shifts)
+            % xlabel('Profile Number');
+            % ylabel('Number of bin shifts')
+            % title('Bin shifts per Range Profile');
+            % matlab2tikz() % Save the figure as LaTeX compatible plot
     elseif (RA_selection == 2)
             [RA_HRR_profiles] = HaywoodRA(HRR_profiles,ref_profile_number);
     end
@@ -163,11 +163,11 @@ if(RA_selection ~= 0)
     figure;
     linear_dB = Normalise_limitDynamicRange_ISAR_dB(RA_HRR_profiles,35);
     imagesc(RangeAxis, 1:M, linear_dB);
-    xlabel('Range (m)');
-    ylabel('Profile Number');
-    title('Range-aligned HRR Profiles');
+    % xlabel('Range (m)');
+    % ylabel('Profile Number');
+    % title('Range-aligned HRR Profiles');
     colormap('jet');
-    colorbar;
+    % colorbar;
     % matlab2tikz() % Save the figure as LaTeX compatible plot
     
     % Plot ISAR image
@@ -178,17 +178,17 @@ if(RA_selection ~= 0)
     
     figure;
     imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-    xlabel('Range (m)');
-    ylabel('Doppler frquency (Hz)');
-    title('Range-aligned ISAR image');
-    colorbar;
+    % xlabel('Range (m)');
+    % ylabel('Doppler frquency (Hz)');
+    % title('Range-aligned ISAR image');
+    % colorbar;
     colormap('jet');
     axis xy;
-    %matlab2tikz() % Save the figure as LaTeX compatible plot
+    % matlab2tikz() % Save the figure as LaTeX compatible plot
 end
 %% Autofocus of Profiles
-% Autofocus the HRR profiles using selected method
 if(AF_selection ~= 0)
+    % Autofocus the HRR profiles using selected method
     if(AF_selection == 1)
         [AF_RA_HRR_profiles] = YuanAF(RA_HRR_profiles);
     elseif (AF_selection == 2)
