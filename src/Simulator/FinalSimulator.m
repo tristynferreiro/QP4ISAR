@@ -1,13 +1,17 @@
-
 % Version 3 - include target translation and rotational motion 
-% Revision: allows for adjustment of the scatterer voltages
+% Revision: 
+%   - allows for adjustment of the scatterer voltages 
+%   - user inputs
+%   - Range Alignment and Autofocus
 
-clear all; close all; clc;
+clear; %all; 
+close all; clc;
 %% 1 User Input Parameters
 target_velocity = input("What is the target's translational velocity (m/s)?\n");
 rotation_angle = input("What is the rotation angle (degrees)?\n");
-RA_selection = input("Range-alignment?\n 1 = Simple Correlation\n 2 = Haywood\n");
-AF_selection = input("Autofocus?\n 1 = Yuan \n 2 = Haywood\n");
+RA_selection = input("Range-alignment?\n 0 = none\n 1 = Simple Correlation\n 2 = Haywood\n");
+AF_selection = input("Autofocus?\n 0 = none\n 1 = Yuan \n 2 = Haywood\n");
+
 %% 2 Simulation Parameters
 C = 3e8;                                            % Speed of light
 F0 = 9.5e9;                                         % Initial centre frequency
@@ -43,29 +47,30 @@ RotRate_deg_s = rotation_angle;                     % Rotation angle
                         % x y amplitude
 Scatterer_axy_local = [
     -10 0 1; -9 0 1; -8 0 1; -7 0 1.5; -6 0 2; -5 0 2.5; -4 0 2.5; 
-    -3 0 3;-3 1 3;-3 2 2;-3 3 1;
-    -2 0 5; -1 0 6; 0 0 20; 
-    1 0 6; 2 0 5; 
-    3 0 3; 3 1 3;3 2 2;3 3 1;
+    -3 0 5; -3 1 3;-3 2 2;-3 3 1;
+    -2 0 5; -1 0 10; 0 0 45; 
+    1 0 10; 2 0 5; 
+    3 0 5; 3 1 3;3 2 2;3 3 1;
     4 0 2.5; 5 0 2.5; 6 0 2; 7 0 1.5; 8 0 1; 9 0 1; 10 0 1];
-
-
+ 
 % Calculate the distance of each point from the center of the object (0,0)
 distances = sqrt(sum(Scatterer_axy_local(:, 1:2).^2, 2));
 
 % Calculate the amplitude values based on a Gaussian-like distribution
 % The centermost scatterer will have the highest amplitude
-max_amplitude = 20; % Set the maximum amplitude
-std = 5; % Adjust this parameter to control the distribution width
+max_amplitude = 100; % Set the maximum amplitude
+std = 50; % Adjust this parameter to control the distribution width
 amplitudes = max_amplitude * exp(-(distances.^2) / (2 * std^2));
 
 % Replace the amplitude values in the scatterer data
 Scatterer_axy_local(:, 3) = amplitudes;
+Scatterer_axy_local(14, 3) = 1000;
 
 figure; scatter(Scatterer_axy_local(:,1),Scatterer_axy_local(:,2))
-xlabel('x-coordinate (m)');
+xlabel('x-coordinate');
 ylabel('y-coordinate');
-title('Plot of the target scatterers');
+title('Target Scatterers');
+
 %% 4 Simulation
 NumScatterers = size(Scatterer_axy_local,1);               % Obtain number of scatterers
 
@@ -134,65 +139,68 @@ title('Unfocused ISAR image');
 colorbar;
 colormap('jet');
 axis xy;
+
 %% 6 Range Alignment of Profiles 
 % Range Align the HRR profiles using user selected algorithm
-ref_profile_number =1;
-if(RA_selection == 1)
-        [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles,ref_profile_number);
-        % % Plot Step Function
-        % figure; plot(1:size(RA_HRR_profiles,1),shifts)
-        % xlabel('Profile Number');
-        % ylabel('Number of bin shifts')
-        % title('Bin shifts per Range Profile');
-elseif (RA_selection == 2)
-        [RA_HRR_profiles] = HaywoodRA(HRR_profiles,ref_profile_number);
+if(RA_selection ~= 0)
+    ref_profile_number =1;
+    if(RA_selection == 1)
+            [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles,ref_profile_number);
+            % Plot Step Function
+            figure; plot(1:size(RA_HRR_profiles,1),shifts)
+            xlabel('Profile Number');
+            ylabel('Number of bin shifts')
+            title('Bin shifts per Range Profile');
+    elseif (RA_selection == 2)
+            [RA_HRR_profiles] = HaywoodRA(HRR_profiles,ref_profile_number);
+    end
+    
+    % Plot HRR profiles
+    figure;
+    linear_dB = Normalise_limitDynamicRange_ISAR_dB(RA_HRR_profiles,35);
+    imagesc(RangeAxis, 1:M, linear_dB);
+    xlabel('Range (m)');
+    ylabel('Profile Number');
+    title('Range-aligned HRR Profiles');
+    colormap('jet');
+    colorbar;
+    
+    % Plot ISAR image
+    WindowMatrix = repmat(hamming(M),1, N);
+    ISAR_linear = fftshift(fft(RA_HRR_profiles.*WindowMatrix, [], 1),1);
+    ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
+    FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
+    
+    figure;
+    imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+    xlabel('Range (m)');
+    ylabel('Doppler frquency (Hz)');
+    title('Range-aligned ISAR image');
+    colorbar;
+    colormap('jet');
+    axis xy;
 end
-
-% Plot HRR profiles
-figure;
-linear_dB = Normalise_limitDynamicRange_ISAR_dB(RA_HRR_profiles,35);
-imagesc(RangeAxis, 1:M, linear_dB);
-xlabel('Range (m)');
-ylabel('Profile Number');
-title('Haywood Range-aligned HRR Profiles');
-colormap('jet');
-colorbar;
-
-% Plot ISAR image
-WindowMatrix = repmat(hamming(M),1, N);
-ISAR_linear = fftshift(fft(RA_HRR_profiles.*WindowMatrix, [], 1),1);
-ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
-FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
-
-figure;
-imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-xlabel('Range (m)');
-ylabel('Doppler frquency (Hz)');
-title('Haywood Range-aligned ISAR image');
-colorbar;
-colormap('jet');
-axis xy;
-
 %% Autofocus of Profiles
 % Autofocus the HRR profiles using selected method
-if(AF_selection == 1)
-    [AF_RA_HRR_profiles] = YuanAF(RA_HRR_profiles);
-elseif (AF_selection == 2)
-    [AF_RA_HRR_profiles] = HaywoodAF(RA_HRR_profiles);
-
+if(AF_selection ~= 0)
+    if(AF_selection == 1)
+        [AF_RA_HRR_profiles] = YuanAF(RA_HRR_profiles);
+    elseif (AF_selection == 2)
+        [AF_RA_HRR_profiles] = HaywoodAF(RA_HRR_profiles);
+    end
+    
+    % Plot ISAR image
+    WindowMatrix = repmat(hamming(M),1, N);
+    ISAR_linear = fftshift(fft(AF_RA_HRR_profiles.*WindowMatrix, [], 1),1);
+    ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
+    FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
+    
+    figure;
+    imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+    xlabel('Range (m)');
+    ylabel('Doppler frquency (Hz)');
+    title('RA and AF Focused ISAR image');
+    colorbar;
+    colormap('jet');
+    axis xy;
 end
-
-% Plot ISAR image
-WindowMatrix = repmat(hamming(M),1, N);
-ISAR_linear = fftshift(fft(AF_RA_HRR_profiles.*WindowMatrix, [], 1),1);
-ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
-FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
-
-figure;
-imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-xlabel('Range (m)');
-ylabel('Doppler frquency (Hz)');
-title('Focused ISAR image');
-colorbar;
-colormap('jet');
-axis xy;

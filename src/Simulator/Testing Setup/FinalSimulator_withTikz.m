@@ -168,7 +168,7 @@ if(RA_selection ~= 0)
     title('Range-aligned HRR Profiles');
     colormap('jet');
     colorbar;
-    %matlab2tikz() % Save the figure as LaTeX compatible plot
+    % matlab2tikz() % Save the figure as LaTeX compatible plot
     
     % Plot ISAR image
     WindowMatrix = repmat(hamming(M),1, N);
@@ -205,7 +205,7 @@ if(AF_selection ~= 0)
     imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
     xlabel('Range (m)');
     ylabel('Doppler frquency (Hz)');
-    title('Focused ISAR image');
+    title('RA and AF Focused ISAR image');
     colorbar;
     colormap('jet');
     axis xy;
