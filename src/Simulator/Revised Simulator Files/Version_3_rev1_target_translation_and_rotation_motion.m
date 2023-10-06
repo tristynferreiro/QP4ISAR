@@ -1,7 +1,7 @@
-
-% Version 3 - include target translation and rotational motion 
+%% Version 3 - include target translation and rotational motion 
 
 clear all; close all; clc;
+
 %% Simulation Parameters
 C = 3e8;                                            % Speed of light
 F0 = 9.5e9;                                         % Initial centre frequency
@@ -122,66 +122,6 @@ imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
 xlabel('Range (m)');
 ylabel('Doppler frquency (Hz)');
 title('Unfocused ISAR image');
-colorbar;
-colormap('jet');
-axis xy;
-
-%% Range Alignment of Profiles 
-% Range Align the HRR profiles using correlation method
-ref_profile_number =1;
-[corr_RA_HRR_profiles] = correlationRA(HRR_Profile,ref_profile_number);
-
-% Plot HRR profiles
-% figure;
-% linear_dB = Normalise_limitDynamicRange_ISAR_dB(corr_RA_HRR_profiles,35);
-% imagesc(RangeAxis, 1:M, linear_dB);
-% xlabel('Range (m)');
-% ylabel('Profile Number');
-% title('Correlation Range-aligned HRR Profiles');
-% colormap('jet');
-% colorbar;
-
-[haywood_RA_HRR_profiles] = HaywoodRA_v0(HRR_Profile,ref_profile_number);
-% Plot HRR profiles
-figure;
-linear_dB = Normalise_limitDynamicRange_ISAR_dB(haywood_RA_HRR_profiles,35);
-imagesc(RangeAxis, 1:M, linear_dB);
-xlabel('Range (m)');
-ylabel('Profile Number');
-title('Haywood Range-aligned HRR Profiles');
-colormap('jet');
-colorbar;
-
-% Plot ISAR image
-WindowMatrix = repmat(hamming(M),1, N);
-ISAR_linear = fftshift(fft(haywood_RA_HRR_profiles.*WindowMatrix, [], 1),1);
-ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
-FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
-
-figure;
-imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-xlabel('Range (m)');
-ylabel('Doppler frquency (Hz)');
-title('Haywood Range-aligned ISAR image');
-colorbar;
-colormap('jet');
-axis xy;
-
-%% Autofocus of Profiles
-%Apply Haywood autofocus to the RA HRR profiles using
-AF_corrRA_HRR_profiles = HaywoodAF(corr_RA_HRR_profiles);
-
-% Plot ISAR image
-WindowMatrix = repmat(hamming(M),1, N);
-ISAR_linear = fftshift(fft(AF_corrRA_HRR_profiles.*WindowMatrix, [], 1),1);
-ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
-FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
-
-figure;
-imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
-xlabel('Range (m)');
-ylabel('Doppler frquency (Hz)');
-title('Focused ISAR image');
 colorbar;
 colormap('jet');
 axis xy;

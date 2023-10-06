@@ -2,7 +2,7 @@ clear all;
 close all;
 clc;
 
-%% Simulation Parameters
+
 C = 3e8;                                            % Speed of light
 F0 = 9.5e9;                                         % Initial centre frequency
 DeltaF = 4e6;                                       % Frequency step size
@@ -20,17 +20,12 @@ disp(['Range resolution = ' num2str(roundn(Range_Resolution,-3)) ' m']);
 disp(['Unambiguous Range = ' num2str(roundn(Unambiguous_range,0)) ' m']);
 disp(' ');
 
-%% Target scatterers
-Scatterer_xy_local = [-10 0; 0 0; 7 0 ];               % Scatterer local co-ordinates
-                                                       % Each row (scatterer) has two elements: [x-cord y-cord]  
-NumScatterers = size(Scatterer_xy_local,1);            % Obtain number of scatterers
-
-% Define where the scatterers are in terms of the global axis (axis of
-% radar) - R0 is distance from radar to center of target
+Scatterer_xy_local = [-10 0; 0 0; 7 0 ];                        % Scatterer local co-ordinates
+                                                          % Each row has two elements: [x-cord y-cord]  
+NumScatterers = size(Scatterer_xy_local,1);               % Obtain number of scatterers
 Scatterer_xy_global(:,1) = Scatterer_xy_local(:,1) + R0;
 Scatterer_xy_global(:,2) = Scatterer_xy_local(:,2);
 
-% calculate the distance from the radar to the scatterer
 Rk = sqrt(Scatterer_xy_global(:,1).^2 + Scatterer_xy_global(:,2).^2);   % Slant range to each Scatterer
 Rx = zeros(1,N);
 
@@ -38,20 +33,19 @@ for CountScatterer = 1:  NumScatterers
  Rx = Rx + exp(-1i*4*pi*CentreFrequencyVector*Rk(CountScatterer)/C);
 end
 
-%% Add noise
 a = randn(1,N);
 b = randn(1,N);
 
-NoiseVoltageVector = sqrt(Pn)*(a+1i*b)*1/sqrt(2);  % 
-RxNoise = Rx + NoiseVoltageVector;                                    % Receive Signal plus noise
+NoiseVoltageVector = sqrt(Pn)*(a+i*b)*1/sqrt(2);  % 
+RxN = Rx + NoiseVoltageVector;                                    % Receive Signal plus noise
 
-%% Get HRR Profiles
-HRR_Profile = (ifft(RxNoise));
+HRR_Profile = (ifft(RxN));
 RangeAxis = (0:1:(N-1))*Range_Resolution;
 
 figure;
 plot(RangeAxis, 20*log(abs(HRR_Profile)))
 grid on;
 
+x = 1;
 
 
