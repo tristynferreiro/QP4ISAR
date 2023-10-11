@@ -3,9 +3,6 @@ This folder contains all the files and versions used to create the final simulat
 
 > When running any of the scripts within this folder, it is necessary to place the 'Normalise_limitDynamicRange_ISAR_dB.m' file (you can find it in the 'Support Functions/' folder) in the same directory.
 
-## Simulator Development/
-This folder contains both the original simulator files and their revised versions. The revisions were made to introduce additional features and address previous issues.
-
 ## Simple_ISAR_Simulator.m
 This script is the final simple ISAR simulator version and has the following additional features:
 
@@ -14,6 +11,9 @@ This script is the final simple ISAR simulator version and has the following add
 3. User-Friendly Command Line Interface (CLI): An easy-to-use CLI is provided, allowing the user to define the rotation and translation motion parameters. As well as whether user would like to configure the scatter amplitudes using the Guassian-like distribution.
 
 There are many other parameters that can be set by changing the code. The CLI was added with the idea of making repetitive testing simpler and is very simplistic in nature.
+
+## Simulator Development/
+This folder contains both the original simulator files and their revised versions. The revisions were made to introduce additional features and address previous issues.
 
 ## Testing Setup/
 This folder comprises all the necessary files to replicate the simulated results used in the report. This version of the simulator differs from the 'Simple_ISAR_Simulator.m' file in several ways:
