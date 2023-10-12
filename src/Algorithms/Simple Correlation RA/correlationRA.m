@@ -1,4 +1,4 @@
-function [RA_HRRP,shifts] = correlationRA(HRRP_all, ref_HRRP_num)
+function [RA_HRRP] = correlationRA(HRRP_all, ref_HRRP_num)
 % Implements a simple correlation range-alignment algorithm. 
     % This approach aligns all profiles based on the a selected reference 
     % profile. We align the profiles based on the peak values in each 
@@ -26,6 +26,12 @@ function [RA_HRRP,shifts] = correlationRA(HRRP_all, ref_HRRP_num)
     shifts = peak_index(ref_HRRP_num) - peak_index;
     % figure; plot(peak_index(1)-peak_index-shifts) % check shifts are
     % correct
+    
+    % Plot stair case Function
+    % figure; plot(1:size(shifts,1),shifts)
+    % xlabel('Profile Number');
+    % ylabel('Number of bin shifts')
+    % title('Bin shifts per Range Profile');
 
     %% Step 3: Range Alignment using ref profile
     RA_HRRP = HRRP_all; % pre-defined for efficiency
