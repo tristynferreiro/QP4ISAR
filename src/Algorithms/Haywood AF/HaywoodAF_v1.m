@@ -1,4 +1,4 @@
-function [AF_RA_HRRP] = HaywoodAF_v0(RA_HRRP)
+function [AF_RA_HRRP] = HaywoodAF_v1(RA_HRRP)
 % Implements the Haywood autofocus algorithm
     % This is the phase compensation part of the Haywood Motion
     % Compensation algorithm. It uses the variance of power across all
@@ -8,8 +8,10 @@ function [AF_RA_HRRP] = HaywoodAF_v0(RA_HRRP)
     
     % A. Zyweck, PhD Thesis Appendix was used as a resource in
     % implementing this Haywood algorithm
+    % A threshold scaling_factor was introduced to aid in noise filtering.
 
-    % First Version: Original implementation of the algorithm
+    % Revision 1: Added threshold scaling factor to force selection of
+    % scatterers with higher power to reduce the effects of noise.
 
     %% Parameters
     num_range_bins = size(RA_HRRP,2);
@@ -23,7 +25,8 @@ function [AF_RA_HRRP] = HaywoodAF_v0(RA_HRRP)
     power_scatterer = sum(abs(RA_HRRP).^2,1);
     average_power_scatterer = mean(power_scatterer);
     % find possible scatterers where power of scatterer > average power
-    candidate_scatterers_idx = find(power_scatterer>average_power_scatterer); % array of matches
+    scaling_factor = 1;
+    candidate_scatterers_idx = find(power_scatterer>scaling_factor*average_power_scatterer); % array of matches
     
     % Criteria 2: candidate with minimum variance is dominant scatterer (DS) - Eq A.9 of Zyweck's appendix
     [~,variance_DS_idx] = min(amplitude_variance(candidate_scatterers_idx)); % returns index of match in candidateScatterersIdx

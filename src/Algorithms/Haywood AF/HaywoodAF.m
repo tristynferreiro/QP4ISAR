@@ -7,9 +7,10 @@ function [AF_RA_HRRP] = HaywoodAF(RA_HRRP)
     % all other scatterers.
     
     % A. Zyweck, PhD Thesis Appendix was used as a resource in
-    % implementing this Haywood algorithm
+    % implementing this Haywood algorithm. 
+    % A threshold scaling_factor was introduced to reduce effects of noise.
 
-    % Revision 1: Restrucutred the code for optimisation. Added additional
+    % Revision 2: Restrucutred the code for optimisation. Added additional
     % step comments
 
     %% Parameters
@@ -21,18 +22,40 @@ function [AF_RA_HRRP] = HaywoodAF(RA_HRRP)
     % Criteria 1: power of scatterer>average power - Eq A.10 of Zyweck's appendix
     power_scatterer = sum(magnitude.^2,1);
     average_power_scatterer = mean(power_scatterer);
-    
+
     % find possible scatterers using a threshold
-    scalingFactor = 1;
-    candidateScatterersIdx = find(power_scatterer>scalingFactor*average_power_scatterer); % array of matches
+    scaling_factor = 10;
+    candidate_scatterers_idx = find(power_scatterer>scaling_factor*average_power_scatterer); % array of matches
     
-    % Calculate Eq A.8 of Zyweck's appendix - amplitude variance
-    amplitude_variance = var(magnitude(:,candidateScatterersIdx),1); % 1xM matrix
+    % Calculate Eq A.8 of Zyweck's appendix - amplitude variance of the
+    % candidate scatterers
+    amplitude_variance = var(magnitude(:,candidate_scatterers_idx),1); % 1xM matrix
 
     % Criteria 2: candidate with minimum variance is dominant scatterer (DS) - Eq A.9 of Zyweck's appendix
     [~,variance_DS_idx] = min(amplitude_variance); % returns index of match in candidateScatterersIdx
-    DS_idx = candidateScatterersIdx(variance_DS_idx);
+    DS_idx = candidate_scatterers_idx(variance_DS_idx);
     
+    % Plot the DS selection to validate the selection is correct
+    figure; plot(power_scatterer,'-*'); hold on;
+    yline(average_power_scatterer,'-g');
+    plot(candidate_scatterers_idx, power_scatterer(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);
+    plot(DS_idx, power_scatterer(DS_idx), 'or', 'MarkerSize', 15);
+    % xlabel('Power'); ylabel('Range Bin');
+    % title('Power of Scatterers');
+    legend('Scatterer power', 'Average power of all scatterers','Candidate scatterers',"Dominant scatterer");
+    hold off;
+    
+    all_amplitude_var = var(magnitude,1);
+    figure; plot(var(magnitude,1), '-*'); hold on; 
+    plot(candidate_scatterers_idx,all_amplitude_var(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);  
+    yline(all_amplitude_var(candidate_scatterers_idx(variance_DS_idx)),'-r'); % Min variance (DS) value
+    plot(candidate_scatterers_idx(variance_DS_idx),all_amplitude_var(candidate_scatterers_idx(variance_DS_idx)), 'or','MarkerFaceColor','r', 'MarkerSize', 8); 
+    % xlabel('Variance'); ylabel('Range Bin');
+    % title('Variance of Scatterers');
+    legend('Scatterer variance', 'Candidate scatterers','Minimum variance','Dominant Scatterer');
+    hold off
+
+
     %% Step 3: Calculate phase differences - Eq A.11 of Zyweck's appendix
     DS_phase_history = angle(RA_HRRP(:,DS_idx)); % N x 1 matrix
     
