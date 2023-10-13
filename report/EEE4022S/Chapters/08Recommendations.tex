@@ -1,0 +1,22 @@
+% ----------------------------------------------------
+% Recommendations
+% ----------------------------------------------------
+\documentclass[class=report,11pt,crop=false]{standalone}
+\input{../Style/ChapterStyle.tex}
+\input{../FrontMatter/Glossary.tex}
+\begin{document}
+% ----------------------------------------------------
+\chapter{Recommendations \label{ch:recommendations}}
+\epigraph{It is for us the living, rather, to be dedicated here to the unfinished work which they who fought here have thus far so nobly advanced.}%
+    {\emph{---Abraham Lincoln}}
+\vspace{0.5cm}
+% ----------------------------------------------------
+
+
+% ----------------------------------------------------
+\ifstandalone
+\bibliography{../Bibliography/References.bib}
+\printnoidxglossary[type=\acronymtype,nonumberlist]
+\fi
+\end{document}
+% ----------------------------------------------------

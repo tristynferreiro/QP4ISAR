@@ -1,0 +1,57 @@
+% ----------------------------------------------------
+% ----------------------------------------------------
+% Implementation
+% ----------------------------------------------------
+\documentclass[class=report,11pt,crop=false]{standalone}
+\input{../Style/ChapterStyle.tex}
+\input{../FrontMatter/Glossary.tex}
+\begin{document}
+\ifstandalone
+\tableofcontents
+\fi
+% ----------------------------------------------------
+\chapter{QPL Measured Data Results \label{ch:validation}}
+\epigraph{If you wish to make an apple pie from scratch, you must first invent the universe.}%
+    {\emph{---Carl Sagan}}
+\vspace{0.5cm}
+% ----------------------------------------------------
+% Characteristics of the practical work section: implementation, simulation
+% •	Practical work done was relevant. Quantity and quality of the work was suitable for the degree 
+% •	Document how you captured experimental data. Include photos of experimental environment and equipment used. Record details of equipment configuration, calibration procedures. 
+% •	Document sub-systems were tested and evaluate if technical specifications were met
+% •	Document system testing and evaluate if technical specifications were met 
+% •	Document simulations and verification tests to show accuracy of implemented code  
+
+% Characteristics of the results section:  analysis of measured data and interpretation of results
+% •	Clear, logical, relevant, and accurate analysis of the data and interpretation of results 
+% •	Important features of the data are highlighted to the reader. 
+% •	The logical conclusions from the interpretations of the data are linked to the research objectives/questions of the work 
+% •	Includes a discussion on how results in this work are similar or different to results presented in the literature. If similar, state reasons why its similar. If different, explain reasons for differences. Simply saying the results are similar or different is not sufficient. 
+ 
+% Important elements when presenting graphs in your work
+% •	Explain the axes of the graph 
+% •	Identify the portion of the graphs that are important. Consider annotating your graphs to ease this process
+% •	Interpret what the graph means in the context of your work
+
+- I have a hypothesis that a QLP that uses a single algorithm does not work well for all datasets especially on different types of boats. Comparing its performance across different datasets might reveal something about the hypothesis.
+\section{Experiment Setup/Background}
+% Important to note that the only information given regarding the setup is very vague and explained in this paper (info paper). As such, the known configuration of the experimental setup is as follows: 
+
+\section{Zay-yaan 1}
+\subsection{QLP}
+
+\subsection{Individual subsystem testing}
+- Do this only if there is time to compare the results of using the other algos with the results of the QLP. I.e. identify which of the algorithms work best on this data and if it is the same combo as the QLP uses. 
+- Already have these results for Zay-yaan 1.
+
+\section{Tugboat}
+
+\section{Discussion}
+
+% ----------------------------------------------------
+\ifstandalone
+\bibliography{../Bibliography/References.bib}
+\printnoidxglossary[type=\acronymtype,nonumberlist]
+\fi
+\end{document}
+% ----------------------------------------------------

@@ -1,0 +1,121 @@
+% ----------------------------------------------------
+% ----------------------------------------------------
+% Implementation
+% ----------------------------------------------------
+\documentclass[class=report,11pt,crop=false]{standalone}
+\input{../Style/ChapterStyle.tex}
+\input{../FrontMatter/Abbreviations}
+\begin{document}
+\ifstandalone
+\tableofcontents
+\fi
+% ----------------------------------------------------
+\chapter{QLP design \label{ch:QLPdesign}}
+
+% ----------------------------------------------------
+% Characteristics of the design section
+% •	When developing a new system, ensure that you have user requirements, technical requirements and acceptance test procedures 
+% •	Clear motivations provided in selecting the approach used to solve the problem stated in the introduction 
+% •	Diagrams to aid the documentation of the design: block diagram, UML diagrams, circuit diagrams, flow charts, pseudo-code 
+% •	Clarifying the interfaces between components 
+% •	When a design decision needs to be made, multiple options are identified before a decision is made with logical reason(s) 
+% •	Meticulous attention to detail in the design description  
+% •	Design considers testing done to evaluate the system in the implementation phase (test points on a PCB, RF coupler in RF design)
+
+% Characteristics of the practical work section: implementation, simulation
+% •	Practical work done was relevant. Quantity and quality of the work was suitable for the degree 
+% •	Document how you captured experimental data. Include photos of experimental environment and equipment used. Record details of equipment configuration, calibration procedures. 
+% •	Document sub-systems were tested and evaluate if technical specifications were met
+% •	Document system testing and evaluate if technical specifications were met 
+
+ % Characteristics of the results section:  analysis of measured data and interpretation of results
+% •	Clear, logical, relevant, and accurate analysis of the data and interpretation of results 
+% •	Important features of the data are highlighted to the reader. 
+% •	The logical conclusions from the interpretations of the data are linked to the research objectives/questions of the work 
+% •	Includes a discussion on how results in this work are similar or different to results presented in the literature. If similar, state reasons why its similar. If different, explain reasons for differences. Simply saying the results are similar or different is not sufficient. 
+ 
+% Important elements when presenting graphs in your work
+% •	Explain the axes of the graph 
+% •	Identify the portion of the graphs that are important. Consider annotating your graphs to ease this process
+% •	Interpret what the graph means in the context of your work
+
+\emph{Chapter introduction: Clear motivations provided in selecting the approach used to solve the problem}
+
+\section{User Requirements}
+\begin{itemize}
+    \item Develop clear image that is a good representation of the reference object
+    \item Must be fast
+    \item Easy to use
+\end{itemize}
+% User requirements:
+% 1 - Develop clear image that is a good representation of the reference object
+% 2 - Must be fast: worst case must be a 1:1 time frame i.e. the data recording time = data processing time
+% 3 - Easy to use: runs like a one button click program and we get the finished product.
+
+\section{Technical Requirements}
+\begin{itemize}
+    \item IC value before TMC is better than after
+    \item worst case must be a 1:1 time frame i.e. the data recording time = data processing
+    \item User-friendly design
+\end{itemize}
+
+\section{QLP Design}
+\begin{itemize}
+    \item \textbf{Diagram} Showing system flow and interactions
+\end{itemize}
+
+\section{Image Focus}
+\begin{itemize}
+    \item Explain experimental setup
+    \item \textbf{Table} summarising contrast results of all algorithms in simulation and measured data
+    \item \textbf{Figures} focused ISAR images (measured data) after all combinations of algorithms: 4 images in total
+    \item Compare results based on contrast value
+    \item Conclude on best algorithm combination
+\end{itemize}
+
+\section{CPI Implementation}
+\begin{itemize}
+    \item explain why needed and CPTWL value
+    \item pseudo code
+\end{itemize}
+\subsection{Effect of CPTWL on Image Focus}
+\begin{itemize}
+    \item \textbf{Table} IC values: all algorithms with different CPTWL sizes
+    % Increase/decrease size of frame discretely and see effects
+\end{itemize}
+
+\section{Timing}
+% Use the suitable CPTWL sizes found in the previous section
+\begin{itemize}
+    \item explain experimental setup
+    \item \textbf{Table} IC values: all algorithms with different CPTWL sizes
+\end{itemize}
+
+
+\section{Analysis of Results}
+\begin{itemize}
+    \item Discuss with reference to user and system requirements which algorithms and CPTWL value(s) are chosen and chosen and why:
+    \begin{itemize}
+        \item processing time < data acquisition time
+        \item image after processing is more focussed than before
+    \end{itemize}
+\end{itemize} 
+
+\section{Final Design}
+\begin{itemize}
+    \item \textbf{Diagram} Flow chart/UML of final system
+    \item Link back to user and functional requirements
+\end{itemize}
+\subsection{App design}
+\begin{itemize}
+    \item Link to User requirement of easy use
+    \item Show image of app and explain basic functionality and, briefly, design decisions.
+\end{itemize}
+
+% ----------------------------------------------------
+\ifstandalone
+\bibliography{../Bibliography/References.bib}
+\printnoidxglossary[type=\acronymtype,nonumberlist]
+\fi
+\end{document}
+% ----------------------------------------------------

@@ -1,0 +1,33 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+\begin{axis}[%
+width=5.554in,
+height=4.754in,
+at={(0.932in,0.642in)},
+scale only axis,
+point meta min=-35,
+point meta max=0,
+axis on top,
+xmin=-0.0732421875,
+xmax=37.4267578125,
+xlabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=-10pt},
+xlabel={Range (m)},
+y dir=reverse,
+ymin=0.5,
+ymax=32.5,
+ylabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=10pt},
+ylabel={Profile Number},
+axis background/.style={fill=white},
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
+xtick distance= 4,             % Set the spacing between x-axis ticks
+colormap/jet,
+colorbar
+]
+\addplot [forget plot] graphics [xmin=-0.0732421875, xmax=37.4267578125, ymin=0.5, ymax=32.5] {Figures/04AlgoV&V/02CorrRA/SCRA_Sim_HRRP_1mps_6deg.png};
+\end{axis}
+\end{tikzpicture}%

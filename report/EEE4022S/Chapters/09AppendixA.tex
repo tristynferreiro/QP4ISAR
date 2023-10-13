@@ -1,0 +1,145 @@
+% ----------------------------------------------------
+% Appendix A
+% ----------------------------------------------------
+\documentclass[class=report,11pt,crop=false]{standalone}
+\input{../Style/ChapterStyle.tex}
+\input{../FrontMatter/Abbreviations.tex}
+\begin{document}
+% ----------------------------------------------------
+\chapter{Appendix A \label{apndxA}}
+% ----------------------------------------------------
+\section{Measured Data Frames for Algorithm Verification} \label{apndxA:verification_frames}
+The \gls{isar} image frames and \gls{hrr} profiles in \autoref{fig:measured_data_frames} were generated from a single measured data set. As discussed in the \autoref{sec:theory_cptwl}, the size of the \gls{cptwl} affects the quality of the image, in this report this value is assumed to be fixed at 128 which is the set value for all of the frames. These frames were chosen from the larger subset as they illustrate the necessity for this selection process. 
+
+Each frame provides a look of the same object over a different frame in time. Some of these are not suitable for verifying the \gls{ra} and \gls{af} processing algorithms considered in this report. The profiles in \autoref{fig:measured_data_frames_HRRP_2464} and \autoref{fig:measured_data_frames_HRRP_4189} are clear and are all neatly within the frame which makes them the ideal choice for verifying \gls{ra} algorithms. Looking at the corresponding \gls{isar} images for Frame 1 and 4, Frame 1 has a more Doppler spread. This makes it more suitable for verifying \gls{af} algorithms.
+    \begin{figure}[h]
+        \begin{minipage}{0.9\linewidth}
+            \begin{figure}
+                \begin{tabular}{@{}cccc@{}}
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2464}}
+                        \caption{Frame 1: unaligned HRR profiles.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2970}}
+                        \caption{Frame 2: unaligned HRR profiles.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_3827}}
+                        \caption{Frame 3: unaligned HRR profiles.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_4189}}
+                        \caption{Frame 4: unaligned HRR profiles.}
+                    \end{subfigure}
+                    \\
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2464}}
+                        \caption{Frame 1: Unfocused ISAR image.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2970}}
+                        \caption{Frame 2: Unfocused ISAR image.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_3827}}
+                         \caption{Frame 3: Unfocused ISAR image.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_4189}}
+                         \caption{Frame 4: Unfocused ISAR image.}
+                    \end{subfigure}
+                \end{tabular}
+                \caption{Different \gls{isar} image frames produced from one measured data set. \label{fig:measured_data_frames}}
+            \end{figure}
+        \end{minipage}
+    \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Scaling Factor in \gls{ds} Selection \label{apndxA:scale_factor_effect}}
+In the Haywood \gls{af} algorithm, given in \autoref{alg:haywood_AF}, phase compensation is calculated based on the phase history of the \gls{ds}. A set of selection criteria is used to determine the \gls{ds}. Initially, candidate scatterers are chosen, and from this set, the scatterer with the minimum variance is selected as the \gls{ds}. The candidate scatters are the scatterers with a power greater than the average scatterer power (the threshold value). As discussed in \autoref{theory:noise}, signals can be frequency-modulated by external interference sources, which can affect the phase of the received signal. Therefore, noise filtering is essential to enhance the performance of this algorithm. An average power scaling factor (SF) was introduced to select higher power scatterers as candidates. This is advantageous because higher power scatterers tend to have a phase history that is less affected by noise.
+
+% In the Haywood \gls{af} algorithm, \autoref{alg:haywood_AF}, the phase compensation is calculated based on the phase history of the \gls{ds}. A set of selection criteria is used to determine the \gls{ds}. First, candidate scatterers are chosen, from this the scatterer with the minimum variance is selected as the \gls{ds}. The candidate dominant scatterers are chosen as all scatterers with a power greater than the average power of all scatterers (the threshold value). A average power scaling factor was introduced to counteract one of the limitations of \gls{ds} algorithms: they assume the selected \gls{ds} is the center of rotation (the 0 Doppler point) which is not always the case. Introducing a scaling factor means that higher power scatterers are chosen as a candidates thus a higher power \gls{ds} will be chosen. This is beneficial because higher power scatters will have a phase history which is less contaminated by noise than a scatterer with less power as discussed in \autoref{theory:noise}. 
+
+    \subsection{Effect of SF on ISAR Image}
+    The effect of the SF on the selection of the \gls{ds} and subsequently the \gls{isar} image is investigated in this section.
+
+    % Grid of the HRRP and ISAR images
+    \begin{figure}[h]
+    \begin{minipage}{0.98\linewidth}
+        \begin{tabular}{@{}cccc@{}}
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/HayAF_SCRA_Sim_ISAR_sf1}}
+                \caption{Autofocused \gls{isar} image, SF = 1.\label{subfig:sf1_corrRA_isar}}
+            \end{subfigure}
+            &
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/HayAF_SCRA_Sim_ISAR_sf2}}
+                \caption{Autofocused \gls{isar} image, SF = 2.\label{subfig:sf2_corrRA_isar}}
+            \end{subfigure}
+            &
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/HayAF_SCRA_Sim_ISAR_sf5}}
+                \caption{Autofocused \gls{isar} image, SF = 5.\label{subfig:sf5_corrRA_isar}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/HayAF_SCRA_Sim_ISAR_sf10}}
+                \caption{Autofocused \gls{isar} image, SF = 10.\label{subfig:sf10_corrRA_isar}}
+            \end{subfigure}
+            \\
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/Power/HayAF_SCRA_Sim_Power_sf1}}
+                \caption{.\label{subfig:hayRA_sim_hrrp}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/Power/HayAF_SCRA_Sim_Power_sf2}}
+                \caption{.\label{subfig:hayRA_sim_hrrp}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/Power/HayAF_SCRA_Sim_Power_sf5}}
+                \caption{.\label{subfig:hayRA_sim_hrrp}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.25\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/CorrRA/Power/HayAF_SCRA_Sim_Power_sf10}}
+                \caption{.\label{subfig:hayRA_sim_hrrp}}
+            \end{subfigure}
+        \end{tabular}
+        \caption{ \label{fig:hayRA_sim}}
+    \end{minipage}
+    \end{figure}
+
+
+
+% ----------------------------------------------------
+\ifstandalone
+\bibliography{../Bibliography/References.bib}
+\printnoidxglossary[type=\acronymtype,nonumberlist]
+\fi
+\end{document}
+% ----------------------------------------------------
