@@ -6,11 +6,12 @@
 \input{../FrontMatter/Abbreviations.tex}
 \begin{document}
 % ----------------------------------------------------
-\chapter{Appendix A \label{apndxA}}
+\appendix
+\chapter{Additional Algorithm Verification and Validation \label{apndxA}}
 % ----------------------------------------------------
 \section{Measured Data Frames for Algorithm Verification} \label{apndxA:verification_frames}
     The \gls{isar} image frames and \gls{hrr} profiles in \autoref{fig:measured_data_frames} were generated from a single measured data set. As discussed in the \autoref{sec:theory_cptwl}, the size of the \gls{cptwl} affects the quality of the image. In this report the \gls{cptwl} is fixed at 128 which is the set value for all of the frames. The frames considered in this section were chosen from the larger subset as they illustrate the necessity for this selection process. 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{minipage}{0.9\linewidth}
             \begin{figure}
                 \begin{tabular}{@{}cccc@{}}
@@ -65,11 +66,12 @@
                 \caption{Different \gls{isar} image frames produced from one measured data set. \label{fig:measured_data_frames}}
             \end{figure}
         \end{minipage}
+        \vspace*{-1.5\baselineskip}
     \end{figure}
 
 
     Each frame provides a look of the same object over a different frame in time. Some of these are not suitable for verifying the \gls{ra} and \gls{af} processing algorithms considered in this report because of characteristics mentioned in \autoref{subsec:theory_isar}. The profiles in \autoref{subfig:measured_data_frames_HRRP_2464} and \autoref{subfig:measured_data_frames_HRRP_4189} have at least one clear \gls{ds} and are within the frame which makes them the ideal choice for verifying \gls{ra} algorithms. \autoref{fig:measured_data_frames_RA} shows the \gls{hrr} profiles of these two frames after applying Simple Correlation \gls{ra}, \autoref{alg:corr_RA}.
-    \begin{figure} [h]
+    \begin{figure} [H]
         \centering
         \begin{subfigure}{0.4\textwidth}
             \centering
@@ -80,7 +82,7 @@
             \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_4189}} 
         \end{subfigure}
         \caption{Frame 1 (left) and 4 (right): range-aligned \gls{hrr} profiles.} \label{fig:measured_data_frames_RA}
-        \label{fig:whole-figure}
+        \vspace*{-1.5\baselineskip} 
     \end{figure}
      As discussed in \autoref{subsec:theory_isar}, not all frames of \gls{isar} data can be focused due to the object's motion, the \gls{cptwl}, and other factors. It then follows that some measured data frames will not be perfectly range-aligned or autofocused. Comparing the profile frames in \autoref{fig:measured_data_frames_RA}, the profiles in Frame 1 are better aligned than those in Frame 4. Furthermore, in Frame 1, a distinct \gls{ds} exists at range bin 14. For validation testing, it is desirable to choose the best case data because the goal is to demonstrate that the algorithms work on measured data. The limitations of the algorithms were investigated and discussed through verification testing where non-ideal data is used. For these reasons, frame 1 was used for validation testing in \autoref{ch:algorithmV&V}. 
 
@@ -106,9 +108,9 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
     \subsection{Using Simple Correlation Range-aligned Profiles} \label{subsec:sf_corrRA}
     The Simple correlation range-aligned \gls{isar} image, as shown in \autoref{fig:sf_corrRA_isar}, is included for comparison to the autofocused \gls{isar} images, \autoref{fig:sf_corrRA}(a)-(c). Additionally, the \gls{isar} image generated when the object had no translational motion, as shown in \autoref{subfig:sf_focused_isar}, is a reference for the expected appearance of a focused image.
     
-    \begin{figure}
+    \begin{figure}[H]
         \centering
-        \begin{minipage}{0.42\linewidth}
+        \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
@@ -116,13 +118,14 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
             \caption{Range-aligned image.\label{subfig:sf_corrRA_isar}}   
         \end{minipage}
         \hspace{1cm}
-        \begin{minipage}{0.42\linewidth}
+        \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Sim_ISAR_0mps_6deg}}
             \end{subfigure} 
             \caption{Reference focused image.\label{subfig:sf_focused_isar}}
         \end{minipage}
+        \vspace*{-1.5\baselineskip}
     \end{figure}
     
     \autoref{fig:sf_corrRA} shows autofocused ISAR images and plots demonstrating the fulfillment of both selection criteria for various \gls{sf} values. When comparing \autoref{fig:sf_corrRA}(d)-(f), it becomes evident that as the \gls{sf} increases, the number of candidate scatterers decreases. Consequently, the number of scatterers to which criterion 2 is applied also decreases, leading to the selection of scatterers with higher amplitude variance, as demonstrated in \autoref{fig:sf_corrRA}(g)-(i). Overall, higher power scatterers are chosen as the \gls{ds}, as shown by the larger circle in \autoref{fig:sf_corrRA}(d)-(f).
@@ -196,14 +199,15 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \end{tabular}
         \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Simple Correlation \gls{ra} \gls{hrr} profiles.\label{fig:sf_corrRA}}
     \end{minipage}
+    \vspace*{-1.5\baselineskip}
     \end{figure}
 
     \subsection{Using Haywood Range-aligned Profiles}
     The Haywood range-aligned \gls{isar} image, as shown in \autoref{fig:sf_hayRA_isar}, is included for comparison to the autofocused \gls{isar} images, \autoref{fig:sf_hayRA}(a)-(c). Additionally, the \gls{isar} image generated when the object had no translational motion, as shown in \autoref{subfig:sf_focused_isar}, is a reference for the expected appearance of a focused image.
     
-    \begin{figure}
+    \begin{figure}[H]
         \centering
-        \begin{minipage}{0.42\linewidth}
+        \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/03HayRA/HayRA_Sim_ISAR_1mps_6deg}}
@@ -211,13 +215,14 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
             \caption{Range-aligned image.\label{subfig:sf_corrRA_isar}}   
         \end{minipage}
         \hspace{1cm}
-        \begin{minipage}{0.42\linewidth}
+        \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Sim_ISAR_0mps_6deg}}
             \end{subfigure} 
             \caption{Reference focused image.\label{subfig:sf_focused_isar}}
         \end{minipage}
+        \vspace*{-1.5\baselineskip}
     \end{figure}
 
     \autoref{fig:sf_hayRA} shows autofocused \gls{isar} images and plots demonstrating the fulfillment of both selection criteria for various \gls{sf} values. Similar to the observations as described in \autoref{subsec:sf_corrRA}, can be made for the figures in \autoref{fig:sf_hayRA}; as the \gls{sf} increases \gls{ds} scatterers with higher power are selected. As previously discussed in \autoref{subsec:sf_corrRA}, the \gls{isar} images in this subsection are also affected by Doppler spreading caused by sidelobes.
@@ -229,7 +234,7 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
     The image focus can be quantitatively measured using the \gls{ic} value calculated as in \autoref{eq:image_contrast}. The values are \textbf{46.14}, \textbf{50.03}, and \textbf{50.03} for \autoref{fig:sf_hayRA}(a)-(c), respectively. These values indicate that both (b) and (c) have the highest \gls{ic} value, confirming the previous analysis that the image is most focused for scaling factors of 5 and 10. In summary, comparing \autoref{fig:sf_corrRA}(a)-(c) and their respective \gls{ic} values shows that introducing a \gls{sf} can result in a more focused \gls{isar} image. Specifically, for these Haywood Correlation range-aligned profiles, a \gls{sf} of 5 and 10 produces the most focused image.
     
     % Grid of the HRRP and ISAR images HaywoodRA
-    \begin{figure}[h]
+    \begin{figure}[H]
     \begin{minipage}{0.98\linewidth}
         \begin{tabular}{@{}ccc@{}}
             \begin{subfigure}{0.33\linewidth}
@@ -288,6 +293,7 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \end{tabular}
         \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Haywood \gls{ra} \gls{hrr} profiles.\label{fig:sf_hayRA}}
     \end{minipage}
+    \vspace*{-1.5\baselineskip}
     \end{figure}
 
 
