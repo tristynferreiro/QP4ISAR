@@ -49,7 +49,7 @@ where N is the receiver thermal noise, C is clutter, and J is jamming noise. Thi
 
 %ch12.2.1 pomr
 Interference not only impacts the power of the received signal but also its phase. As discussed in \autoref{theory:doppler_shift}, the Doppler shift is determined using the phase of the received signal. Any sources of interference can introduce phase modulation to the signal, consequently affecting the accuracy of calculated Doppler shifts. The influence of various interference sources on the received signal is discussed in Chapter 12.2 and throughout \cite{pomr}. 
-A critical consideration for this report is that phase noise leads to spectral spreading in Doppler characteristics. In the context of \gls{sfw} and synthetic aperture systems, it can also result in increased sidelobes during image processing, consequently distorting the image in an undesirable manner.%ch12.2.4 pomr effect oh phase noise on imaging
+A critical consideration for this report is that phase noise leads to Doppler spectral spreading. In the context of \gls{sfw} and synthetic aperture systems, it can also result in increased sidelobes during image processing, consequently distorting the image in an undesirable manner.%ch12.2.4 pomr effect oh phase noise on imaging
 
 \section{Radar Resolution Concepts in ISAR \label{sec:theory_resolution}}
 Radar resolution defines a radar's ability to resolve objects or scatterers closely spaced in terms of range, angle, or Doppler frequency. If the objects are closer spaced than the radar's resolution, they cannot be reliably resolved \cite{pomr}. The resolution requirements of radar systems vary depending on their specific application. For example, \gls{isar} imaging employs high-resolution radar to form detailed images.
@@ -288,7 +288,6 @@ In real ISAR imaging scenarios, the target must be in motion with respect to the
     To obtain a useful \gls{isar} image there must be relative motion between the target and the radar. %Zyweck ch 2.5.3
     % The projection plane of an ISAR image refers to the plane onto which the target��s scattering centres are pro jected�� The orientation of the pro jection plane depends on the target��s rotational motion�� The RLOS lies in the pro jection plane and the target��s rotation vector is normal to the pro jection plane�� Since the target motion is unknown it is often di��cult to deduce the pro jection plane of an ISAR image and this makes feature extraction and subsequent classi��cation di��cult��
     
-        
     \subsubsection{Motion Compensation}
     % Include this in the image formation pipeline
     Pure small rotational motion which is required to form an ISAR image, does not occur in measured data. The motion of an object can cause it to appear at different positions across different range profiles. This migration produces smearing and blurring in the ISAR image consequently degrading its quality. To compensate for this, \gls{tmc} and \gls{rmc} are used to form focused ISAR images. Motion compensation removes or reduces the effects of an object's translational or large rotational motion to achieve a pure small rotational motion needed to construct the ISAR image. In this report, only \gls{tmc} techniques are investigated and implemented, which will be the focus of subsequent sections. Nonetheless, for the sake of completeness, contextual information regarding \gls{rmc} is provided.
@@ -300,7 +299,7 @@ In real ISAR imaging scenarios, the target must be in motion with respect to the
         \resizebox{\linewidth}{!}{\input{Figures/02Theory/Image_formation}}
         \caption{Block diagram showing the adapted \gls{isar} image formation process. \label{fig:theory_image_formation}}
     \end{figure}
-
+       
     %****************************************************************************%
     \subsection{Rotational Motion Compensation (RMC)} %Martorella ch4.2
     % mention what rotational motion compensation is but do not get into the details
@@ -344,7 +343,7 @@ Translational motion causes the scatterers of an object to appear at different p
     \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Important Concepts in \gls{isar}}
+\section{Important Concepts in \gls{isar}} \label{sec:theory_isar_complications}
 
     %****************************************************************************%
     \subsubsection{Considerations for ISAR Images}
@@ -352,8 +351,31 @@ Translational motion causes the scatterers of an object to appear at different p
     \begin{itemize}
         \item this section will discuss complexities surrounding non-suitable ISAR images which will lead into the following subsections/sections on RA, AF and CPTWL
         \item effects of complex target motion
+        \item effects of sidelobes causing doppler spreading
     \end{itemize}
 
+    %****************************************************************************%
+    \subsection{Sidelobes}
+    Generally in frequency modulated waveforms, high sidelobes appear adjacent to or near the mainlobe, and decrease with distance from the mainlobe. The high peak sidelobes are a result of the spectrum’s sharp transition in frequency between pulses.
+    FIGURE OF SIDELOBES
+    Noise, specifically that affects the phase, can lead to large signal sidelobes which results in Doppler spreading. 
+    When large sidelobes appear in \gls{isar} data they distort the image. The distortion appears as spreading of a scatterer power across the doppler spectrum. Specifically, after \gls{af}, the power of a scatterer will remain in its range bin but be spread over the Doppler. 
+
+    Sidelobes result in energy from the echo of a target being present in the data samples adjacent to those that correspond to the actual target location.  % pomr pg693
+    Both peak and integrated sidelobe ratios are important performance metrics. Integrated sidelobe levels are relevant when operating in a distributed clutter environment, as the cumulative sidelobe contributions associated with clutter may degrade the quality of a target measurement. For example, integrated sidelobes contribute to the multiplicative noise in a synthetic aperture radar (SAR) image [10]. %pomr ch20.2.10
+    Pulse compression waveforms exhibit range sidelobes that extend over a time interval equal to twice the pulse width and that are a function of the modulation employed. Sidelobes degrade radar performance by placing energy up and down range from its source. For example, range sidelobes associated with a large RCS target may mask the presence of a smaller target located within a pulse width of the larger target; thus, “low” sidelobes are a desirable property. %ch20.7.5
+    For example, an HRR profile of a vehicle contains returns from scatterers located on the vehicle and returns from neighboring terrain projected onto the vehicle through the range sidelobes. Patches of resolved terrain contribute sidelobe energy onto the vehicle’s range profile. The sidelobe energy, originating from resolved patches distributed in range, adds noncoherently at ranges associated with the vehicle. The cumulative, noncoherent contribution may be sufficient to degrade the HRR profile.
+    
+The integrated sidelobe ratio is defined as the ratio of the energy in the sidelobes to the energy in the mainlobe. Integrated sidelobes are a source of multiplicative noise [10] and must be weighted by the average power in the range cells containing the interference to determine their impact. The integrated sidelobe ratio for an unweighted LFM waveform is approximately −9.6 dB [29]. Amplitude weighting lowers the peak sidelobe and reduces the integrated sidelobe ratio (ISR; see Section 20.9). %ch20.7.5
+Further discused in 3.3 of Martorella.
+    Discuss what sidelobes are and what caises them. 
+    A simple hamming window is applied in this implementation however more effective filters exist as discussed in \cite{ISARtextbook_Martorella}.
+    Discuss How the filter window can reduce the sidelobes but then discuss the types of filters available in the Lit review not in the theory section. Taylor weighting %poomr ch20.9
+    
+    Filtering can be applied to reduce the sidelobes but will likely result in snr reduction and loss in resolution. % pomr pg 648
+    
+    %!!!!!!!!!!!!!!!!!! NB:
+    Spectral spreading is caused by sidelobes that form when the \gls{fft} is applied. Throughout this report, a simple hamming window is applied before using this \gls{fft} to reduce the spreading however, more aggressive filters exist as discussed in \cite{ISARtextbook_Martorella}. Windowing was used to reduce the sidelobes before forming the \gls{isar} images in this report but it was not always found to fully effictive.
     %****************************************************************************%
     \subsection{\gls{isar} Image Contrast} % chapter 12.1 of Martorella
     As discussed in \cite{image_contrast}, \gls{ic} can be used to measure the focus of an image. The idea behind this is that in a focused image, the power of target scatterers is less spread and so become more pronounced than in an unfocused image. The \gls{ic} is calculated using the intensity and mean power of the image:
@@ -361,13 +383,15 @@ Translational motion causes the scatterers of an object to appear at different p
     IC = \frac{\sqrt{(I-A\{I\})^2}}{A\{I\}}
     \end{equation}
     Where \(I\) is the intensity of all range bins in the image calculated as \(|amplitude|^2\) and \(A\) is the mean function.
-
+    
     %****************************************************************************%
     \subsection{Coherent Processing Interval (CPI)}
     \begin{itemize}
         \item Discuss CPTWL and effects of that on resolution, the ISAR image, etc
         % Martorella pg 191
     \end{itemize}
+
+    
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

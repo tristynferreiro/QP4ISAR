@@ -141,7 +141,7 @@ The calculated number of bins is used to shift the misaligned range profile into
                     \begin{subfigure}{0.5\linewidth}
                         \centering
                         \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/02CorrRA/SCRA_Sim_HRRP_1mps_6deg}}
-                        \caption{Range Aligned \gls{hrrp}s.\label{subfig:corrRA_sim_hrrp}}
+                        \caption{Range-aligned \gls{hrrp}s.\label{subfig:corrRA_sim_hrrp}}
                     \end{subfigure}
                     \\
                     \begin{subfigure}{0.5\linewidth}
@@ -153,7 +153,7 @@ The calculated number of bins is used to shift the misaligned range profile into
                     \begin{subfigure}{0.5\linewidth}
                         \centering
                         \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
-                        \caption{Range Aligned \gls{isar} image. \label{subfig:corrRA_sim_isar}}
+                        \caption{Range-aligned \gls{isar} image. \label{subfig:corrRA_sim_isar}}
                     \end{subfigure}
                 \end{tabular}
                 \caption{Simulated object motion is 1m/s forward heading and 6 degrees/s. \label{fig:corrRA_sim}}
@@ -180,11 +180,13 @@ The calculated number of bins is used to shift the misaligned range profile into
         \end{minipage}
     \end{figure}
     
-    The object's translation motion causes it to drift across range bins between profiles which is reflected in \autoref{subfig:corrRA_sim_hrrp}. This results in the defocused \gls{isar} image in \autoref{subfig:sim_isar_1mps}. Applying \autoref{alg:corr_RA}, to the unaligned \gls{hrrp}s should produce range aligned profiles in \autoref{subfig:sim_hrrp_1mps} that look like the profiles in \autoref{subfig:sim_hrrp_0mps}. However, when comparing them it is clear that they are not the same and that the simple 
+    The object's translation motion causes it to drift across range bins between profiles which is reflected in \autoref{subfig:corrRA_sim_hrrp}. This results in the defocused \gls{isar} image in \autoref{subfig:sim_isar_1mps}. Applying \autoref{alg:corr_RA}, to the unaligned \gls{hrrp}s should produce range-aligned profiles in \autoref{subfig:sim_hrrp_1mps} that look like the profiles in \autoref{subfig:sim_hrrp_0mps}. However, when comparing them it is clear that they are not the same and that the simple 
     \begin{wrapfigure}{l}{0.45\linewidth}
       \centering
+      \vspace*{-\baselineskip}
       \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/02CorrRA/SCRA_Sim_shifts_1mps_6deg}}
       \caption{Staircase curve of range bin shifts per \gls{hrrp}.\label{fig:corrRA_sim_shifts}}
+      \vspace*{-\baselineskip}
     \end{wrapfigure}
     correlation algorithm does not produce the expected output. \autoref{fig:corrRA_sim_shifts} shows the bin shifts calculated by the algorithm and is a staircase curve. This is correct and expected because the object moves by a fraction of a range bin over one profile. So, it takes multiple profiles before it moves one entire range bin (as seen by the plateaus in the curve). This \gls{ra} technique calculates the back shift amount as the location of the peak in the cross-correlation return. This location is an index and so an integer number. Since the algorithm is limited to integer shifts, the profiles that are misaligned by a fractional number of bins can only be shifted by an exact integer number which results in an erroneous alignment with the reference profile (profile 1). This reflects in the staggered alignment seen in \autoref{subfig:corrRA_sim_hrrp}. Although the aligned profiles do not match up with \autoref{subfig:sim_hrrp_0mps}, when comparing the staggering with the staircase in \autoref{fig:corrRA_sim_shifts}, it is clear that the correct shifting is done. This shows that the algorithm has been implemented correctly. 
     
@@ -263,7 +265,7 @@ This \gls{ra} algorithm builds on the technique used in the simple correlation a
             \begin{subfigure}{0.5\linewidth}
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/03HayRA/HayRA_Sim_HRRP_1mps_6deg}}
-                \caption{Range Aligned \gls{hrrp}s.\label{subfig:hayRA_sim_hrrp}}
+                \caption{Range-aligned \gls{hrrp}s.\label{subfig:hayRA_sim_hrrp}}
             \end{subfigure}
             \\
             \begin{subfigure}{0.5\linewidth}
@@ -275,7 +277,7 @@ This \gls{ra} algorithm builds on the technique used in the simple correlation a
             \begin{subfigure}{0.5\linewidth}
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/03HayRA/HayRA_Sim_ISAR_1mps_6deg}}
-                \caption{Range Aligned \gls{isar} image. \label{subfig:hayRA_sim_isar}}
+                \caption{Range-aligned \gls{isar} image. \label{subfig:hayRA_sim_isar}}
             \end{subfigure}
         \end{tabular}
         \caption{Simulated object motion is 1m/s forward heading and 6 degrees/s. \label{fig:hayRA_sim}}
@@ -300,11 +302,13 @@ This \gls{ra} algorithm builds on the technique used in the simple correlation a
     \end{minipage}
     \end{figure}
 
-    The object's translation motion causes it to drift across range bins between profiles which is reflected in \autoref{subfig:corrRA_sim_hrrp}. This results in the defocused \gls{isar} image in \autoref{subfig:sim_isar_1mps}. Applying \autoref{alg:corr_RA}, to the unaligned \gls{hrrp}s should produce range aligned profiles in \autoref{subfig:sim_hrrp_1mps} that look like the profiles in \autoref{subfig:sim_hrrp_0mps}. However, when comparing them it is clear that they are not the same and that the simple 
+    The object's translation motion causes it to drift across range bins between profiles which is reflected in \autoref{subfig:corrRA_sim_hrrp}. This results in the defocused \gls{isar} image in \autoref{subfig:sim_isar_1mps}. Applying \autoref{alg:corr_RA}, to the unaligned \gls{hrrp}s should produce range-aligned profiles in \autoref{subfig:sim_hrrp_1mps} that look like the profiles in \autoref{subfig:sim_hrrp_0mps}. However, when comparing them it is clear that they are not the same and that the simple 
     \begin{wrapfigure}{l}{0.45\linewidth}
         \centering
+        \vspace*{-\baselineskip}
         \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/03HayRA/HayRA_Sim_shifts_1mps_6deg}}
         \caption{Linearised staircase curve of range bin shifts per \gls{hrrp}.\label{fig:hayRA_sim_shifts}}
+        \vspace*{-\baselineskip}
     \end{wrapfigure}
     correlation algorithm does not produce the expected output. \autoref{fig:corrRA_sim_shifts} shows the bin shifts calculated by the algorithm and is a staircase curve. This is correct and expected because the object moves by a fraction of a range bin over one profile. So, it takes multiple profiles before it moves one entire range bin (as seen by the plateaus in the curve). This \gls{ra} technique calculates the back shift amount as the location of the peak in the cross-correlation return. This location is an index and so an integer number. Since the algorithm is limited to integer shifts, the profiles that are misaligned by a fractional number of bins can only be shifted by an exact integer number which results in an erroneous alignment with the reference profile (profile 1). This reflects in the staggered alignment seen in \autoref{subfig:corrRA_sim_hrrp}. Although the aligned profiles do not match up with \autoref{subfig:sim_hrrp_0mps}, when comparing the staggering with the staircase in \autoref{fig:corrRA_sim_shifts}, it is clear that the correct shifting is done. This shows that the algorithm has been implemented correctly.
 
@@ -362,6 +366,7 @@ This \gls{ra} algorithm builds on the technique used in the simple correlation a
     
 % !!!!!!!!!!!!!! DO NOT INDENT IT MESSES UP THE LATEX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 \begin{lstlisting}[caption={\textsc{Matlab} code for selecting candidate dominant scatterers.},label={code:scale_factor}]
+scaling_factor = 1;
 candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_scatterers);
 \end{lstlisting}
 % !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
