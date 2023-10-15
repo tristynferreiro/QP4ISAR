@@ -24,7 +24,7 @@ function [AF_RA_HRRP] = HaywoodAF(RA_HRRP)
     average_power_scatterer = mean(power_scatterer);
 
     % find possible scatterers using a threshold
-    scaling_factor = 10;
+    scaling_factor = 10; % should be 10 for simulated data
     candidate_scatterers_idx = find(power_scatterer>scaling_factor*average_power_scatterer); % array of matches
     
     % Calculate Eq A.8 of Zyweck's appendix - amplitude variance of the
@@ -40,24 +40,35 @@ function [AF_RA_HRRP] = HaywoodAF(RA_HRRP)
     yline(average_power_scatterer,'-g');
     plot(candidate_scatterers_idx, power_scatterer(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);
     plot(DS_idx, power_scatterer(DS_idx), 'or', 'MarkerSize', 15);
-    % xlabel('Power'); ylabel('Range Bin');
-    % title('Power of Scatterers');
+    xlabel('Range Bin'); ylabel('Power');
+    title('Power of Scatterers');
     legend('Scatterer power', 'Average power of all scatterers','Candidate scatterers',"Dominant scatterer");
     hold off;
+    % matlab2tikz() % Save the figure as LaTeX compatible plot
     
     all_amplitude_var = var(magnitude,1);
     figure; plot(var(magnitude,1), '-*'); hold on; 
     plot(candidate_scatterers_idx,all_amplitude_var(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);  
     yline(all_amplitude_var(candidate_scatterers_idx(variance_DS_idx)),'-r'); % Min variance (DS) value
     plot(candidate_scatterers_idx(variance_DS_idx),all_amplitude_var(candidate_scatterers_idx(variance_DS_idx)), 'or','MarkerFaceColor','r', 'MarkerSize', 8); 
-    % xlabel('Variance'); ylabel('Range Bin');
-    % title('Variance of Scatterers');
+    xlabel('Range Bin'); ylabel('Amplitude Variance');
+    title('Variance of Scatterers');
     legend('Scatterer variance', 'Candidate scatterers','Minimum variance','Dominant Scatterer');
     hold off
-
+    % matlab2tikz() % Save the figure as LaTeX compatible plot
+    
+    % Only works when running on SF = 1
+    % figure; plot(angle(RA_HRRP(:,134)), '-*'); hold on; %candidate_scatterers_idx(20)
+    % plot(angle(RA_HRRP(:,126)), '-*'); %candidate_scatterers_idx(15)
+    % plot(angle(RA_HRRP(:,127)), '-*'); %candidate_scatterers_idx(16)
+    % xlabel('Profile Number'); ylabel('Phase');
+    % title('Phase of Dominant Scatterers over all profiles');
+    % legend('Dominat scatterer, SF = 1', 'Dominat scatterer, SF = 5', 'Dominat scatterer, SF = 10');
+    % hold off
 
     %% Step 3: Calculate phase differences - Eq A.11 of Zyweck's appendix
     DS_phase_history = angle(RA_HRRP(:,DS_idx)); % N x 1 matrix
+    
     
     %% Step 4: apply phase differences to each HRRP - Eq A.12 of Zyweck's appendix
     DS_complex_conjugate = exp(-1i*DS_phase_history);
