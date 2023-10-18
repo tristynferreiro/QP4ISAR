@@ -1,0 +1,46 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+\begin{axis}[%
+width=5.554in,
+height=4.754in,
+at={(0.932in,0.642in)},
+scale only axis,
+point meta min=-35,
+point meta max=0,
+axis on top,
+xmin=0,
+xmax=128,
+xlabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=-10pt},
+xlabel={Range Bin Number},
+y dir=reverse,
+ymin=0,
+ymax=96,
+ylabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=10pt},
+ylabel={Profile Number},
+axis background/.style={fill=white},
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
+xtick distance= 20,             % Set the spacing between x-axis ticks
+colormap/jet,
+colorbar
+]
+\addplot [forget plot] graphics [xmin=0, xmax=128, ymin=0, ymax=96] {Figures/04AlgoV&V/Measured/02CorrRA/SCRA_Measured_HRRP_frame2464.png};
+
+% Add a vertical black line at x = 50
+\addplot [black, line width=2pt] coordinates {(59, 0) (59, 96)};
+
+% Add a black arrow pointing at (60, 30)
+\draw[->, black, line width=1.5pt] (35, 8) -- (57.5, 8);
+\draw[->, black, line width=1.5pt] (35, 18) -- (57.5, 18);
+\draw[->, black, line width=1.5pt] (35, 76) -- (57.5, 76);
+% Add a label to the left of the arrow with a white box
+\node[left] at (36, 8) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
+\node[left] at (36, 18) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
+\node[left] at (36, 76) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
+
+\end{axis}
+\end{tikzpicture}%

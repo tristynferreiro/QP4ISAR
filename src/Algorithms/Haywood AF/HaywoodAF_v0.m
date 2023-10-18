@@ -5,11 +5,11 @@ function [AF_RA_HRRP] = HaywoodAF_v0(RA_HRRP)
     % range-aligned profiles to select a dominant scatterer (DS). The phase
     % of this DS is used to calculate the compensation factor to correct
     % all other scatterers.
-    
+    %
     % A. Zyweck, PhD Thesis Appendix was used as a resource in
     % implementing this Haywood algorithm
-
-    % First Version: Original implementation of the algorithm
+    %
+    % Version: v0
 
     %% Parameters
     num_range_bins = size(RA_HRRP,2);

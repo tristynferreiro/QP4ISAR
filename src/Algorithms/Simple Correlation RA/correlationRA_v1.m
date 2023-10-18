@@ -5,13 +5,17 @@ function [RA_HRRP,shifts] = correlationRA_v1(HRRP_all, ref_HRRP_num)
     % profile and use correlation to discover the location of the peaks. 
     % This location corresponds to the number of range bins the profile 
     % needs to be shifted in order to align with the reference profile.
-
+    %
     % Principles of Modern Radar was used as a resource in
     % implementing this algorithm
-    
-    % Revision 1: optimisation changes using built in MATLAB functions and
-    % reducing number of variables and general code cleaning
-    %% Parameters
+    %
+    % Version: v1
+    %
+    % Revisions:
+    %   - optimisation changes using built in MATLAB functions and
+    %     reducing number of variables and general code cleaning
+
+    %% Variables
     RA_HRRP = HRRP_all; % pre-defined for efficiency
     shifts = zeros(size(HRRP_all,1),1);
 

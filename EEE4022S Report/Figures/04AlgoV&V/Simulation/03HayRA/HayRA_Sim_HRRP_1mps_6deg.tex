@@ -1,0 +1,46 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+\begin{axis}[%
+width=5.554in,
+height=4.754in,
+at={(0.932in,0.642in)},
+scale only axis,
+point meta min=-35,
+point meta max=0,
+axis on top,
+xmin=0,
+xmax=256,
+xlabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=-10pt},
+xlabel={Range (m)},
+y dir=reverse,
+ymin=0.5,
+ymax=32.5,
+ylabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=10pt},
+ylabel={Profile Number},
+axis background/.style={fill=white},
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
+xtick distance= 50,             % Set the spacing between x-axis ticks
+colormap/jet,
+colorbar
+]
+\addplot [forget plot] graphics [xmin=0, xmax=256, ymin=0.5, ymax=32.5] {Figures/04AlgoV&V/Simulation/03HayRA/HayRA_Sim_HRRP_1mps_6deg.png};
+
+% Add a vertical black line at x = 50
+\addplot [black, line width=2pt] coordinates {(56, 0.5) (56, 32.5)};
+
+% Add a black arrow pointing at (60, 30)
+\draw[->, black, line width=1.5pt] (45, 31) -- (61, 31);
+\draw[->, black, line width=1.5pt] (45, 20) -- (60, 20);
+\draw[->, black, line width=1.5pt] (45, 11) -- (59, 11);
+% Add a label to the left of the arrow with a white box
+\node[left] at (50, 31) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
+\node[left] at (51, 20) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
+\node[left] at (52, 11) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
+
+\end{axis}
+\end{tikzpicture}%

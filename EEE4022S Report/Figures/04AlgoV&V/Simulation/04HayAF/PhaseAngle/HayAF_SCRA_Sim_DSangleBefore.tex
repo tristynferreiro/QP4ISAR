@@ -1,0 +1,64 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=6.028in,
+height=4.754in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=0,
+xmax=32,
+xlabel style={font=\fontsize{25}{20}\selectfont\color{black}, yshift = -10},
+xlabel={Profile Number},
+ymin=-4,
+ymax=3,
+ylabel style={font=\fontsize{25}{20}\selectfont\color{black}, yshift=10pt},
+ylabel={Phase Angle},
+axis background/.style={fill=white},
+xtick distance = 4,
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}}
+]
+\addplot [color=mycolor1, forget plot]
+  table[row sep=crcr]{%
+1	-0.713652998873585\\
+2	-1.26328398961862\\
+3	-1.79761267535875\\
+4	2.11723648169395\\
+5	1.52890140406838\\
+6	0.933432252246175\\
+7	0.343937565370561\\
+8	-0.258904474711182\\
+9	-0.829898857738967\\
+10	-1.32815255562551\\
+11	-1.89579871862167\\
+12	-2.45425890388898\\
+13	-2.90917521126634\\
+14	0.918508750369201\\
+15	0.36435881260357\\
+16	-0.234756315479329\\
+17	-0.811935144614113\\
+18	-1.34967521347663\\
+19	-1.85491320114706\\
+20	-2.4440814742834\\
+21	-3.02730416254395\\
+22	2.81049908082331\\
+23	0.376388812791332\\
+24	-0.142087705005013\\
+25	-0.738608192995369\\
+26	-1.24225854609403\\
+27	-1.76452604632288\\
+28	-2.32564715390667\\
+29	-2.85613646189082\\
+30	2.81629102559214\\
+31	2.31164459812681\\
+32	-0.0567907978676315\\
+};
+\end{axis}
+\end{tikzpicture}%

@@ -8,12 +8,11 @@ function [RA_HRRP] = HaywoodRA_v0(HRRP_all, ref_profile_number)
     % used to calculate a phase adjustment factor for each profile. The 
     % phase adjustment factor is then applied to each profile in order to 
     % align with the reference profile.
-    
+    %
     % A. Zyweck, PhD Thesis, Appendix was used as a resource in
     % implementing this Haywood algorithm
-
-    % First Version: First implementation of the algorithm using the
-    % correlation RA
+    %
+    % Version: v0
 
 %% Step 1 get the correlation values (the bin shifts):
 [RA_HRRP,shifts] = correlationRA(HRRP_all,ref_profile_number);

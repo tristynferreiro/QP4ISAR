@@ -9,85 +9,43 @@
 \appendix
 \chapter{Additional Algorithm Verification and Validation \label{apndxA}}
 % ----------------------------------------------------
-\section{Measured Data Frames for Algorithm Verification} \label{apndxA:verification_frames}
-    The \gls{isar} image frames and \gls{hrr} profiles in \autoref{fig:measured_data_frames} were generated from a single measured data set. As discussed in the \autoref{sec:theory_cptwl}, the size of the \gls{cptwl} affects the quality of the image. In this report the \gls{cptwl} is fixed at 128 which is the set value for all of the frames. The frames considered in this section were chosen from the larger subset as they illustrate the necessity for this selection process. 
-    \begin{figure}[H]
-        \begin{minipage}{0.9\linewidth}
-            \begin{figure}
-                \begin{tabular}{@{}cccc@{}}
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2464}}
-                        \caption{Frame 1: unaligned HRR profiles. \label{subfig:measured_data_frames_HRRP_2464}}
-                    \end{subfigure}
-                    &
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2970}}
-                        \caption{Frame 2: unaligned HRR profiles.}
-                    \end{subfigure}
-                    &
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_3827}}
-                        \caption{Frame 3: unaligned HRR profiles.}
-                    \end{subfigure}
-                    &
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_4189}}
-                        \caption{Frame 4: unaligned HRR profiles. \label{subfig:measured_data_frames_HRRP_4189}}
-                    \end{subfigure}
-                    \\
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2464}}
-                        \caption{Frame 1: unfocused ISAR image.}
-                    \end{subfigure}
-                    &
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2970}}
-                        \caption{Frame 2: unfocused ISAR image.}
-                    \end{subfigure}
-                    &
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_3827}}
-                         \caption{Frame 3: unfocused ISAR image.}
-                    \end{subfigure}
-                    &
-                    \begin{subfigure}{0.25\linewidth}
-                        \centering
-                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_4189}}
-                         \caption{Frame 4: unfocused ISAR image.}
-                    \end{subfigure}
-                \end{tabular}
-                \caption{Different \gls{isar} image frames produced from one measured data set. \label{fig:measured_data_frames}}
-            \end{figure}
-        \end{minipage}
-        \vspace*{-1.5\baselineskip}
-    \end{figure}
+\section{\gls{sdsaf} Additional Figures}
+This section contains additional plots of results discussed in \autoref{subsec:hayAF}
+    %***************************************************************************************%    
+    \subsection{Algorithm Verification}
+    The scatterer power and variance plots in \autoref{subsec:hayAF_verification} are zoomed in to make the \gls{ds} selection clearer. The plots in this section contain both the original and zoomed in plots for context. 
 
-
-    Each frame provides a look of the same object over a different frame in time. Some of these are not suitable for verifying the \gls{ra} and \gls{af} processing algorithms considered in this report because of characteristics mentioned in \autoref{subsec:theory_isar}. The profiles in \autoref{subfig:measured_data_frames_HRRP_2464} and \autoref{subfig:measured_data_frames_HRRP_4189} have at least one clear \gls{ds} and are within the frame which makes them the ideal choice for verifying \gls{ra} algorithms. \autoref{fig:measured_data_frames_RA} shows the \gls{hrr} profiles of these two frames after applying Simple Correlation \gls{ra}, \autoref{alg:corr_RA}.
-    \begin{figure} [H]
+    \begin{figure}
         \centering
-        \begin{subfigure}{0.4\textwidth}
-            \centering
-            \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_2464}}
+        \begin{subfigure}{0.4\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/Power/HayAF_SCRA_Sim_Power}}
+                \caption{Scatterer power.\label{subfig:apndxA_hayAF_SCRA_sim_power}}
         \end{subfigure}
-        \begin{subfigure}{0.4\textwidth}
-            \centering
-            \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_4189}} 
+         \hspace{1cm}
+        \begin{subfigure}{0.4\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/Power/HayAF_SCRA_Sim_Power_scaled}}
+                \caption{Scatterer power (zoomed-in).\label{subfig:apndxA_hayAF_SCRA_sim_power_zoomed}}
         \end{subfigure}
-        \caption{Frame 1 (left) and 4 (right): range-aligned \gls{hrr} profiles.} \label{fig:measured_data_frames_RA}
-        \vspace*{-1.5\baselineskip} 
+        \begin{subfigure}{0.4\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/Variance/HayAF_SCRA_Sim_Variance}}
+                \caption{Scatterer variance.\label{subfig:apndxA_hayAF_SCRA_sim_var}}
+        \end{subfigure}
+        \hspace{1cm}
+        \begin{subfigure}{0.4\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/Variance/HayAF_SCRA_Sim_Variance_scaled}}
+                \caption{Scatterer amplitude variance (zoomed-in). \label{subfig:apndxA_hayAF_SCRA_sim_var_zoomed}}
+        \end{subfigure}
+        \caption{\gls{sdsaf} \gls{ds} selection plots for Simple Correlation \gls{ra} \gls{hrr} profiles.\label{fig:apndxA_hayAF_SCRA_sim}}
     \end{figure}
-     As discussed in \autoref{subsec:theory_isar}, not all frames of \gls{isar} data can be focused due to the object's motion, the \gls{cptwl}, and other factors. It then follows that some measured data frames will not be perfectly range-aligned or autofocused. Comparing the profile frames in \autoref{fig:measured_data_frames_RA}, the profiles in Frame 1 are better aligned than those in Frame 4. Furthermore, in Frame 1, a distinct \gls{ds} exists at range bin 14. For validation testing, it is desirable to choose the best case data because the goal is to demonstrate that the algorithms work on measured data. The limitations of the algorithms were investigated and discussed through verification testing where non-ideal data is used. For these reasons, frame 1 was used for validation testing in \autoref{ch:algorithmV&V}. 
 
+    %***************************************************************************************%    
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Scaling Factor in Dominant Scatterer Selection \label{apndxA:scale_factor_effect}}
+\section{Scaling Factor for Dominant Scatterer Selection \label{apndxA:scale_factor_effect}}
 In the Haywood \gls{af} algorithm, given in \autoref{alg:haywood_AF}, phase compensation is calculated based on the phase history of the \gls{ds} over all profiles. A set of selection criteria is used to determine the \gls{ds}:
 \begin{itemize}
     \item Criterion 1: The set of candidate dominant scatterers includes all scatterers with a power greater than the average scatterer power (the threshold value) across all range bins.
@@ -113,7 +71,7 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
-                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
             \end{subfigure}
             \caption{Range-aligned image.\label{subfig:sf_corrRA_isar}}   
         \end{minipage}
@@ -121,11 +79,10 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
-                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Sim_ISAR_0mps_6deg}}
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg}}
             \end{subfigure} 
             \caption{Reference focused image.\label{subfig:sf_focused_isar}}
         \end{minipage}
-        \vspace*{-1.5\baselineskip}
     \end{figure}
     
     \autoref{fig:sf_corrRA} shows autofocused ISAR images and plots demonstrating the fulfillment of both selection criteria for various \gls{sf} values. When comparing \autoref{fig:sf_corrRA}(d)-(f), it becomes evident that as the \gls{sf} increases, the number of candidate scatterers decreases. Consequently, the number of scatterers to which criterion 2 is applied also decreases, leading to the selection of scatterers with higher amplitude variance, as demonstrated in \autoref{fig:sf_corrRA}(g)-(i). Overall, higher power scatterers are chosen as the \gls{ds}, as shown by the larger circle in \autoref{fig:sf_corrRA}(d)-(f).
@@ -140,6 +97,7 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
      
     % Grid of the HRRP and ISAR images SCRA
     \begin{figure}[H]
+    \vspace*{\baselineskip}
     \centering
     \begin{minipage}{0.98\linewidth}
         \begin{tabular}{@{}ccc@{}}
@@ -199,9 +157,9 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \end{tabular}
         \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Simple Correlation \gls{ra} \gls{hrr} profiles.\label{fig:sf_corrRA}}
     \end{minipage}
-    \vspace*{-1.5\baselineskip}
     \end{figure}
 
+    %***************************************************************************************%   
     \subsection{Using Haywood Range-aligned Profiles}
     The Haywood range-aligned \gls{isar} image, as shown in \autoref{fig:sf_hayRA_isar}, is included for comparison to the autofocused \gls{isar} images, \autoref{fig:sf_hayRA}(a)-(c). Additionally, the \gls{isar} image generated when the object had no translational motion, as shown in \autoref{subfig:sf_focused_isar}, is a reference for the expected appearance of a focused image.
     
@@ -210,7 +168,7 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
-                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/03HayRA/HayRA_Sim_ISAR_1mps_6deg}}
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/03HayRA/HayRA_Sim_ISAR_1mps_6deg}}
             \end{subfigure}
             \caption{Range-aligned image.\label{subfig:sf_corrRA_isar}}   
         \end{minipage}
@@ -218,11 +176,10 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \begin{minipage}{0.4\linewidth}
             \begin{subfigure}{\linewidth}
                 \centering
-                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Sim_ISAR_0mps_6deg}}
+                \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg}}
             \end{subfigure} 
             \caption{Reference focused image.\label{subfig:sf_focused_isar}}
         \end{minipage}
-        \vspace*{-1.5\baselineskip}
     \end{figure}
 
     \autoref{fig:sf_hayRA} shows autofocused \gls{isar} images and plots demonstrating the fulfillment of both selection criteria for various \gls{sf} values. Similar to the observations as described in \autoref{subsec:sf_corrRA}, can be made for the figures in \autoref{fig:sf_hayRA}; as the \gls{sf} increases \gls{ds} scatterers with higher power are selected. As previously discussed in \autoref{subsec:sf_corrRA}, the \gls{isar} images in this subsection are also affected by Doppler spreading caused by sidelobes.
@@ -235,6 +192,7 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
     
     % Grid of the HRRP and ISAR images HaywoodRA
     \begin{figure}[H]
+    \centering
     \begin{minipage}{0.98\linewidth}
         \begin{tabular}{@{}ccc@{}}
             \begin{subfigure}{0.33\linewidth}
@@ -293,9 +251,93 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \end{tabular}
         \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Haywood \gls{ra} \gls{hrr} profiles.\label{fig:sf_hayRA}}
     \end{minipage}
-    \vspace*{-1.5\baselineskip}
     \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Number of Dominant Scatterers Selected \label{apndxA:num_DS_effect}}
+
+
+
+
+
+
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+\section{Measured Data Frames for Algorithm Validation} \label{apndxA:verification_frames}
+    The \gls{isar} image frames and \gls{hrr} profiles in \autoref{fig:measured_data_frames} were generated from a single measured data set. As discussed in the \autoref{sec:theory_cptwl}, the size of the \gls{cptwl} affects the quality of the image. In this report the \gls{cptwl} is fixed at 128 which is the set value for all of the frames. The frames considered in this section were chosen from the larger subset as they illustrate the necessity for this selection process. 
+    \begin{figure}[H]
+        \begin{minipage}{0.9\linewidth}
+            \begin{figure}
+                \begin{tabular}{@{}cccc@{}}
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2464}}
+                        \caption{Frame 1: unaligned HRR profiles. \label{subfig:measured_data_frames_HRRP_2464}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2970}}
+                        \caption{Frame 2: unaligned HRR profiles.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_3827}}
+                        \caption{Frame 3: unaligned HRR profiles.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_4189}}
+                        \caption{Frame 4: unaligned HRR profiles. \label{subfig:measured_data_frames_HRRP_4189}}
+                    \end{subfigure}
+                    \\
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2464}}
+                        \caption{Frame 1: unfocused ISAR image.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2970}}
+                        \caption{Frame 2: unfocused ISAR image.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_3827}}
+                         \caption{Frame 3: unfocused ISAR image.}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_4189}}
+                         \caption{Frame 4: unfocused ISAR image.}
+                    \end{subfigure}
+                \end{tabular}
+                \caption{Different \gls{isar} image frames produced from one measured data set. \label{fig:measured_data_frames}}
+            \end{figure}
+        \end{minipage}
+    \end{figure}
+
+
+    Each frame provides a look of the same object over a different frame in time. Some of these are not suitable for verifying the \gls{ra} and \gls{af} processing algorithms considered in this report because of characteristics mentioned in \autoref{subsec:theory_isar}. The profiles in \autoref{subfig:measured_data_frames_HRRP_2464} and \autoref{subfig:measured_data_frames_HRRP_4189} have at least one clear \gls{ds} and are within the frame which makes them the ideal choice for verifying \gls{ra} algorithms. \autoref{fig:measured_data_frames_RA} shows the \gls{hrr} profiles of these two frames after applying Simple Correlation \gls{ra}, \autoref{alg:corr_RA}.
+    \begin{figure} [H]
+        \vspace*{\baselineskip}
+        \centering
+        \begin{subfigure}{0.4\textwidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_2464}}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_4189}} 
+        \end{subfigure}
+        \caption{Frame 1 (left) and 4 (right): range-aligned \gls{hrr} profiles.} \label{fig:measured_data_frames_RA}
+    \end{figure}
+     As discussed in \autoref{subsec:theory_isar}, not all frames of \gls{isar} data can be focused due to the object's motion, the \gls{cptwl}, and other factors. It then follows that some measured data frames will not be perfectly range-aligned or autofocused. Comparing the profile frames in \autoref{fig:measured_data_frames_RA}, the profiles in Frame 1 are better aligned than those in Frame 4. Furthermore, in Frame 1, a distinct \gls{ds} exists at range bin 14. For validation testing, it is desirable to choose the best case data because the goal is to demonstrate that the algorithms work on measured data. The limitations of the algorithms were investigated and discussed through verification testing where non-ideal data is used. For these reasons, frame 1 was used for validation testing in \autoref{ch:algorithmV&V}. 
 
 
 % ----------------------------------------------------

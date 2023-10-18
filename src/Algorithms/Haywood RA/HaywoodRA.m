@@ -8,12 +8,16 @@ function [RA_HRRP] = HaywoodRA(HRRP_all, ref_HRRP_num)
     % used to calculate a phase adjustment factor for each profile. The 
     % phase adjustment factor is then applied to each profile in order to 
     % align with the reference profile.
-
+    %
     % A. Zyweck, PhD Thesis, Appendix was used as a resource in
     % implementing this Haywood algorithm
-
-    % Revision 2: Implements cross-correlation within the script, rather
-    % than calling another script
+    %
+    % Version: v2
+    %
+    % Revisions:
+    %   - Improved efficiency by removing for loop and instead
+    %     using built-in MATLAB functions which can handle matrices. 
+    %   - Additional comments explaining steps.
 
     %% Step 1 get the correlation values (the bin shifts): - Eq A.3 of Zyweck's appendix
     % Get reference profile

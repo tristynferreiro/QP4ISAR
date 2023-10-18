@@ -1,7 +1,26 @@
-function [AF_RA_HRRP] = YuanAF(RA_HRRP)
+function [AF_RA_HRRP] = YuanAF_v2(RA_HRRP)
 % Implements the Yuan autofocus algorithm
-    % This approach is based on the dominant scatterer algorithm (DSA). 
-
+    % It is a type of dominant scatterer algorithm (DSA) that uses multiple 
+    % dominant scatterres (DS) to achieve phase correction. Candidate 
+    % scatterers are selected based on a threshold value of 0.16 
+    % (step 2). From these candidate scatterers a number of DSs are
+    % selected (step 3). The phases of the DSs are used to calculate a 
+    % compensation factor use to correct all other scatterers (step 4).    
+    %
+    % Chao Yuan and David P. Casasent, https://doi.org/10.1117/1.1425789
+    % Note: A threshold scaling_factor was introduced to reduce effects of noise.
+    %
+    % Version: v2
+    %
+    % Revisions: 
+    %   - A threshold was introduced to ensure that only scatterers within
+    %     the object are considered. i.e. no noisy scatterers are used. 
+    %     This prevents false trigger DS selection 
+    %   - Added if statement to set number of scatterers to highest number
+    %     possible in cases where a smaller number of candidate scatterers
+    %     are available.
+    
+    %% Variables
     num_range_bins = size(RA_HRRP,2);
     
     %% Step 1: Calculate mean and variance
@@ -13,12 +32,20 @@ function [AF_RA_HRRP] = YuanAF(RA_HRRP)
     % Threshold to get target profiles
     no_noise_scatterers = find(amplitude_mean.^2>mean(amplitude_mean.^2));
     no_noise_scatterers = min(no_noise_scatterers):max(no_noise_scatterers);
-    
+   
     % Identify candidate scatterers using Yuan's threshold
     criteria = amplitude_variance./(amplitude_variance+amplitude_mean.^2);
     criteria_thresh = criteria(no_noise_scatterers)< 0.16;
     candidate_scatterers_idx = no_noise_scatterers(criteria_thresh);
 
+    % Plot Noisy Candidate Scatterers: HRRP profiles
+    noisy_scatterers = criteria<0.16;
+    noisy_HRRP = zeros(size(RA_HRRP,1), size(RA_HRRP,2));
+    noisy_HRRP(:,noisy_scatterers) = RA_HRRP(:,noisy_scatterers);
+    figure; imagesc(20*log10(abs(noisy_HRRP))); colormap('jet'); colorbar;
+    xlabel('Range (m)'); ylabel('Profile Number');
+    title('HRR Profiles: Selected scatterers (no noise filtering)');
+    
     % Plot noise filtered HRRP profiles
     filtered_HRRP = zeros(size(RA_HRRP,1), size(RA_HRRP,2));
     filtered_HRRP(:,no_noise_scatterers) = RA_HRRP(:,no_noise_scatterers);
@@ -33,7 +60,6 @@ function [AF_RA_HRRP] = YuanAF(RA_HRRP)
     xlabel('Range (m)'); ylabel('Profile Number');
     title('HRR Profiles: Selected scatterers (with noise filtering)'); colorbar;
 
-    
     %% Step 3:  Choose smallest x scatterers
     if(size(candidate_scatterers_idx,2)>11)
         num_scatterers = 11; % ideally 11 otherwise value in range 6-18
@@ -46,13 +72,6 @@ function [AF_RA_HRRP] = YuanAF(RA_HRRP)
     [~,candidate_scatterers_sorted] = sort(criteria(candidate_scatterers_idx));
     DS_idx = candidate_scatterers_idx(candidate_scatterers_sorted(1:num_scatterers));  % get range bin numbers
     
-    % Plot Dominant Scatterers: HRRP profiles
-    noisy_HRRP = zeros(size(RA_HRRP,1), size(RA_HRRP,2));
-    noisy_HRRP(:,DS_idx) = RA_HRRP(:,DS_idx);
-    figure; imagesc(20*log10(abs(noisy_HRRP))); colormap('jet'); colorbar;
-    xlabel('Range (m)'); ylabel('Profile Number');
-    title('HRR Profiles: Selected dominant scatterers (with noise filtering)');
-
     %% Step 4:  Determine constant phase shift for N pulses
     ref_bins = RA_HRRP(1,DS_idx); % reference profile
     product_vector = conj(ref_bins).* RA_HRRP(:,DS_idx);

@@ -236,6 +236,7 @@ In real ISAR imaging scenarios, the target must be in motion with respect to the
     %****************************************************************************%
     % SEE learning plan ISAR reviewed
     \subsection{Synthetic Aperture Radar (SAR) and \gls{isar} Background } % read chaper 12.1 martorella
+    InISAR the object motion is ynknown where as in SAR it is. In ISAR the object's motion is used to provide the second axis in the image. In the Range-Doppler map, the axes are range and Doppler where the Doppler values are found using the object's motion. The yaw, pitch and roll of a ship results in the reflected signal having a different frequency to the transmitted signal and provides Doppler data as given by \autoref{eq:doppler_shift}. The Doppler data is used to produce data on the height of the ship for use in imaging. In the case of smallships, their yaw, pitch and roll change rapidly which results in larger image distortion. % Yuan Autofocus paper
     % Goal: relating SAR nad ISAR concepts to aid understanding of how the ISAR image is formed using target motion
         \begin{itemize}
             \item \textbf{Diagram} spotlight SAR vs ISAR
@@ -334,8 +335,7 @@ Translational motion causes the scatterers of an object to appear at different p
     The peak location of the cross-correlation return is used to estimate the integer number of bins the misaligned profile has drifted by compared to the reference profile. This estimation is used to shift the misaligned range cells into the correct range bin, thereby aligning the profile with the reference profile. This procedure is repeated for all range profiles, aligning the \gls{ds} in all range profiles. The reference profile can be chosen arbitrarily, however, choosing the profile that shows higher peaks near the center of its range cells will ensure that the target image is centered. Cross-correlation can be performed in the time or frequency domain, since the frequency domain is a multiplication operation it is faster than time-domain correlation \cite{ISARtextbook_Martorella}. %chapter 4.1.1.
 
     %****************************************************************************%
-    \subsection{Autofocus (\gls{af})}
-    HRRP: To measure the Doppler shift, we need to measure the change in phase between the transmitted and echoed signal at the same reference point (L). Hence processing occurs in the slow-time dimension (we compare the value sampled from different pulses at the same sample number). 
+    \subsection{Autofocus (\gls{af})} 
     \begin{itemize}
         \item Refer back to imaging pipeline
         \item what it is and what it compensates for and how it helps focus the image
