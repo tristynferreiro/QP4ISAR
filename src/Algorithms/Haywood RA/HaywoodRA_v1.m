@@ -20,7 +20,7 @@ function [RA_HRRP] = HaywoodRA_v1(HRRP_all, ref_HRRP_num)
 
 
     %% Step 1 get the correlation values (the bin shifts): - Eq A.3 of Zyweck's appendix
-    [~,shifts] = correlationRA(HRRP_all,ref_HRRP_num);
+    [~,shifts] = correlationRA_v0(HRRP_all,ref_HRRP_num);
 
     % Plot stair case Function
     % figure; plot(1:size(shifts,1),shifts)
