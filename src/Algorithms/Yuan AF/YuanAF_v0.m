@@ -33,16 +33,16 @@ function [AF_RA_HRRP] = YuanAF_v0(RA_HRRP)
     [~,candidate_scatterers_idx_min] = mink(dispersion(candidate_scatterers_idx), num_scatterers);
     DS_idx = candidate_scatterers_idx(candidate_scatterers_idx_min); % get range bin numbers
 
-    % % Plot the DS selection to validate the selection is correct
-    % figure; plot(dispersion,'-*'); hold on;
-    % yline(0.16,'-g');
-    % plot(candidate_scatterers_idx, dispersion(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);
-    % plot(DS_idx, dispersion(DS_idx), 'or', 'MarkerSize', 15);
-    % xlabel('Range Bin Number'); ylabel('Scatterer Dispersion');
-    % title('Candidate DS selection.');
-    % legend('Criteria', 'Threshold','Candidate scatterers','Dominant Scatterers');
-    % hold off;
-    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
+    % Plot the DS selection to validate the selection is correct
+    figure; plot(dispersion,'-*'); hold on;
+    yline(0.16,'-g');
+    plot(candidate_scatterers_idx, dispersion(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);
+    plot(DS_idx, dispersion(DS_idx), 'or', 'MarkerSize', 15);
+    xlabel('Range Bin Number'); ylabel('Scatterer Dispersion');
+    title('Candidate DS selection.');
+    legend('Scatterer Dispersion', 'Threshold','Candidate scatterers','Dominant Scatterers');
+    hold off;
+    matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
     
     %% Intemediary step
     % This was an addition to the original algorithm described by Yuan.
