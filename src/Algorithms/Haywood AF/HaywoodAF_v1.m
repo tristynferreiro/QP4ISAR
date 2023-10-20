@@ -10,7 +10,7 @@ function [AF_RA_HRRP] = HaywoodAF_v1(RA_HRRP)
     % implementing this Haywood algorithm
     %
     % Revisions: 
-    %   - A threshold scaling_factor was introduced to force selection of
+    %   - NEW: A threshold scaling_factor was introduced to force selection of
     %     scatterers with higher power to reduce the effects of noise.
 
     %% Parameters

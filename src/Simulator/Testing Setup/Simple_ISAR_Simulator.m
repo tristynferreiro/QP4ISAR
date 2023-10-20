@@ -1,8 +1,19 @@
-% Version 3 - include target translation and rotational motion 
-% Revision: 
-%   - allows for adjustment of the scatterer voltages 
-%   - user inputs
-%   - Range Alignment and Autofocus
+% A simple ISAR image simulator that uses a stepped-frequency pulsed
+    % waveform. This is built on the origianl simulator available at:
+    % 
+    %   
+    % Its features include:
+    %   1. An easy to use CLI
+    %   2. Scatterer Configuration: x-y coordinates and amplitudes
+    %   3. Scatterer configuration plots
+    %   4. Sets the scatterer amplitudes using a Gaussian-like distribution
+    %   5. Implementing the user selected RA and AF algorithms
+    %   6. Calculating the image contrast values
+    %
+    % Input values
+    %   translational velocity: x-direction movement
+    %   rotational velocity: rotation around the object's center of
+    %       rotation
 
 clear; %all; 
 close all; clc;
@@ -43,7 +54,7 @@ TgtVelocity_ms = target_velocity;                   % Translational motion
 RotRate_deg_s = rotation_angle;                     % Rotation angle
 
 % Scatterer local co-ordinates
-% Each row has two elements: [x-cord y-cord]  
+% Each row has three elements: [x-cord y-cord amplitude]  
                         % x y amplitude
 Scatterer_axy_local = [
     -10 0 1; -9 0 1; -8 0 1; -7 0 1.5; -6 0 2; -5 0 2.5; -4 0 2.5; 
@@ -69,7 +80,7 @@ Scatterer_axy_local(14, 3) = 1000;
 % figure; scatter(Scatterer_axy_local(:,1),Scatterer_axy_local(:,2))
 % xlabel('x-coordinate'); ylabel('y-coordinate');
 % title('Target Scatterers');
-% matlab2tikz() % Save the figure as LaTeX compatible plot
+% matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
 
 %% 4 Simulation
 NumScatterers = size(Scatterer_axy_local,1);               % Obtain number of scatterers
@@ -113,29 +124,27 @@ end
 
 %% 5 Get Unfocused HRR Profiles
 HRR_profiles = (ifft(RxNoise,[], 2));
-RangeAxis = (0:1:(N-1))*C/(2*N*DeltaF); 
 
-% Plot HRR profiles
+% Plot unaligned HRR profiles
 figure;
-linear_dB = Normalise_limitDynamicRange_ISAR_dB(HRR_profiles,35);
-imagesc(RangeAxis, 1:M, linear_dB);
-xlabel('Range (m)'); ylabel('Profile Number');
+imagesc(1:N, 1:M, 20*log10(abs(HRR_profiles)));
+xlabel('Range Bin Number'); ylabel('Profile Number');
 title('Unaligned HRR Profiles');
 colormap('jet'); colorbar;
-% matlab2tikz() % Save the figure as LaTeX compatible plot
+% matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
 
 % Plot unfocused ISAR image
-WindowMatrix = repmat(hamming(M),1, N);
+RangeAxis = (0:1:(N-1))*C/(2*N*DeltaF); 
+WindowMatrix = repmat(hanning(M),1, N);
 ISAR_linear = fftshift(fft(HRR_profiles.*WindowMatrix, [], 1),1);
 ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,40);
 FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
 
-figure;
-imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+figure; imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
 xlabel('Range (m)'); ylabel('Doppler frquency (Hz)');
 title('Unfocused ISAR image');
 colorbar; colormap('jet'); axis xy;
-% matlab2tikz() % Save the figure as LaTeX compatible plot
+% matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
 
 % Calculate contrast value
 contrast_unfocused = imageContrast(ISAR_linear);
@@ -145,37 +154,29 @@ if(RA_selection ~= 0)
     % Range Align the HRR profiles using user selected algorithm
     ref_profile_number =1;
     if(RA_selection == 1)
-            [RA_HRR_profiles,shifts] = correlationRA(HRR_profiles,ref_profile_number);
-            % Plot bin shifts
-            figure; plot(1:size(RA_HRR_profiles,1),shifts)
-            xlabel('Profile Number'); ylabel('Number of bin shifts');
-            title('Bin shifts per Range Profile');
-            % matlab2tikz() % Save the figure as LaTeX compatible plot
+            RA_HRR_profiles = correlationRA(HRR_profiles,ref_profile_number);
     elseif (RA_selection == 2)
-            [RA_HRR_profiles] = HaywoodRA(HRR_profiles,ref_profile_number);
+            RA_HRR_profiles = HaywoodRA(HRR_profiles,ref_profile_number);
     end
     
-    % Plot HRR profiles
-    figure;
-    linear_dB = Normalise_limitDynamicRange_ISAR_dB(RA_HRR_profiles,35);
-    imagesc(RangeAxis, 1:M, linear_dB);
-    xlabel('Range (m)'); ylabel('Profile Number');
+    % Plot RA HRR profiles
+    figure; imagesc(1:N, 1:M, 20*log10(abs(RA_HRR_profiles)));
+    xlabel('Range Bin Number'); ylabel('Profile Number');
     title('Range-aligned HRR Profiles');
-    colormap('jet'); colorbar;
-    % matlab2tikz() % Save the figure as LaTeX compatible plot
+    colormap('jet'); % colorbar;
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
     
-    % Plot ISAR image
+    % Plot RA ISAR image
     WindowMatrix = repmat(hamming(M),1, N);
     ISAR_linear = fftshift(fft(RA_HRR_profiles.*WindowMatrix, [], 1),1);
     ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
     FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
     
-    figure;
-    imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+    figure; imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
     xlabel('Range (m)'); ylabel('Doppler frquency (Hz)');
     title('Range-aligned ISAR image');
     colorbar; colormap('jet'); axis xy;
-    % matlab2tikz() % Save the figure as LaTeX compatible plot
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
 
     % Calculate contrast value
     contrast_afterRA = imageContrast(ISAR_linear);
@@ -185,23 +186,22 @@ end
 if(AF_selection ~= 0)
     % Autofocus the HRR profiles using selected method
     if(AF_selection == 1)
-        [AF_RA_HRR_profiles] = YuanAF(RA_HRR_profiles);
+        AF_RA_HRR_profiles = YuanAF(RA_HRR_profiles);
     elseif (AF_selection == 2)
-        [AF_RA_HRR_profiles] = HaywoodAF(RA_HRR_profiles);
+        AF_RA_HRR_profiles = HaywoodAF(RA_HRR_profiles);
     end
     
-    % Plot ISAR image
+    % Plot RA AF ISAR image
     WindowMatrix = repmat(hamming(M),1, N);
     ISAR_linear = fftshift(fft(AF_RA_HRR_profiles.*WindowMatrix, [], 1),1);
     ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
     FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
     
-    figure;
-    imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+    figure; imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
     xlabel('Range (m)'); ylabel('Doppler frquency (Hz)');
     title('RA and AF Focused ISAR image');
-    colorbar;  colormap('jet');  axis xy;   
-    %matlab2tikz() % Save the figure as LaTeX compatible plot
+    colorbar; colormap('jet');  axis xy;   
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
 
     % Calculate contrast value
     contrast_afterAF = imageContrast(ISAR_linear);

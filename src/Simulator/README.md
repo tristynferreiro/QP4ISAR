@@ -3,12 +3,13 @@ This folder contains all the files and versions used to create the final simulat
 
 > When running any of the scripts within this folder, it is necessary to place the 'Normalise_limitDynamicRange_ISAR_dB.m' file (you can find it in the 'Support Functions/' folder) in the same directory.
 
-## Simple_ISAR_Simulator.m
+## ISAR_Simulator.m
 This script is the final simple ISAR simulator version and has the following additional features:
 
 1. Customizable Scatterer Amplitudes: In addition to x-y coordinates, you can now set scatterer amplitudes either manually or by utilizing a Gaussian-like distribution.
 2. Scatterer Configuration Display: The simulator plots the scatterer configuration.
 3. User-Friendly Command Line Interface (CLI): An easy-to-use CLI is provided, allowing the user to define the rotation and translation motion parameters. As well as whether user would like to configure the scatter amplitudes using the Guassian-like distribution.
+4. RA and AF algorithm setup - these do not have to be used.
 
 There are many other parameters that can be set by changing the code. The CLI was added with the idea of making repetitive testing simpler and is very simplistic in nature.
 
@@ -16,11 +17,9 @@ There are many other parameters that can be set by changing the code. The CLI wa
 This folder contains both the original simulator files and their revised versions. The revisions were made to introduce additional features and address previous issues.
 
 ## Testing Setup/
-This folder comprises all the necessary files to replicate the simulated results used in the report. This version of the simulator differs from the 'Simple_ISAR_Simulator.m' file in several ways:
+This folder contains all the necessary files to run the simulator and test the algorithms with ease. It includes the RA and AF algorithms as well as the function used to calculate image contrast values.
 
-1. It not only generates the data but also includes calls to the RA and AF algorithms. The CLI has been updated to allow users to select the RA and AF alorithms, if any.
-2. It calculates image contrast values.
-3. Additionally, it incorporates a package that allows for the saving of MATLAB plots in LaTeX-compatible file formats.
+Additionally, it incorporates a package that allows for the MATLAB plots to be saved as LaTeX-compatible file formats.
 
 ### Matlab2Tikz
 The [matlab2tikz](http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz?download=true) package was used to save the MATLAB plots in LaTeX-compatible file formats
