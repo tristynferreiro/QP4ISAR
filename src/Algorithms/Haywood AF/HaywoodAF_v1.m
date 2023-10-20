@@ -24,13 +24,39 @@ function [AF_RA_HRRP] = HaywoodAF_v1(RA_HRRP)
     % Criteria 1: power of scatterer>average power - Eq A.10 of Zyweck's appendix
     power_scatterer = sum(abs(RA_HRRP).^2,1);
     average_power_scatterer = mean(power_scatterer);
-    % find possible scatterers where power of scatterer > average power
-    scaling_factor = 1;
+
+    % Scaling Factor for noise filtering
+    scaling_factor = 10; % should be 10 for simulated data
     candidate_scatterers_idx = find(power_scatterer>scaling_factor*average_power_scatterer); % array of matches
-    
+    if size(candidate_scatterers_idx,2)==0
+        candidate_scatterers_idx = find(power_scatterer>average_power_scatterer); 
+    end
+
     % Criteria 2: candidate with minimum variance is dominant scatterer (DS) - Eq A.9 of Zyweck's appendix
     [~,variance_DS_idx] = min(amplitude_variance(candidate_scatterers_idx)); % returns index of match in candidateScatterersIdx
     DS_idx = candidate_scatterers_idx(variance_DS_idx);
+
+    % Plot the DS selection to validate the it is correct
+    figure; plot(power_scatterer,'-*'); hold on;
+    yline(average_power_scatterer,'-g');
+    plot(candidate_scatterers_idx, power_scatterer(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);
+    plot(DS_idx, power_scatterer(DS_idx), 'or', 'MarkerSize', 15);
+    xlabel('Range Bin'); ylabel('Power');
+    title('Power of Scatterers');
+    legend('Scatterer power', 'Average power of all scatterers','Candidate scatterers',"Dominant scatterer");
+    hold off;
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
+    
+    all_amplitude_var = var(abs(RA_HRRP),1);
+    figure; plot(var(abs(RA_HRRP),1), '-*'); hold on; 
+    plot(candidate_scatterers_idx,all_amplitude_var(candidate_scatterers_idx), 'ok', 'MarkerSize', 8);  
+    yline(all_amplitude_var(candidate_scatterers_idx(variance_DS_idx)),'-r'); % Min variance (DS) value
+    plot(candidate_scatterers_idx(variance_DS_idx),all_amplitude_var(candidate_scatterers_idx(variance_DS_idx)), 'or','MarkerFaceColor','r', 'MarkerSize', 8); 
+    xlabel('Range Bin'); ylabel('Amplitude Variance');
+    title('Variance of Scatterers');
+    legend('Scatterer variance', 'Candidate scatterers','Minimum variance','Dominant Scatterer');
+    hold off
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
     
     %% Step 3: Calculate phase differences - Eq A.11 of Zyweck's appendix
     DS_phase_history = angle(RA_HRRP(:,DS_idx)); % N x 1 matrix
