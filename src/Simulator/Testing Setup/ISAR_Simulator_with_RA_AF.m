@@ -7,7 +7,8 @@
     %   2. Scatterer Configuration: x-y coordinates and amplitudes
     %   3. Scatterer configuration plots
     %   4. Sets the scatterer amplitudes using a Gaussian-like distribution
-    %   5. Saves the generated profiles to a .csv file
+    %   5. Implementing the user selected RA and AF algorithms
+    %   6. Calculating the image contrast values
     %
     % Input values
     %   translational velocity: x-direction movement
@@ -19,6 +20,8 @@ close all; clc;
 %% 1 User Input Parameters
 target_velocity = input("What is the target's translational velocity (m/s)?\n");
 rotation_angle = input("What is the rotation angle (degrees)?\n");
+RA_selection = input("Range-alignment?\n 0 = none\n 1 = Simple Correlation\n 2 = Haywood\n");
+AF_selection = input("Autofocus?\n 0 = none\n 1 = Yuan \n 2 = Haywood\n");
 
 %% 2 Simulation Parameters
 C = 3e8;                                            % Speed of light
@@ -115,7 +118,7 @@ for BurstCounter = 1:M
     b = randn(1,N);
     
     NoiseVoltageVector = sqrt(Pn)*(a+CountScatterer*b)*1/sqrt(2);  %
-    RxNoise(BurstCounter, :) = Rx + NoiseVoltageVector;    % Receive Signal plus noise
+    RxNoise(BurstCounter, :) = Rx + NoiseVoltageVector;                                    % Receive Signal plus noise
     
 end
 
@@ -143,3 +146,65 @@ xlabel('Range (m)'); ylabel('Doppler frquency (Hz)');
 title('Unfocused ISAR image');
 colorbar; colormap('jet'); axis xy;
 % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
+
+% Calculate contrast value
+% contrast_unfocused = imageContrast(ISAR_linear);
+% fprintf("\nThe contrast IC value of the unfocused image is %.4f",contrast_unfocused)
+%% 6 Range Alignment of Profiles
+if(RA_selection ~= 0)
+    % Range Align the HRR profiles using user selected algorithm
+    ref_profile_number =1;
+    if(RA_selection == 1)
+            RA_HRR_profiles = correlationRA(HRR_profiles,ref_profile_number);
+    elseif (RA_selection == 2)
+            RA_HRR_profiles = HaywoodRA(HRR_profiles,ref_profile_number);
+    end
+    
+    % Plot RA HRR profiles
+    figure; imagesc(1:N, 1:M, 20*log10(abs(RA_HRR_profiles)));
+    xlabel('Range Bin Number'); ylabel('Profile Number');
+    title('Range-aligned HRR Profiles');
+    colormap('jet'); % colorbar;
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
+    
+    % Plot RA ISAR image
+    WindowMatrix = repmat(hamming(M),1, N);
+    ISAR_linear = fftshift(fft(RA_HRR_profiles.*WindowMatrix, [], 1),1);
+    ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
+    FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
+    
+    figure; imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+    xlabel('Range (m)'); ylabel('Doppler frquency (Hz)');
+    title('Range-aligned ISAR image');
+    colorbar; colormap('jet'); axis xy;
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
+
+    % Calculate contrast value
+    contrast_afterRA = imageContrast(ISAR_linear);
+    fprintf("\nThe contrast IC value after RA is %.4f",contrast_afterRA)
+end
+%% Autofocus of Profiles
+if(AF_selection ~= 0)
+    % Autofocus the HRR profiles using selected method
+    if(AF_selection == 1)
+        AF_RA_HRR_profiles = YuanAF(RA_HRR_profiles);
+    elseif (AF_selection == 2)
+        AF_RA_HRR_profiles = HaywoodAF(RA_HRR_profiles);
+    end
+    
+    % Plot RA AF ISAR image
+    WindowMatrix = repmat(hamming(M),1, N);
+    ISAR_linear = fftshift(fft(AF_RA_HRR_profiles.*WindowMatrix, [], 1),1);
+    ISAR_linear_dB = Normalise_limitDynamicRange_ISAR_dB(ISAR_linear,35);
+    FrequencyAxis_Hz = (-M/2:1:(M/2-1))*BurstRepetionFrequency/M;
+    
+    figure; imagesc(RangeAxis, FrequencyAxis_Hz, ISAR_linear_dB);
+    xlabel('Range (m)'); ylabel('Doppler frquency (Hz)');
+    title('RA and AF Focused ISAR image');
+    colorbar; colormap('jet');  axis xy;   
+    % matlab2tikz() % Only uncomment to Save the figure as LaTeX compatible plot
+
+    % Calculate contrast value
+    contrast_afterAF = imageContrast(ISAR_linear);
+    fprintf("\nThe contrast IC value after AF is %.4f",contrast_afterAF)
+end

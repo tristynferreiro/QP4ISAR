@@ -4,12 +4,12 @@ This folder contains all the files and versions used to create the final simulat
 > When running any of the scripts within this folder, it is necessary to place the 'Normalise_limitDynamicRange_ISAR_dB.m' file (you can find it in the 'Support Functions/' folder) in the same directory.
 
 ## ISAR_Simulator.m
-This script is the final simple ISAR simulator version and has the following additional features:
+This script is the final ISAR simulator version and has the following additional features:
 
 1. Customizable Scatterer Amplitudes: In addition to x-y coordinates, you can now set scatterer amplitudes either manually or by utilizing a Gaussian-like distribution.
 2. Scatterer Configuration Display: The simulator plots the scatterer configuration.
-3. User-Friendly Command Line Interface (CLI): An easy-to-use CLI is provided, allowing the user to define the rotation and translation motion parameters. As well as whether user would like to configure the scatter amplitudes using the Guassian-like distribution.
-4. RA and AF algorithm setup - these do not have to be used.
+3. User-Friendly Command Line Interface (CLI): An easy-to-use CLI is provided, allowing the user to define the rotation and translation motion parameters of the object.
+4. Saves the simulated profiles to a .csv file.
 
 There are many other parameters that can be set by changing the code. The CLI was added with the idea of making repetitive testing simpler and is very simplistic in nature.
 
@@ -17,7 +17,9 @@ There are many other parameters that can be set by changing the code. The CLI wa
 This folder contains both the original simulator files and their revised versions. The revisions were made to introduce additional features and address previous issues.
 
 ## Testing Setup/
-This folder contains all the necessary files to run the simulator and test the algorithms with ease. It includes the RA and AF algorithms as well as the function used to calculate image contrast values.
+This folder contains all the necessary files to run the simulator and test the algorithms with ease. It includes the RA and AF algorithms as well as the function used to calculate image contrast values. 
+
+> The ISAR_Simulator_with_RA_AF.m is an extension of the ISAR_simulator.m which includes the RA and AF algorithms to streamline testing. The CLI has been updated to allow users to select which algorithms, if any, to apply to the simulated profiles.
 
 Additionally, it incorporates a package that allows for the MATLAB plots to be saved as LaTeX-compatible file formats.
 
