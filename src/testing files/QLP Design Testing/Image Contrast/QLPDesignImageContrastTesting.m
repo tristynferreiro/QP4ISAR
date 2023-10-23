@@ -29,7 +29,7 @@ figure; imagesc( Range_axis, DopplerAxis_Hz, ISAR_image_dB );
 xlabel('Range(m)'); ylabel('Doppler frequency (Hz)')                                           
 title('Unfocused ISAR Image (no RA, no AF)'); 
 axis xy; colormap('jet'); %colorbar;
-% matlab2tikz() % Save the figure as LaTeX compatible plot
+%matlab2tikz() % Save the figure as LaTeX compatible plot
 
 % Calculate contrast value
 contrast_unfocused = imageContrast(ISAR_image);

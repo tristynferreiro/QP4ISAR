@@ -8,8 +8,6 @@ close all; clear all; clc;
 path_name ="QLP_design_IC_collated";
 path_name = strcat(path_name,".csv");
 
-
-
 %% (B) Image constrast testing
 frame_center = [2464, 2970, 3827, 4189];
 for frame = 1: size(frame_center,2)
