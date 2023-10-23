@@ -52,7 +52,12 @@ function [AF_RA_HRRP] = YuanAF(RA_HRRP)
     candidate_scatterers_idx = no_noise_scatterers_idx(dispersion_thresh);
 
     %% Step 3:  Choose smallest x scatterers
-    if(size(candidate_scatterers_idx,2)>11)
+    if(size(candidate_scatterers_idx,2)==0) % if there are no candidate scatterers.
+        % choose smallest scatterer above threshold.
+        dispersion_thresh = dispersion(no_noise_scatterers_idx)> 0.16;
+        candidate_scatterers_idx = no_noise_scatterers_idx(dispersion_thresh);
+        num_scatterers = 1;
+    elseif(size(candidate_scatterers_idx,2)>11)
         num_scatterers = 11; % ideally 11 otherwise value in range 6-18
     else
         % set the number of scatterers as largest value value possible
