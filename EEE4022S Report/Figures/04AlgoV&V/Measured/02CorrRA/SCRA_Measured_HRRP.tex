@@ -33,10 +33,10 @@ colorbar
 % Add a vertical black line at x = 50
 \addplot [black, line width=2pt] coordinates {(59, 0) (59, 96)};
 
-% Add a black arrow pointing at (60, 30)
+% Add pink arrows pointing at (60, 30)
 \draw[->, black, line width=1.5pt] (35, 8) -- (57.5, 8);
-\draw[->, black, line width=1.5pt] (35, 18) -- (57.5, 18);
-\draw[->, black, line width=1.5pt] (35, 76) -- (57.5, 76);
+\draw[->,black, line width=1.5pt] (35, 18) -- (57.5, 18);
+\draw[->,black, line width=1.5pt] (35, 76) -- (57.5, 76);
 % Add a label to the left of the arrow with a white box
 \node[left] at (36, 8) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};
 \node[left] at (36, 18) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Scatterer A};};

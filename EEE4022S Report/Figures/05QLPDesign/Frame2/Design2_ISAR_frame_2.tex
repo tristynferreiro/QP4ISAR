@@ -1,0 +1,34 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+\begin{axis}[%
+width=5.554in,
+height=4.754in,
+at={(0.932in,0.642in)},
+scale only axis,
+point meta min=-40,
+point meta max=0,
+axis on top,
+xmin=0,
+xmax=29.6578125,
+xlabel style={font=\fontsize{25}{14}\selectfont\color{black}, yshift=-10pt},
+xlabel={Range (m)},
+ymin=-88.0034,
+ymax=86.6175,
+ylabel style={font=\fontsize{25}{14}\selectfont\color{black}},
+ylabel={Doppler frquency (Hz)},
+axis background/.style={fill=white},
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
+xtick distance= 4,             % Set the spacing between x-axis ticks
+ytick distance = 10,
+colormap/jet,
+colorbar
+]
+\addplot [forget plot] graphics [xmin=0, xmax=29.6578125, ymin=-88.0034, ymax=86.6175] {Figures/05QLPDesign/Frame2/Design2_ISAR_frame_2.png};
+\end{axis}
+
+\end{tikzpicture}%

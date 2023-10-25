@@ -25,7 +25,11 @@ axis background/.style={fill=white},
 tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
 xtick distance = 50,
 yticklabel={\ifdim\tick pt=0pt\else\pgfmathprintnumber{\tick}\fi}, 
-legend style={legend cell align=left, align = left, draw=white!15!black, font=\fontsize{12}{11}\selectfont\color{black}}
+legend style={legend cell align=left, align = left, draw=white!15!black, font=\fontsize{12}{11}\selectfont\color{black}},
+grid=both,  % Enables major grids
+minor tick num=10,  % Sets the number of minor grid lines between major lines
+grid style={dashed,gray!50},  % Style for major grids
+minor grid style={dotted,gray!50} % Style for minor grids
 ]
 \addplot [color=mycolor1, mark=asterisk, mark options={solid, mycolor1}]
   table[row sep=crcr]{%

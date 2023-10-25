@@ -1,5 +1,6 @@
 % A simple ISAR image simulator that uses a stepped-frequency pulsed
-    % waveform. This is built on the origianl simulator available at:
+    % waveform. This is built on the origianl simulator created by Ahmed 
+    % Vanker and Dr. Yunus Abdul Gaffar.
     % 
     %   
     % Its features include:

@@ -16,7 +16,7 @@
 % •	The theory provides a foundation for the design/research work performed later in the work
 % •	There is balance between text and diagrams when describing the important theoretical concepts 
 
-This chapter provides the theoretical foundation for \gls{isar} imaging concepts used throughout this report. It concentrates on exploring general radar principles and their context in \gls{isar}. The discussed topics encompass high-resolution radar, range-Doppler image formation, motion compensation, and measures of \gls{isar} imaging quality.
+This chapter provides the theoretical foundation for \gls{isar} imaging concepts used throughout this report. It starts by discussing general radar principles and their context in \gls{isar}. The discussed topics encompass high-resolution radar, range-Doppler image formation, motion compensation, and measures of \gls{isar} imaging quality.
 
 % FOOT NOTES TO ADD 
 % - term waveform refers to the signal generated and transmittd by the radar. term signal refers to the radiated object's response to the waveform. However it might be used interchangeably
@@ -356,6 +356,8 @@ Translational motion causes the scatterers of an object to appear at different p
 
     %****************************************************************************%
     \subsection{Sidelobes}
+     Before comparing the \gls{isar} images, it is important to recall that sidelobes formed when using the \gls{fft} on measured data can result in Doppler spreading in \gls{isar} images, as discussed in \autoref{sec:theory_isar_complications}.  Although windowing was applied to minimise these sidelobes, it was not completely effective, as is evident in the images throughout this section. The spectral spreading caused by these sidelobes is present in the range-aligned image, and persists in the autofocused images. Whilst \gls{af} can reduce these sidelobes, it is not effective in removing them. 
+     
     Generally in frequency modulated waveforms, high sidelobes appear adjacent to or near the mainlobe, and decrease with distance from the mainlobe. The high peak sidelobes are a result of the spectrum’s sharp transition in frequency between pulses.
     FIGURE OF SIDELOBES
     Noise, specifically that affects the phase, can lead to large signal sidelobes which results in Doppler spreading. 
@@ -390,16 +392,6 @@ Further discused in 3.3 of Martorella.
         \item Discuss CPTWL and effects of that on resolution, the ISAR image, etc
         % Martorella pg 191
     \end{itemize}
-
-    
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Summary}
-\emph{This section might not be necessary, all depends how I am able to link up the other sections. I want to make sure that the context and flow of concepts make sense in terms of the report.}
-\begin{itemize}
-    \item Discuss RA and AF linking with CPI to form focused ISAR images
-\end{itemize}
 
 
 

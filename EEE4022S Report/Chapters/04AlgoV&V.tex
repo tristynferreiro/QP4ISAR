@@ -12,87 +12,201 @@
 % ----------------------------------------------------
 \chapter{Algorithm Verification and Validation \label{ch:algorithmV&V}}
 % ----------------------------------------------------
-% Characteristics of the practical work section: implementation, simulation
-% •	Practical work done was relevant. Quantity and quality of the work was suitable for the degree 
-% •	Document how you captured experimental data. Include photos of experimental environment and equipment used. Record details of equipment configuration, calibration procedures. 
-% •	Document sub-systems were tested and evaluate if technical specifications were met
-% •	Document system testing and evaluate if technical specifications were met 
-
- % Characteristics of the results section:  analysis of measured data and interpretation of results
-% •	Clear, logical, relevant, and accurate analysis of the data and interpretation of results 
-% •	Important features of the data are highlighted to the reader. 
-% •	The logical conclusions from the interpretations of the data are linked to the research objectives/questions of the work 
-% •	Includes a discussion on how results in this work are similar or different to results presented in the literature. If similar, state reasons why its similar. If different, explain reasons for differences. Simply saying the results are similar or different is not sufficient. 
- 
-% Important elements when presenting graphs in your work
-% •	Explain the axes of the graph 
-% •	Identify the portion of the graphs that are important. Consider annotating your graphs to ease this process
-% •	Interpret what the graph means in the context of your work
-
-\emph{Chapter introduction: Clear motivations provided in selecting the approach used to validate and verify algorithms (why I used simulated and measured data)}
-% •	Document simulations and verification tests to show accuracy of implemented code  
-\textsc{MATLAB} by MathWorks \cite{mathworks}
+The \gls{tmc} algorithms implemented in this section were chosen because of their low computation requirements which made them desirable for use in a \gls{qlp}. Despite their simplistic nature, they have been shown to produce well focused \gls{isar} images in their respective literature \cite{ISARtextbook_Martorella,haywood_RA_AF,yuan_AF}. Simulated data was used to verify that the implementation of each algorithm in \textsc{MATLAB} was accurate. Thereafter, measured data was used to validate the implemented algorithms for use in the \gls{qlp} designed in \autoref{ch:QLPdesign}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{ISAR Simulator}
-Simulated data is useful when verifying that the algorithms investigated and implemented in this report work as expected. The simulator is a \textsc{Matlab} script which was developed by \cite{matlab}. It uses a \gls{sfw} signal and user defined point scatterer x-y coordinates to produce \gls{hrrp}s. The configurable motion parameters are values for rotational motion (in degrees per second) and translation motion (in meters per second). The motion parameters are used to simulate range walk and range offset which the algorithms are meant to compensate for. A for loop is used to iterate over the \gls{cpi}, each iteration the scatterer array is moved by the set motion parameter amount. The output is the generated \gls{hrrp}s based on the motion input parameters for the configured scatterers.
+Simulated data was valuable for verifying that the algorithms investigated and implemented in this report function as expected. Since the ideal outcome of simulated data was known, it was used to reveal errors and limitations in the algorithm implementation. 
+
+The simulator considered for use in this report was a \textsc{MATLAB} script developed by Ahmed Vanker \cite{4022}. It used a \gls{sfw} signal and user-defined x-y coordinates for scatterers to produce \gls{hrr} profiles. The \gls{hrrp}s were generated based on the configured rotation motion (in degrees per second) and translation motion (in meters per second).
 
     %***************************************************************************************%
     \subsection{Simulator Changes}
-    The \href{https://github.com/tristynferreiro/QP4ISAR/blob/main/src/Simulator/Original%20Simulator%20Files/Version_3_object_translation_and_rotation_motion.m}{original} has been altered to better suit the data needed to verify the algorithms. \gls{ra} and \gls{af} algorithms use \gls{ds}s to correct the \gls{isar} image. The \href{https://github.com/tristynferreiro/QP4ISAR/blob/main/src/Simulator/Revised%20Simulator%20Files/Version_3_rev1_object_translation_and_rotation_motion.m}{new version} has scatterer amplitudes as a parameter to ensure that some scatterers can be configured to be stronger than others.
-    
-    In the \href{https://github.com/tristynferreiro/QP4ISAR/blob/main/src/Simulator/Final_Simulator.m}{final simulator} used for data generation in this report, more features were added. The amplitude values are set using a Gaussian-like distribution which aids in randomising the scatterer amplitudes. The \gls{ra} and \gls{af} steps have been added in to the simulator and a simple \gls{cli} has been implemented. The \gls{cli} allows users to configure the image processing pipeline by choosin the translational and rotational motion and which \gls{ra} and \gls{af} algorithms, if any, to apply to the data. 
-    
+     Vanker's simulator \cite{4022} was adapted to better align with the data requirements for verifying the algorithms implemented in this report. \gls{af} algorithms use dominant scatterers to correct object motion errors in the \gls{hrr} profiles. These scatterers are selected based on power, amongst other criteria, which necessitated configurable scatterer amplitudes. This allowed for some scatterers to be configured with higher power levels than others, which proved valuable in the verification of \gls{ds} selection within the \gls{af} algorithms. Moreover, the scatterer amplitudes were configured using a Gaussian-like distribution. A simple \gls{cli} was implemented to aid user-friendliness. The final simulator is available on \href{}{GitHub}.
+
     %***************************************************************************************%
-    \subsection{Simulator set-up for testing} \label{subsec:suimulation_setup}
-    The \href{https://github.com/tristynferreiro/QP4ISAR/tree/main/src/Simulator/Testing%20Setup}{testing code and configuration} is available for ease of repetition of these experiments. The scatterers were setup as illustrated in \autoref{fig:sim_scatterers}. The experiment motion input parameters for all subsections of this chapter are specified in \autoref{tab:simulation_setup}. The \gls{ra} and \gls{af} algorithms were selected in the \gls{cli} depending on which algorithm was being investigated in each section.
+    \subsection{Description of Simulator Setup} \label{subsec:suimulation_setup}
+    The simulator was set-up as described in this subsection. The \gls{sfw} parameters are described in \autoref{tab:simulation_setup_sfw}.
     
-    \begin{table}[ht]
+    \begin{table}[H]
         \centering
-        {\small
-        \begin{tabular}{|c|c|c|}
+        \begin{tabular}{|l|c|}
             \hline
-            & \textbf{Translational velocity (m/s)} & \textbf{Rotational velocity (deg/s)} \\
+            \textbf{Parameter} & \textbf{Value}\\
             \hline
-            No translational motion (Focused image) & 0 & 6 \\
+            Center Frequency ($f_0$) & 9.5 GHz\\
             \hline
-            Unfocused image & 1 & 6 \\
+            Frequency step ($\delta f$)& 4 MHz \\
+            \hline
+            Number of pulses (N) &  256 \\
+            \hline
+            Pulse Repetition Frequency (PRF) & 2kHz \\
+            \hline
+            Number of Bursts (M) & 32 \\
             \hline
         \end{tabular}
-        }
-        \caption{Caption}
-        \label{tab:simulation_setup}
+        \caption{\gls{sfw} parameters for simulation.}\label{tab:simulation_setup_sfw}
     \end{table}
 
-    \begin{figure}[ht]
+    Additionally, the scatterers were setup as illustrated in \autoref{fig:sim_scatterers}. The simulated object was a representation of the boat in \autoref{fig:sim_boat} and included the boat's main features: 2 masts and a hull. 
+    
+    \begin{figure}[H]
         \centering
-        \captionsetup{type=figure}
-        \begin{minipage}{0.5\linewidth} % Adjust the width as needed
+        \begin{subfigure}{0.4\linewidth}
             \centering
             \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/Sim_scatterers}}
-            \caption{X-Y plot of scatterers used in the simulation.\label{fig:sim_scatterers}}
+            \caption{Scatterers configured in the\\ simulator.}\label{fig:sim_scatterers}
+        \end{subfigure}
+        \hspace{1cm}
+        \begin{subfigure}{0.4\linewidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/boat}}
+            \caption{Boat structure with scattererers. Adapted from \cite{boat}. }\label{fig:sim_boat}
+        \end{subfigure}
+        \caption{Scattererer structure used for simulation based on boat features. }
+    \end{figure}
+
+    Two sets of simulated data were used in this report. First, the object was simulated with a \textbf{ translation motion of 0m/s} and \textbf{rotation motion of 6 deg/s} to generate the ideal \gls{hrr} profiles and \gls{isar} image shown in \autoref{fig:sim_setup_0mps}. These served as a reference for what the profiles and \gls{isar} image should look like after \gls{ra} and \gls{af}. The boat features in \autoref{fig:sim_boat} are labelled in \autoref{fig:sim_setup_0mps_ISAR} to show how the scatterers reflect in the \gls{isar} image.
+
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.4\linewidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_HRRP_0mps_6deg}}
+            \caption{Reference aligned profiles.}\label{fig:sim_setup_0mps_HRRP}
+        \end{subfigure}
+        \hspace{1cm}
+        \begin{subfigure}{0.4\linewidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg}}
+            \caption{Reference focused image.}\label{fig:sim_setup_0mps_ISAR}
+        \end{subfigure}
+        \caption{Simulator output for the object with no translation motion and 6 degrees per second rotation motion. }\label{fig:sim_setup_0mps}
+    \end{figure}
+            
+    Additionally, the object was simulated to have a translation motion of \textbf{1 m/s} and rotation motion of \textbf{6 deg/s}, which produced the unaligned \gls{hrr} profiles and defocused \gls{isar} image in \autoref{fig:sim_setup_1mps}. In \autoref{fig:sim_setup_1mps_ISAR}, the scatterers were spread over the Doppler and range axes which was not seen in \autoref{fig:sim_setup_0mps_ISAR}. The scatterer smearing in \autoref{fig:sim_setup_1mps_ISAR} was caused by the object's translation motion.
+
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.4\linewidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/01WithMotion/Sim_HRRP_1mps_unedited}}
+            \caption{Unaligned profiles.}\label{fig:sim_setup_1mps_HRRP}
+        \end{subfigure}
+        \hspace{1cm}
+        \begin{subfigure}{0.4\linewidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/01WithMotion/Sim_ISAR_1mps_6deg}}
+            \caption{Unfocused image.}\label{fig:sim_setup_1mps_ISAR}
+        \end{subfigure}
+        \caption{Simulator output for the object with 1 meters per second translational motion and 6 degrees per second rotational motion  \label{fig:sim_setup_1mps}}
+    \end{figure}
+    
+    The \href{https://github.com/tristynferreiro/QP4ISAR/tree/main/src/Simulator/Testing%20Setup}{testing code and configuration} was collated into a single folder to facilitate repetition of the results achieved throughout this chapter. Furthermore, the \gls{ra} and \gls{af} algorithms were added to the simulator to simplify the testing process.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Description of Measured Data Setup} \label{subsec:measuredData_setup}
+Measured \gls{hrr} profiles were used to validate the algorithms implemented in this report. The profiles were generated using a \gls{sfw} fired at a Zay-Yaan KB6 fishing boat moving toward the radar using, further described in \cite{zayyaan_data}. \autoref{fig:zayyaan} shows the boat that was used.
+
+\begin{figure}[H]
+    \centering
+    \resizebox{0.45\linewidth}{!}{\includegraphics{Figures/04AlgoV&V/Measured/zayyaan.pdf}}
+    \caption{Zay-Yaan KB6 boat structure. Adapted from \cite{zayyaan_data}.}
+    \label{fig:zayyaan}
+\end{figure}
+
+Several frames\footnote{A frame is a single \gls{isar} image developed using a preselcted number of \gls{hrr} profiles. In this report it was 128 profiles.} were considered for use in validation. The \gls{isar} image frames and \gls{hrr} profiles in \autoref{fig:measured_data_frames} were constructed from a single measured data set. As discussed in \autoref{sec:theory_cptwl}, the size of the \gls{cptwl} affects the quality of the image. In this report, the \gls{cptwl} was fixed at 128, and it served as the constant value for all the frames. The frames considered in this section were chosen from the larger subset as they all produce \gls{isar} images that resemble the side-view of the boat. 
+
+    \begin{figure}[H]
+        \begin{minipage}{0.9\linewidth}
+            \begin{figure}
+                \begin{tabular}{@{}cccc@{}}
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2464}}
+                        \caption{Frame 1: unaligned HRR profiles. \label{subfig:measured_data_frames_HRRP_frame1}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_2970}}
+                        \caption{Frame 2: unaligned HRR profiles.\label{subfig:measured_data_frames_HRRP_frame2}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_3827}}
+                        \caption{Frame 3: unaligned HRR profiles.\label{subfig:measured_data_frames_HRRP_frame3}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_HRRP_4189}}
+                        \caption{Frame 4: unaligned HRR profiles. \label{subfig:measured_data_frames_HRRP_frame4}}
+                    \end{subfigure}
+                    \\
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2464}}
+                        \caption{Frame 1: unfocused ISAR image.\label{subfig:measured_data_frames_ISAR_frame1}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_2970}}
+                        \caption{Frame 2: unfocused ISAR image.\label{subfig:measured_data_frames_ISAR_frame2}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_3827}}
+                         \caption{Frame 3: unfocused ISAR image.\label{subfig:measured_data_frames_ISAR_frame3}}
+                    \end{subfigure}
+                    &
+                    \begin{subfigure}{0.25\linewidth}
+                        \centering
+                        \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_ISAR_4189}}
+                         \caption{Frame 4: unfocused ISAR image.\label{subfig:measured_data_frames_ISAR_frame4}}
+                    \end{subfigure}
+                \end{tabular}
+                \caption{Different \gls{isar} image frames produced from a single measured data set. \label{fig:measured_data_frames}}
+            \end{figure}
         \end{minipage}
     \end{figure}
 
-    All simulation data used on which \gls{ra} and \gls{af} are performed throughout this section was generated for the object in \autoref{fig:sim_scatterers} with a translational motion of 1m/s and rotational motion of 6deg/s. The ideal result of the \gls{isar} images after range alignment and autofocus was simulated using a translational motion of 0m/s and a rotational motion of 6deg/s this is reffered to as the 'Reference focused \gls{isar} image'  or the 'Focused \gls{isar} image'.
-% Focused image: 0 mps 6 degps
-% Simulaiton: 1mps 6degps
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Description of Measured Data Setup} \label{subsec:measuredData_setup}
-To perform the algorithm verification, measured data containing already constructed \gls{HRR} profiles was used. A \textsc{MATLAB} \href{}{script} was developed to make verification testing simple, the full testing setup is available on \href{}{GitHub}. Several unfocused image frames \footnote{A frame is a single \gls{isar} image developed using a set amount of \gls{hrr} profiles} were considered, and the one which most clearly resembled the imaged object was chosen to verify all algorithms. All frames considered are available in the \autoref{apndxA:verification_frames} and the chosen frame is shown in \autoref{fig:corrRA_measured_frame}. The \gls{cptwl} is 128 \gls{hrr} profiles in length.
+    Multiple frames were unsuitable for validating the \gls{ra} and \gls{af} algorithms discussed in this report due to specific characteristics. \autoref{subfig:measured_data_frames_ISAR_frame2} was not suitable because not all of the profiles appeared within the frame, which could have led to erroneous \gls{ra}. Using this frame would have created uncertainty regarding whether any unexpected results were due to poor-quality data or the implemented algorithm, making it an unsuitable choice. Additionally, \autoref{subfig:measured_data_frames_HRRP_frame3} was significantly affected by noise and had fewer prominent scatterers compared to Frames 1 and 2. This made it an unsuitable choice compared to the other frames.
+
+    Furthermore, the profiles in \autoref{subfig:measured_data_frames_HRRP_frame1} and \autoref{subfig:measured_data_frames_HRRP_frame4} exhibited more than one clear \gls{ds} and were fully within the frame, making them suitable choices for verifying \gls{ra} algorithms. \autoref{fig:measured_data_frames_RA} shows the \gls{hrr} profiles of these two frames after applying the Correlation \gls{ra} algorithm.
+    
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.4\textwidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_2464}}
+        \end{subfigure}
+        \begin{subfigure}{0.4\textwidth}
+            \centering
+            \resizebox{\linewidth}{!}{\input{Figures/09Appendix/MeasuredDataFrames/Measured_SCRA_HRRP_4189}} 
+        \end{subfigure}
+        \caption{Frame 1 (left) and 4 (right): range-aligned \gls{hrr} profiles.} \label{fig:measured_data_frames_RA}
+    \end{figure}
+
+    As discussed in \autoref{subsec:theory_isar}, not all frames of \gls{isar} data can be focused due to factors such as the object's motion and the \gls{cptwl}. Consequently, it was expected that some measured data frames would not be perfectly range-aligned or autofocused. For the purpose of validation testing, it was essential to select ideal data that gave the \gls{tmc} algorithms the best chance at success, since the aim was to demonstrate the performance of the algorithms on measured data.
+
+    When comparing the profile frames in \autoref{fig:measured_data_frames_RA}, it was clear that the profiles in Frame 1 were better aligned than those in Frame 4. Moreover, Frame 1 featured a prominent Scatterer A that was consistently visible at range bin 57 across all range profiles, making it an ideal choice for \gls{af} validation. In contrast, Scatterer A in Frame 4 did not exhibit the same level of consistent visibility in all profiles. Using Frame 4 for validation testing would have introduced uncertainty surrounding whether any unexpected results in \gls{af} were caused by poor-quality data or the implemented algorithm. For these reasons, \textbf{Frame 1 in \autoref{fig:measured_data_frames_RA}  was selected} for validation testing in this chapter.
+
+    A \textsc{MATLAB} script was used to facilitate the validation testing process. Permission was obtained from the \gls{csir} to use their measured data but is not freely available for replicating the measured data results in this report. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Correlation Range Alignment Algorithm}\label{subsec:corrRA}
-% martorella ch 4.1.1. % Martorella pg 13
-This is a simplistic \gls{ra} algorithm that uses cross-correlation to determine the number of integer range bins by which a profile is misaligned with respect to a reference profile.
-%to determine the extent of misalignment between a profile and a reference profile in terms of the number of range bins.
-The calculated number of bins is used to shift the misaligned range profile into alignment with the reference profile. An outline of the correlation \gls{ra} algorithm as described in Chapter 4.1.1. \cite{ISARtextbook_Martorella} is given in \autoref{alg:corr_RA}.
+This is a simplistic \gls{ra} algorithm that uses cross-correlation to determine the number of integer range bins by which a profile is misaligned with respect to a reference profile. The calculated number of bins is used to shift the misaligned range profile into alignment with the reference profile. An outline of the correlation \gls{ra} algorithm as described in Chapter 4.1.1. \cite{ISARtextbook_Martorella} is given in \autoref{alg:corr_RA}.
     %***************************************************************************************%
     \subsection{Pseudo Code and Implementation}
     % Corr RA Pseudo code
-    \begin{figure}[ht]
+    \begin{figure}[H]
       \vspace{0.5cm}
       \centering
       \captionsetup{type=figure}
       \begin{minipage}{.7\linewidth}
-        \begin{algorithm}[h]
+        \begin{algorithm}[H]
             \caption{Correlation \gls{ra} Algorithm.\label{alg:corr_RA}}
             
             \LinesNumbered % NUMBER THE LINES
@@ -121,14 +235,14 @@ The calculated number of bins is used to shift the misaligned range profile into
       \end{minipage}
     \end{figure}
 
-    The Correlation Algorithm, \autoref{alg:corr_RA}, was implemented as a stand-alone function in \textsc{MATLAB}. \textsc{MATLAB} is designed to operate on matrices and arrays and so for-loops were omitted in the implementation. The function, \href{}{corrRA.m}, was validated and verified in this section.
+    The Correlation Algorithm, \autoref{alg:corr_RA}, was implemented as a stand-alone function in \textsc{MATLAB}. The function, \href{}{corrRA.m}, was validated and verified in this section.
     
     %***************************************************************************************%
     \subsection{Algorithm Verification}
-    The goal of this section was to verify that \autoref{alg:corr_RA} was implemented correctly in \textsc{MATLAB}. The simulation setup described in \autoref{subsec:suimulation_setup} was used to generate \gls{hrr} profiles on which \autoref{alg:corr_RA} implementation was performed.
+    In this subsection simulated \gls{hrr} profiles were used to verify that \autoref{alg:corr_RA} was implemented correctly in \textsc{MATLAB}. 
     
     % Grid of the HRRP 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \begin{minipage}{0.60\linewidth}
             \begin{figure}
                 \begin{tabular}{@{}cc@{}}
@@ -162,33 +276,26 @@ The calculated number of bins is used to shift the misaligned range profile into
         \end{minipage}
     \end{figure}
     
-    Recall from \autoref{theory:RA} that an object's motion causes range migration of the object between range profiles. \autoref{subfig:corrRA_sim_hrrp_1mps} shows that Scatterer A migrates between profiles as expected, the vertical line further illustrates that the profiles are not aligned. Correlation \gls{ra} was applied to the unaligned profiles in an attempt to align the profiles to achieve straight line scatterers similar to \autoref{subfig:corrRA_sim_hrrp_0mps}.
+    Recall from \autoref{theory:RA} that an object's motion causes range migration of the object between range profiles. \autoref{subfig:corrRA_sim_hrrp_1mps} shows that Scatterer A migrated between profiles as expected, the vertical line further illustrates that the profiles were not aligned. Correlation \gls{ra} was applied to the unaligned profiles in an attempt to achieve straight line scatterers similar to profiles of the object without translation motion shown in \autoref{subfig:corrRA_sim_hrrp_0mps}.
 
     Using line 7 of \autoref{alg:corr_RA}, the peak location (index) of each profile's cross-correlation with respect to profile 1 was calculated. This value was then used to calculate the number of bins each profile was shifted from profile 1 as in line 8 of \autoref{alg:corr_RA}. \autoref{fig:corrRA_sim_shifts} shows the calculated bin shifts for each profile in \autoref{fig:corrRA_sim_shifts}.
 
-    \begin{figure}
+    \begin{figure}[H]
         \centering
-        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_shifts_1mps_6deg}}
+        \resizebox{0.4\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_shifts_1mps_6deg}}
         \caption{Staircase curve of range bin shifts per \gls{hrrp} for Correlation \gls{ra} on simulated profiles.\label{fig:corrRA_sim_shifts}}
     \end{figure}
-    % \begin{wrapfigure}{l}{0.45\linewidth}
-    %   \centering
-    %   \vspace*{-\baselineskip}
-    %   \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_shifts_1mps_6deg}}
-    %   \caption{Staircase curve of range bin shifts per \gls{hrrp} for Correlation \gls{ra} on simulated profiles.\label{fig:corrRA_sim_shifts}}
-    %   \vspace*{-\baselineskip}
-    % \end{wrapfigure} 
-    
-    \autoref{subfig:corrRA_sim_hrrp_1mps} shows that Scatterer A migrated by a fraction of a range bin between succeessive profiles. However, the 'steps' in \autoref{fig:corrRA_sim_shifts} show that each profile was always shifted by an integer number of bins. As explained before, the bin shifts were calculated as the difference between array indices which was an integer value. Therefore, profiles with fractional bin shifts were rather treated as a full bin shift as shown by the flat horizontal steps in \autoref{fig:corrRA_sim_shifts}. In terms of the algorithm, which expects all bin shifts to be integer numbers, \autoref{fig:corrRA_sim_shifts} is correct.
 
-    Applying the implemented \autoref{alg:corr_RA} to the unaligned profiles in \autoref{subfig:corrRA_sim_hrrp_1mps} did not produce range-aligned profiles in \autoref{subfig:corrRA_sim_hrrp} that look like the profiles in \autoref{subfig:corrRA_sim_hrrp_0mps}. However, the range-aligned profiles do follow the staircase pattern of \autoref{fig:corrRA_sim_shifts}. Although, the profiles are not perfectly aligned as expected, they are correctly aligned in terms of the bin shift values in \autoref{alg:corr_RA}. Therefore, because the correct bin shifts were calculated and applied, \autoref{alg:corr_RA} was implemented correctly.
+    \autoref{subfig:corrRA_sim_hrrp_1mps} shows that Scatterer A migrated by a fraction of a range bin between successive profiles. However, the 'steps' in \autoref{fig:corrRA_sim_shifts} show that each profile was always shifted by an integer number of bins. As explained before, the bin shifts were calculated as the difference between array indices which was an integer value. Therefore, profiles with fractional bin shifts were rather treated as a full bin shift as shown by the flat horizontal steps in \autoref{fig:corrRA_sim_shifts}. In terms of the algorithm, which expects all bin shifts to be integer numbers, \autoref{fig:corrRA_sim_shifts} was correct.
+
+    Applying the implemented \autoref{alg:corr_RA} to the unaligned profiles in \autoref{subfig:corrRA_sim_hrrp_1mps} did not produce range-aligned profiles in \autoref{subfig:corrRA_sim_hrrp} that look like the profiles in \autoref{subfig:corrRA_sim_hrrp_0mps}. However, the range-aligned profiles do follow the staircase pattern of \autoref{fig:corrRA_sim_shifts}. Although, the profiles were not perfectly aligned as expected, they were correctly aligned in terms of the bin shift values in \autoref{alg:corr_RA}. Therefore, because the correct bin shifts were calculated and applied, \autoref{alg:corr_RA} was implemented correctly.
 
     %***************************************************************************************%
     \subsection{Algorithm Validation}
-    The aim of validation was to test that Correlation \gls{ra} could align the \gls{hrr} profiles in the measured data frame, discussed in \autoref{subsec:measuredData_setup}.
+    In this subsection, measured \gls{hrr} data was used to validate that the implemented Correlation \gls{ra} did range-align the \gls{hrr} profiles.
     
     % Grid of the HRRP 
-    \begin{figure}[h]
+    \begin{figure}[H]
         \centering
         \begin{subfigure}{0.4\linewidth}
                 \centering
@@ -206,27 +313,20 @@ The calculated number of bins is used to shift the misaligned range profile into
 
     \autoref{subfig:corrRA_measured_hrrp_unaligned} shows that Scatterer A migrated between profiles. Comparing the position of Scatterer A, in all profiles, to the vertical black line in \autoref{subfig:corrRA_measured_hrrp_unaligned} illustrates that before \gls{ra}, the profiles were not aligned to profile 1.
     
-    \begin{figure}
+    \begin{figure}[H]
         \centering
-        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/02CorrRA/SCRA_Measured_shifts}}
+        \resizebox{0.4\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/02CorrRA/SCRA_Measured_shifts}}
         \caption{Staircase curve of range bin shifts per \gls{hrrp} for Correlation \gls{ra} on measured profiles.}\label{fig:corrRA_Measured_shifts}
     \end{figure}
-    % \begin{wrapfigure}{l}{0.45\linewidth}
-    %   \centering
-    %   \vspace*{-\baselineskip}
-    %   \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/02CorrRA/SCRA_Measured_shifts}}
-    %   \caption{Staircase curve of range bin shifts per \gls{hrrp} for Correlation \gls{ra} on measured profiles.}\label{fig:corrRA_Measured_shifts}
-    %   \vspace*{-1.5\baselineskip}
-    % \end{wrapfigure} 
     
-    \autoref{fig:corrRA_Measured_shifts} shows the calculated bin shifts for all profiles, calculated with respect to profile 1, in \autoref{subfig:corrRA_measured_hrrp_unaligned}. These shifts were applied to the unaligned profiles, resulting in the range-aligned profiles in \autoref{subfig:corrRA_measured_hrrp}. \autoref{subfig:corrRA_measured_hrrp} shows that after range-alignment, Scatterer A does not migrate between profiles. All scatterers are also aligned with the vertical black line. Therefore, Correlation \gls{ra} was able to align the misaligned profiles and meets the requirements of a \gls{ra} algorithm.
+    \autoref{fig:corrRA_Measured_shifts} shows the bin shifts for all profiles, calculated with respect to profile 1, in \autoref{subfig:corrRA_measured_hrrp_unaligned}. These shifts were applied to the unaligned profiles and resulted in the range-aligned profiles in \autoref{subfig:corrRA_measured_hrrp}. \autoref{subfig:corrRA_measured_hrrp} shows that after range-alignment, Scatterer A remained in the same range bin throughout all profiles. Additionally, all scatterers were aligned with the vertical black line. Therefore, performing Correlation \gls{ra} range-aligned the profiles and was validated for use in this report.
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Haywood's Range Alignment Algorithm}\label{subsec:HayRA}
-This \gls{ra} algorithm accommodates fractional bin shifts, unlike the integer-only range bin shifts allowed in \autoref{alg:corr_RA}. This is achieved by linearising the calculated bin shifts and applying them to the profiles as a phase shift, $\phi$. An outline of the Haywood \gls{ra} algorithm, as described in \cite{haywood_RA_AF,zyweck}, is provided in \autoref{alg:haywood_RA}.
+This \gls{ra} algorithm realised fractional bin shifts, unlike the integer-only range bin shifts allowed in \autoref{alg:corr_RA}. This is achieved by linearising the calculated bin shifts and applying them to the profiles as a phase shift, $\phi$. The Haywood \gls{ra} algorithm, as described in \cite{haywood_RA_AF,zyweck}, was outlined in \autoref{alg:haywood_RA}.
     \subsection{Pseudo code and Implementation}
     % Haywood RA Pseudo code
-    \begin{figure}[ht]
+    \begin{figure}[H]
       \vspace{0.5cm}
       \centering
       \captionsetup{type=figure}
@@ -268,11 +368,13 @@ This \gls{ra} algorithm accommodates fractional bin shifts, unlike the integer-o
     The \gls{ra} algorithm, \autoref{alg:haywood_RA}, was implemented as a stand-alone function in \textsc{MATLAB}. The implementation, \href{}{haywoodRA.m}, was validated and verified in this section.
     
     %***************************************************************************************%
-    \subsection{Algorithm Verification}
-    The aim of the testing in this section was to use simulated \gls{hrr} profiles to verify that \autoref{alg:haywood_RA} was implemented correctly.
+    \subsection{Algorithm Verification}\label{subsec:corrRA_verification}
+     In this subsection simulated \gls{hrr} profiles were used to verify that \autoref{alg:haywood_RA} was implemented correctly in \textsc{MATLAB}.
+
+    The vertical black line in \autoref{subfig:hayRA_sim_hrrp} shows that the range profiles were not originally aligned. Haywood's \gls{ra} algorithm was applied to the unaligned profiles in an attempt to align them such that Scatterer A remained in the same range bin across all profiles. \autoref{subfig:hayRA_sim_hrrp_0mps} serves as a reference for what range-aligned profiles should look like.
 
     % Grid of the HRRP and ISAR images
-    \begin{figure}[h]
+    \begin{figure}[H]
     \begin{minipage}{0.6\linewidth}
         \begin{tabular}{@{}cc@{}}
             \begin{subfigure}{0.5\linewidth}
@@ -296,38 +398,27 @@ This \gls{ra} algorithm accommodates fractional bin shifts, unlike the integer-o
                 \centering
                 \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_HRRP_0mps_6deg}}
                 \caption{Reference aligned profiles.\label{subfig:hayRA_sim_hrrp_0mps}}
-            
             \end{subfigure}
         \end{tabular}
         \caption{Simulated object with no translation motion. \label{fig:sim_0mps}}
     \end{minipage}
     \end{figure}
 
-    The vertical black line in \autoref{subfig:hayRA_sim_hrrp} shows that the range profiles are not aligned. Haywood's \gls{ra} algorithm was applied to the unaligned profiles in an attempt to align them such that Scatterer A stays in the same range bin across all profiles. \autoref{subfig:hayRA_sim_hrrp_0mps} serves as a reference for what range-aligned profiles should look like.
+    The blue 'staircase' curve in \autoref{fig:hayRA_sim_shifts} shows the bin shifts calculated using lines 3 to 6 of \autoref{alg:haywood_RA} and the red line shows the linearised shifts as per line 7 of \autoref{alg:haywood_RA}. The red line further shows that fractional bin shifts were calculated in the implementation as expected. 
 
-    \begin{figure}
+    \begin{figure}[H]
         \centering
-        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/03HayRA/HayRA_Sim_shifts_1mps_6deg}}
+        \resizebox{0.4\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/03HayRA/HayRA_Sim_shifts_1mps_6deg}}
         \caption{Linearised staircase curve of range bin shifts per \gls{hrrp}.\label{fig:hayRA_sim_shifts}}
     \end{figure}
 
-    % \begin{wrapfigure}{l}{0.45\linewidth}
-    %     \centering
-    %     \vspace*{-\baselineskip}
-    %     \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/03HayRA/HayRA_Sim_shifts_1mps_6deg}}
-    %     \caption{Linearised staircase curve of range bin shifts per \gls{hrrp}.\label{fig:hayRA_sim_shifts}}
-    %     \vspace*{-1.5\baselineskip}
-    % \end{wrapfigure}
-    
-    The blue curve in \autoref{fig:hayRA_sim_shifts} shows the bin shifts calculated using lines 3 to 6 of \autoref{alg:haywood_RA} and the red line shows the linearised shifts as per line 7 of \autoref{alg:haywood_RA}. The red line shows that fractional bin shifts were calculated in the implementation. \autoref{subfig:hayRA_sim} shows the \gls{hrr} profiles after performing Haywood \gls{ra}.
-
-    In \autoref{subfig:hayRA_sim} scatter A did not migrate between profiles and shows that the calculated bin shifts successfully range-aligned the profiles. Comparing the scatterer lines to the vertical black line further proves that the profiles are aligned after Haywood \gls{ra}. Therefore, Haywood \gls{ra} yielded the eexpected result which verifies that \autoref{alg:haywood_RA} was implemented correctly.
+    In \autoref{subfig:hayRA_sim} Scatterer A remained in the same range bin in all the profiles and shows that the calculated bin shifts successfully range-aligned the profiles. Comparing the scatterer lines to the vertical black line further proves that the profiles are aligned after Haywood \gls{ra}. Therefore, Haywood \gls{ra} yielded the expected result which verified that \autoref{alg:haywood_RA} was implemented correctly.
     
     %***************************************************************************************%
     \subsection{Algorithm Validation}
-    The aim of this section was test weather Haywood \gls{ra} works on a measured data frame thereby validating the algorithm for use in this report.
-
-    \begin{figure}[h]
+    In this subsection, measured \gls{hrr} data was used to validate the Haywood \gls{ra} implementation.
+     
+    \begin{figure}[H]
         \centering
         \begin{subfigure}{0.4\linewidth}
                 \centering
@@ -342,11 +433,11 @@ This \gls{ra} algorithm accommodates fractional bin shifts, unlike the integer-o
         \caption{\gls{hrr} profiles of a measured data frame before and after Haywood \gls{ra}. \label{fig:hayRA_measured}}
     \end{figure}
 
-    \autoref{subfig:hayRA_measured_hrrp_unaligned} shows that Scatterer A migrated between profiles and that before \gls{ra}, the profiles were not aligned to profile 1. \autoref{fig:hayRA_Measured_shifts} shows the calculated bin shifts for the unaligned profiles which were calculated with respect to profile 1. \autoref{subfig:hayRA_measureed_hrrp} shows that, after range-alignment, Scatterer A did not migrate between profiles and that all scatterers are aligned with the vertical black line. Therefore, Haywood \gls{ra} range-aligned the profiles and meets the requirements of a \gls{ra} algorithm.
+    \autoref{subfig:hayRA_measured_hrrp_unaligned} shows that Scatterer A migrated between profiles and that before \gls{ra}, the profiles were not aligned to profile 1. \autoref{fig:hayRA_Measured_shifts} shows the calculated bin shifts for the unaligned profiles which were calculated with respect to profile 1. \autoref{subfig:hayRA_measureed_hrrp} shows that, after range-alignment, Scatterer A did not migrate between profiles and that all scatterers were aligned with the vertical black line. Therefore, Haywood \gls{ra} range-aligned the profiles and was validated for use in this report.
     
-    \begin{figure}
+    \begin{figure}[H]
         \centering
-        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/03HayRA/HayRA_Measured_shifts}}
+        \resizebox{0.4\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/03HayRA/HayRA_Measured_shifts}}
         \caption{Linearised staircase curve of range bin shifts per \gls{hrrp}.\label{fig:hayRA_Measured_shifts}}
     \end{figure}
 
@@ -355,11 +446,11 @@ This \gls{ra} algorithm accommodates fractional bin shifts, unlike the integer-o
 \section{Single Dominant Scatterer Autofocus Algorithm} \label{subsec:hayAF}
 
 % Read the Haywood paper and zyweck paper
-This is a type of \gls{dsa} that uses a single \gls{ds} to correct the phase errors introduced by \gls{ra}. It selects the \gls{ds} based on a set of selection criteria and uses the \gls{ds}'s phase to correct all other \gls{hrr} profiles. An outline of the Single Dominant Scatterer \gls{af} algorithm, as described by \cite{haywood_RA_AF}, is given in \autoref{alg:haywood_AF}.
+This is a type of \gls{dsa} that uses a single scatterer to correct the phase errors that remain after \gls{ra}. A set of selection criteria is used to choose the \gls{ds} and it's phase is used to correct all other \gls{hrr} profiles. The \gls{sdsaf} algorithm, as described by \cite{haywood_RA_AF}, was outlined in \autoref{alg:haywood_AF}.
     %***************************************************************************************%
     \subsection{Pseudo Code and Implementation}
     % Haywood AF Pseudo code
-    \begin{figure}[ht]
+    \begin{figure}[H]
       \vspace{0.5cm}
       \centering
       \captionsetup{type=figure}
@@ -386,13 +477,13 @@ This is a type of \gls{dsa} that uses a single \gls{ds} to correct the phase err
                 }
                 $avgPower \leftarrow mean(allPower)$\;
                 $candidateIndices \leftarrow $ indices of $ allPower>avgPower$\;
-                \For(){$i$ in 1 to length($candidateIndices$)}{
+                \For(){$b$ in 1 to length($candidateIndices$)}{
                     \For(){$k$ in 1 to rows($hrrp_{RA}$)}{
-                        $amplitudes[k] \leftarrow |hrrp_{RA}[k][candidateIndices[i]]| $\;
+                        $amplitudes[k] \leftarrow |hrrp_{RA}[k][candidateIndices[b]]| $\;
                     }
                     $variance[i] \leftarrow variance(amplitudes) $\;
                 }
-                \gls{ds}$Index \leftarrow candidatesIndex[$index of $min(variance)]$\;
+                \gls{ds}$Index \leftarrow candidateIndices[$index of $min(variance)]$\;
                 \For(){$k$ in 1 to rows($hrrp_{RA}$)}{
                     $angle \leftarrow angle(hrrp_{RA}[k][\gls{ds}Index]) $\;
                     $phaseHistory[k] \leftarrow exp(-1i \cdot angle)$\;
@@ -412,46 +503,25 @@ This is a type of \gls{dsa} that uses a single \gls{ds} to correct the phase err
     
      %***************************************************************************************%
     \subsection{Algorithm Verification}
-    The aim of this section is to use the \gls{sdsaf} to correct the phase errors in the range-aligned simulated \gls{hrr} profiles. Only Correlation range-aligned profiles were used. To clearly see the effects of applying \gls{sdsaf}, an \gls{isar} image of the range-aligned profiles was formed as shown in \autoref{fig:hayRA_sim}(a). \autoref{subfig:hayAF_SCRA_sim_isar_AF} shows the image formed from simulated \gls{hrr} profiles of the object with no translational motion and represents the ideal focused image that should be formed after \gls{ra} and\gls{af}.
+    As discussed in \autoref{subsec:theory_AF}, after \gls{ra}, \gls{af} is used to correct phase errors that cause Doppler spreading in the \gls{isar} image. Correlation range-aligned simulated \gls{hrr} profiles were used to verify that \autoref{alg:haywood_AF} was implemented correctly in \textsc{MATLAB}.
 
-    % Grid of the HRRP and ISAR images
-    \begin{figure}[h]
-        \centering
-        \begin{subfigure}{0.3\linewidth}
-            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
-            \caption{Range-aligned image. \label{subfig:hayAF_SCRA_sim_isar_RA}}
-        \end{subfigure}
-        \begin{subfigure}{0.3\linewidth}
-            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/HayAF_SCRA_Sim_ISAR_1mps_6deg}}
-            \caption{Autofocused \gls{isar} image. \label{subfig:hayAF_SCRA_sim_isar_AF}}
-        \end{subfigure}
-        \begin{subfigure}{0.3\linewidth}
-            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg}}
-            \caption{'Focused' image.\label{subfig:hayAF_sim_isar_0mps}}
-        \end{subfigure}
-        \caption{(a) Correlation range-aligned \gls{isar} image, (b) \gls{sdsaf} autofocused \gls{isar} image, (c) \gls{isar} image of simulated object with no translation motion. \label{fig:hayAF_sim}}
-    \end{figure}
-    
-    As discussed in \autoref{subsec:theory_AF}, after \gls{ra}, \gls{af} is used to correct phase errors that cause Doppler spreading which defocuses the image. As shown by the scatterer co-ordinates in \autoref{fig:sim_scatterers} of \autoref{subsec:suimulation_setup}, the simulated object only had one thin hull which is reflected in \autoref{hayAF_sim_0mps}, the 'focused' image. However, in \autoref{subfig:hayAF_SCRA_sim_isar_RA} there are two similar sets of bright scatterers (labeled A and B) that look like the hull of the ship-like object. The duplication of the hull in \autoref{subfig:hayAF_SCRA_sim_isar_RA} was the result of Doppler spreading and shows that the image was still defocused after \gls{ra}.
-
-    \gls{sdsaf} was applied to the Correlation range-aligned profiles shown in \autoref{subfig:hayRA_sim_hrrp}. For a scatterer to be chosen as the \gls{ds}, it needs to fulfill \autoref{alg:haywood_AF}'s selection criteria. \autoref{subfig:hayAF_SCRA_sim_power} shows the candidate scatterers selected when line 10 of \autoref{alg:haywood_AF} was implemented. All the candidate scatterers appear above the average power threshold (orange line) which illustrates that criterion 1 was implemented correctly. \autoref{subfig:hayAF_SCRA_sim_power} shows the \gls{ds} selection based on criterion 2 in line 17 of \autoref{alg:haywood_AF}. The solid red line shows the mininimum variance of all candidate scatterers and the red dot is the selected \gls{ds}. Comparing the variance of the selected \gls{ds} to all other candidate scatterers illustrates that the chosen \gls{ds} was the scatterer with minimum variance. Therefore the selection criteria was implemented correctly.
-
-    \begin{figure}
+    \begin{figure}[H]
         \centering
         \begin{subfigure}{0.45\linewidth}
             \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/Power/HayAF_SCRA_Sim_Power_scaled}}
-            \caption{Scatterer power.} \label{subfig:hayAF_SCRA_sim_power}
+            \caption{Criterion 1: Scatterer power.} \label{subfig:hayAF_SCRA_sim_power}
         \end{subfigure}
         \hspace{1cm}
         \begin{subfigure}{0.45\linewidth}
             \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/Variance/HayAF_SCRA_Sim_Variance_scaled}}
-            \caption{Scatterer amplitude variance.} \label{subfig:hayAF_SCRA_sim_var}
+            \caption{Criterion 2: Scatterer amplitude variance.} \label{subfig:hayAF_SCRA_sim_var}
         \end{subfigure}
-        \caption{\gls{sdsaf} \gls{ds} selection plots for Simple Correlation \gls{ra} \gls{hrr} profiles.\label{subfig:hayAF_SCRA_sim_power&var}}
+        \caption{\gls{sdsaf} \gls{ds} selection for Correlation range-aligned simulated \gls{hrr} profiles.\label{subfig:hayAF_SCRA_sim_power&var}}
     \end{figure}
 
-    The phase history of the \gls{ds} was calculated as the conjugate of the angle that the \gls{ds} moved through in each profile, for all profiles as in lines 18-21 of \autoref{alg:haywood_AF}. After applying the phase history to the \gls{ds}, its angle should be reduced to 0 for all profiles making it the zero-Doppler point in the autofocused image. \autoref{subfig:hayAF_SCRA_sim_power&var} shows the angle of the \gls{ds} before and after phase correction and the small values in \autoref{subfig:hayAF_SCRA_sim_var} illustrate that the angle is effectively reduced to zero. Therefore \autoref{alg:haywood_AF} has been implemented correctly.
-    \begin{figure}
+    In \autoref{alg:haywood_AF}, lines 10 and 17 outline the criteria for selecting the \gls{ds}, which is used to phase-correct \gls{hrr} profiles. Line 10 outlines the conditions for candidate \gls{ds} selection. \autoref{subfig:hayAF_SCRA_sim_power} shows that all the chosen candidate scatterers were above the average power threshold (indicated by the orange line). \autoref{subfig:hayAF_SCRA_sim_var} illustrates the implemented \gls{ds} selection process based on the criterion defined in line 17 of \autoref{alg:haywood_AF}. \autoref{subfig:hayAF_SCRA_sim_var} shows that the selected \gls{ds} had the least amplitude variance (indicated by the red line), which aligns with the conditions of criterion 2. Therefore, both selection criteria were implemented correctly.
+    
+    \begin{figure}[H]
         \centering
         \begin{subfigure}{0.45\linewidth}
             \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/PhaseAngle/HayAF_SCRA_Sim_DSangleBefore}}
@@ -464,121 +534,364 @@ This is a type of \gls{dsa} that uses a single \gls{ds} to correct the phase err
         \end{subfigure}
         \caption{\gls{ds} phase angle before and after \gls{sdsaf} phase correction.\label{subfig:hayAF_SCRA_sim_DSangle}}
     \end{figure}
+
+    As outlined in lines 18-21 of \autoref{alg:haywood_AF}, the phase history of the \gls{ds} was computed as the conjugate of the angle through which the \gls{ds} moved between profiles. This value was then used to perform phase correction on all profiles. The small values, of order $10^{-16}$, shown in \autoref{subfig:hayAF_SCRA_sim_var} illustrate that, following phase correction, the angle of the \gls{ds} was effectively zero, as expected. Additionally, the white horizontal line in \autoref{subfig:hayAF_SCRA_ISAR_0Doppler} shows that the \gls{ds} was centered on zero-Doppler after \gls{af}. These results collectively confirm that phase correction was implemented correctly.
     
-    RA IC = 24.7384
-    AF IC = 34.0975
+    \begin{figure}[H]
+        \centering
+        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/HayAF_SCRA_Sim_ISAR_0Doppler}}
+        \caption{\gls{isar} image formed after \gls{sdsaf} correction on Correlation range-aligned simulated \gls{hrr} profiles.\label{subfig:hayAF_SCRA_ISAR_0Doppler}}
+    \end{figure}
+
+    \autoref{subfig:hayAF_sim_isar_0mps} shows the image of the object with no translation motion, and represents the ideal focused image after \gls{ra} and \gls{af}. The scatterer coordinates in \autoref{fig:sim_scatterers} show that the simulated ship had a single, thin hull and two masts. \autoref{subfig:hayAF_sim_isar_0mps} shows the hull and mast features clearly.
+
+    However, in \autoref{subfig:hayAF_SCRA_sim_isar_RA}, a duplication of the hull, seen as two similar sets of bright scatterers labelled A and B, appeared due to Doppler spreading caused by phase errors in the \gls{hrr} profiles. To address this, \gls{sdsaf} was applied to the Correlation range-aligned profiles. Consequently, \autoref{subfig:hayAF_SCRA_sim_isar_RA} shows a more focused image, featuring a single prominent group of scatterers representing the hull. \gls{ic} values were used to quantitatively evaluate the \gls{sdsaf}'s performance. The \gls{ic} values were \textbf{24.73} for the image before \gls{af} and \textbf{34.09} for the image after \gls{af}. The improvement of the \gls{ic} after \gls{sdsaf} further confirmed that \gls{sdsaf} improved the focus of the image. Therefore, \autoref{alg:haywood_AF} was implemented correctly.
     
-    \gls{sdsaf} was applied to the Correlation range-aligned profiles, \autoref{subfig:hayRA_sim_hrrp}, and produced the autofocused image in \autoref{subfig:hayAF_SCRA_sim_isar_AF}. Unlike in \autoref{subfig:hayAF_SCRA_sim_isar_RA}, the image in \autoref{subfig:hayAF_SCRA_sim_isar_AF} shows a single base centered at zero-Doppler. This    
+    % Grid of the HRRP and ISAR images
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
+            \caption{Range-aligned image. \label{subfig:hayAF_SCRA_sim_isar_RA}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/04HayAF/HayAF_SCRA_Sim_ISAR}}
+            \caption{Autofocused \gls{isar} image. \label{subfig:hayAF_SCRA_sim_isar_AF}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg}}
+            \caption{'Focused' image.\label{subfig:hayAF_sim_isar_0mps}}
+        \end{subfigure}
+        \caption{(a) Correlation range-aligned \gls{isar} image, (b) \gls{sdsaf} autofocused \gls{isar} image, (c) \gls{isar} image of simulated object with no translation motion. \label{fig:hayAF_sim}}
+    \end{figure}
+
+    Importantly, while the implementation was correct, comparing \autoref{subfig:hayAF_SCRA_sim_isar_AF} to \autoref{subfig:hayAF_sim_isar_0mps} shows that the image remained defocused after \gls{af}. In \autoref{subfig:hayAF_SCRA_sim_isar_AF} the \gls{ds}, at 18.5m, is spread over the Doppler axis which also appears in \autoref{subfig:hayAF_SCRA_sim_isar_RA}. This spreading was a result of poor \gls{ra} by the Correlation \gls{ra} algorithm, as discussed in \autoref{subsec:corrRA_verification}. Additionally, in \autoref{subfig:hayAF_SCRA_sim_isar_AF} the ship's hull and masts appear to have faint scatterer sidelobes. This shows that the \gls{sdsaf} algorithm did not perfectly correct the scatterer phases. This is also attributed to using misaligned range profiles. Nevertheless, the image was still more focused after \gls{ra} and the \gls{sdsaf} was implemented correctly.
     
     %***************************************************************************************%
     \subsection{Algorithm Validation}
-     An adjustment was made to this algorithm during implementation. As discussed in \autoref{theory:noise}, signals can be frequency-modulated by external interference sources, which can affect the phase of the received signal. These effects were seen in the initial \gls{isar} images hence a threshold \gls{sf} was introduced. It ensures that higher power scatterers are chosen as the \gls{ds} to reduce the effects of noise. The advantage of this is discussed using comparative results in \autoref{apndxA:scale_factor_effect}. The scaling factor was implemented as shown below.
-       
-    The best \gls{sf} for the simulated data was found to be 10 for both Haywood and Correlation data. Choosing a SF of 10 demonstartes the best case autofocused image where Haywood AF chooses the center of rotation \gls{ds} to use to phase correct all profiles. This will not always be the case in measured data however for the the purpose of verifying that the algorithm works as expected, the most ideal data is preferable and so the SF of 10 will be used in this section to verify the algorithm.
-    
-    \begin{itemize}
-        \item Implementation Revision: Discuss adjustments made to algorithm and why: higher power candidate scatterers chosen when using measured data was necessary and improved results
-        \item pseudo code update
-        \item Discuss chosen Scatterers, calculated image contrast results and visual signs of focused image
-        \item \textbf{Figures} thresholding of scatterers correct and dominant scatterer chosen, ISAR image before and after AF.
-    \end{itemize}
+    In this subsection, measured Correlation range-aligned \gls{hrr} data was used to validate that \autoref{alg:haywood_AF} improved the focus of the \gls{isar} image. \autoref{subfig:hayAF_measured_original_1} shows the original image formed using uncompensated \gls{hrr} profiles. \autoref{subfig:hayAF_corrRA_measured_RA_1} shows the image formed using the Correlation range-aligned profiles and was included for discussions around the performance of \gls{af}. 
 
-    \gls{sdsaf} was applied to the Correlation range-aligned profiles, \autoref{subfig:hayRA_sim_hrrp}, and produced the autofocused image in \autoref{subfig:hayAF_SCRA_sim_isar_AF}. Unlike in \autoref{subfig:hayAF_SCRA_sim_isar_RA}, the image in \autoref{subfig:hayAF_SCRA_sim_isar_AF} shows a single base centered at zero-Doppler. This 
+    Before comparing the \gls{isar} images, it is important to recall that sidelobes formed when using the \gls{fft} on measured data can result in Doppler spreading in the images, as discussed in \autoref{sec:theory_isar_complications}. Windowing was applied to minimise these sidelobes, but was not completely effective, as is evident in the images throughout this section. The spectral spreading caused by these sidelobes was present in the range-aligned image, and persisted in the autofocused images. Whilst the phase correction performed in \gls{af} can reduce the sidelobes in measured data, it is not the purpose of the algorithm.
     
-    Different scaling factors were tested for both the Correlation and Haywood range-aligned profiles to find the most suitable value for each. For correlation it was found to be x and for Haywood RA it was found to be x. As discussed in \autoref{apndxA:scale_factor_effect}, the SF will not always be ideal for all frames of data in the dataset. For the purpose of validation, the ideal case for the chosen frame was found inorder to validate that the algorithm produces a focused \gls{isar} image.
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/01Original/Measured_ISAR_frame2464}}
+            \caption{Unfocused image. \label{subfig:hayAF_measured_original_1}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/02CorrRA/SCRA_Measured_ISAR}}
+            \caption{Range-aligned image. \label{subfig:hayAF_corrRA_measured_RA_1}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/CorrRA/HayAF_SCRA_Measured_ISAR}}
+            \caption{Autofocused image.\label{subfig:hayAF_corrRA_measured_AF_1}}
+        \end{subfigure}
+        \caption{\gls{isar} images formed using the original, Correlation range-aligned and \gls{sdsaf} autofocused \gls{hrr} profiles of a single measured data frame.} \label{subfig:hayAF_corrRA_measured_1}
+    \end{figure}
 
-    In measureed data there is often more than one \gls{ds}. A limitation of the Haywood AF is that it uses only one \gls{ds} to phase corrects all profiles. This limits how well the image can be focused when using data where more than one \gls{ds} exists. %Yuan paper end of pg95 and beginning of 97
-    The \gls{ds} selected is assumed to be the cor which is not always the case in measured data where more than one \gls{ds} is selected. his means that phase corrections will not be perfect and so the image does not exactly like the reference focused isar image. Using multiple dominant scatterers stands to improve the focus of the image.
-    Recall from \autoref{theory:motion} that the center of rotation is the static point around which the object rotates and is the zero-Doppler point. A limitation of this \gls{dsa} is that it assumes that the selected \gls{ds} is the center of rotation, which is not always true. This means that phase corrections will not be perfect and so the image does not exactly like the reference focused isar image.
+    In \autoref{subfig:hayAF_measured_original_1}, the features of the object were not an accurate representation of those in \autoref{fig:hayAF_zayyaan}, for instance, the mast and antennae were wider in range than expected. \autoref{subfig:hayAF_corrRA_measured_RA_1} shows a more 
+     \begin{wrapfigure}{l}{0.4\linewidth}
+        \centering
+        \vspace*{-\baselineskip}
+        \resizebox{\linewidth}{!}{\includegraphics{Figures/04AlgoV&V/Measured/zayyaan.pdf}}
+        \caption{Zay-Yaan KB6 boat structure. Adapted from \cite{zayyaan_data}.}
+        \label{fig:hayAF_zayyaan}
+        \vspace*{-\baselineskip}
+    \end{wrapfigure}
+    accurate characterisation of the object's features. After \gls{ra}, the antennae were longer and thinner than the mast, and the angular bow was more pronounced. However, there was significant spreading of the object's features over the Doppler axis, which was attributed to the effects of phase errors in the range-aligned profiles and sidelobes in the data. As discussed in \autoref{theory:af}, \gls{af} is used to correct the phase errors introduced by \gls{ra}. \autoref{subfig:hayAF_corrRA_measured_AF_1} shows that after \gls{af} was applied, the Doppler spreading was reduced; however, the shape of the bow and mast were not an accurate representation of the features in \autoref{fig:hayAF_zayyaan}. Notably, the spectral spreading caused by sidelobes was still present as previously discussed. The \gls{ic} values of each image were \textbf{7.0534}, \textbf{8.1803}, and \textbf{10.4345} for the unfocused, range-aligned, and autofocused images, respectively. Although there was a \(\frac{10.4345-7.0534}{7.0534} = 47.94\%\) improvement on the image contrast after \gls{ra} and \gls{af} was applied, the features of the object in \autoref{subfig:hayAF_corrRA_measured_AF_1} were not a satisfactory representation of those in \autoref{fig:hayAF_zayyaan}.
+
+    Importantly, in measured data there often exists more than one \gls{ds}. A limitation of the \gls{sdsaf} algorithm is that it uses only one \gls{ds} to phase correct all profiles. The poor quality of \autoref{subfig:hayAF_corrRA_measured_AF_1} was attributed to the \gls{ds} selected by the \gls{sdsaf} algorithm. As explained in \autoref{theory:noise}, the \gls{snr} of a scatterer is influenced by noise, which subsequently impacts the performance of \gls{af} algorithms. \autoref{fig:hayAF_SCRA_measured_power_1} shows that a low power \gls{ds} was selected when producing \autoref{subfig:hayAF_corrRA_measured_AF_1}. 
+    \begin{figure}[H]
+        \centering
+        \resizebox{0.4\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/CorrRA/HayAF_SCRA_Measured_Power}}
+        \caption{Scatterer power for the selection of a \gls{ds} in \gls{sdsaf} applied to correlation range-aligned measured \gls{hrr} profiles}
+       \label{fig:hayAF_SCRA_measured_power_1}
+    \end{figure}
+
+    Consequently, whilst multiple \gls{ds}s cannot be selected, a different approach was taken to improve the performance of the algorithm. A \gls{sf} was introduced into line 10 of \autoref{alg:haywood_AF} to ensure that a higher power \gls{ds} was selected. The aim was to improve the quality of the autofocused image by selecting a \gls{ds} that was less affected by noise. This was implemented as shown in \autoref{code:scaling_factor}.
+% !!!!!!!!!!!!!! DO NOT INDENT IT MESSES UP THE LATEX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\begin{lstlisting}[caption={\textsc{MATLAB} code for scaling factor in candidate \gls{ds} selection.},label={code:scaling_factor}]
+scaling_factor = 10;
+candidate_scatterers_idx = find(power_scatterer>scaling_factor*average_power_scatterer);
+\end{lstlisting}
+
+    Two scaling factors, namely 5 and 10, were used to test the effect of the improved implementation on the performance of \gls{sdsaf}. \autoref{subfig:hayAF_SCRA_measured_power_sf5} and \autoref{subfig:hayAF_SCRA_measured_power_sf10} show that as the \gls{sf} increased, a higher power \gls{ds} was selected as expected.
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.4\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/ScalingFactor/HayAF_SCRA_Measured_Power_SF5}}
+            \caption{\gls{sf} = 5. \label{subfig:hayAF_SCRA_measured_power_sf5}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.4\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/ScalingFactor/HayAF_SCRA_Measured_Power_SF10}}
+            \caption{\gls{sf} = 10. \label{subfig:hayAF_SCRA_measured_power_sf10}}
+        \end{subfigure}
+        \caption{Scatterer power for the selection of a \gls{ds} in \gls{sdsaf} using various threshold \gls{sf}s applied to correlation range-aligned measured \gls{hrr} profiles} \label{fig:hayAF_SCRA_measured_power_2}
+    \end{figure}
+
+    Subsequently, introducing the \gls{sf} produced the images in \autoref{subfig:hayAF_corrRA_measured_2}. \autoref{subfig:hayAF_corrRA_measured_SF1} shows the focused image before the \gls{sf} was introduced which inherently means that the \gls{sf} was 1. The \gls{ic} values for each image were calculated to provide a quantitative evaluation of the \gls{sf}'s effect on the performance of \gls{sdsaf}. The values for images (a),(b) and (c) in \autoref{subfig:hayAF_corrRA_measured_2} were calculated as \textbf{10.4345}, \textbf{15.1049} and \textbf{15.2911} respectively. The improvement of the \gls{ic} values as the \gls{sf} increased, indicated that introducing the \gls{sf} improved the performance of \gls{sdsaf}.
+    
+    Although the \gls{ic} values indicated that \autoref{subfig:hayAF_corrRA_measured_SF5} and \autoref{subfig:hayAF_corrRA_measured_SF10} were similarly focused, the visual results did not reflect his result. In \autoref{subfig:hayAF_corrRA_measured_SF5}, the Doppler spreading, was reduced compared to \autoref{subfig:hayAF_corrRA_measured_SF1} however, the features of the boat were less recognisable. Whilst the antennae were well represented as a long, thin regtangular cluster, the bow and stern were taller than expected. In contrast, when a \gls{sf} of 10 was used, \autoref{subfig:hayAF_corrRA_measured_SF5} showed the most accurate representation of the boat's features. There was a distinct long, thin rectangular cluster of scatterers representing the antennae and the angular bow and round stern were clearly identifiable. Additionally, there was a clear cluster of scatterers at the bow of the ship which accurately represented the front end of the ship shown in \autoref{fig:zayyaan}.
+
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/CorrRA/HayAF_SCRA_Measured_ISAR}}
+            \caption{\gls{sf} = 1. \label{subfig:hayAF_corrRA_measured_SF1}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/ScalingFactor/ISAR/HayAF_SCRA_Measured_ISAR_SF5}}
+            \caption{\gls{sf} = 5. \label{subfig:hayAF_corrRA_measured_SF5}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/04HayAF/ScalingFactor/ISAR/HayAF_SCRA_Measured_ISAR_SF10}}
+            \caption{\gls{sf} = 10.\label{subfig:hayAF_corrRA_measured_SF10}}
+        \end{subfigure}
+        \caption{\gls{isar} images of after \gls{sdsaf} using different scaling factors applied to Correlation range-aligned measured \gls{hrr} profiles.} \label{subfig:hayAF_corrRA_measured_2}
+    \end{figure}
+
+    Therefore, the \gls{sf} improved the performance of \gls{sdsaf}, resulting in a more focused image. Using a \gls{sf} of 10 produced an image which more accurately represented the features on the boat than the image produced when no \gls{sf} was used. However, when a scaling factor of 5 was used, the image appeared less focused. This was attributed to the selection of an unsuitable \gls{ds}. Importantly, this does not imply that a \gls{sf} of 5 is inherently less desirable than a \gls{sf} of 1. Rather, it was a consequence of the characteristics of the dataset and could occur regardless of the chosen \gls{sf}. 
+
+    Overall, the improved \gls{sdsaf} implementation produced a focused \gls{isar} image when using a \gls{sf} of 10 and was validated for use in this report. This \gls{sf} of 10 was used for all following experimentation which involved \gls{sdsaf}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Multiple Dominant Scatterer Autofocus Algorithm}\label{subsec:yuanAF}
-In measured data there often exists more than one \gls{ds}. The Multiple Dominant Scatterer \gls{af} algorithm is a type of \gls{dsa} that selects a set of dominant scatterers to use in phase correction. The average of all the phase differences of all dominant scatterers is used for the phase correction. Since the amplitude of each \gls{ds} is included in the calculated average, the phase of the stronger scatterers contribute more to the phase correction. Hence, this is a weighted multiple scatterer approach to \gls{af}.
-An outline of the Yuan \gls{af} algorithm as described in \cite{yuan_AF} is given in \autoref{alg:yuan_AF}.
- % Read Yuan's paper
-
+The \gls{mdsaf} algorithm is a type of \gls{dsa} that uses a set of scatterers to phase correct \gls{hrr} profiles. The \gls{ds}s are selected as those with the least dispersion\footnote{Dispersion describes the spread of the scatterer across all \gls{hrr} profiles}. The \gls{mdsaf} algorithm, as described in \cite{yuan_AF}, was outlined in \autoref{alg:yuan_AF}.
+ 
     %***************************************************************************************%
     \subsection{Pseudo Code and Implementation}
     % Yuan AF Pseudo code
-    \begin{figure}[h]
-      \vspace{0.5cm}
-      \centering
-      \captionsetup{type=figure}
-      \begin{minipage}{.7\linewidth}
-        \begin{algorithm}[H]
-            \caption{Multiple Dominant Scatterer \gls{af} Algorithm.\label{alg:yuan_AF}}
-    
+    \begin{figure}[H]
+        \vspace{0.25cm}
+        \centering
+        \captionsetup{type=figure}
+        \begin{minipage}{.8\linewidth}
+            \begin{algorithm}[H]
+            \caption{Haywood \gls{ra} Algorithm.\label{alg:yuan_AF}}
+        
+            \LinesNumbered % NUMBER THE LINES
             \DontPrintSemicolon
             \SetAlgoLined
             \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}\SetKwInOut{Parameter}{parameter}
-    
-            \Input{\gls{ra} \gls{hrrp}s, matrix $hrrp_{RA}$}
-            \Output{Autofocused \gls{hrrp}s, matrix $hrrp_{AF}$}
+        
+            \Input{All \gls{hrrp}s, matrix $hrrp_{all}$}
+            \Output{Range-aligned \gls{hrrp}s, matrix $hrrp_{RA}$}
             \Parameter{Reference \gls{hrrp} number, $refIndex$}
-    
+        
             \BlankLine
             \Begin{
-                \For(){$k$ in 1 to rows($hrrp_{all}$)}{
-                    $variance[k] \leftarrow variance(| hrrp_{all}[k] |) $\;
+                $scattererAmplitudes \leftarrow 0$\;
+               \For(){$k$ in 1 to rows($hrrp_{RA}$)}{
+                    \For(){$n$ in 1 to $columns(hrrp_{RA})$}{
+                        $scattererAmplitudes \leftarrow scattererAmplitudes + |hrrp_{RA}[k][n]|^2 $\;
+                    }
+                    $mean[n] \leftarrow mean(scattererAmplitudes) $\;
+                    $variance[n] \leftarrow var(scattererAmplitudes) $\;
+                }
+
+                $a \leftarrow 0$\;
+                \For(){$b$ in 1 to length($mean$)}{
+                    $dispersion[b] \leftarrow variance[b]/(variance[b] + mean[b]^2)$\;
+                    \If{$dispersion>0.16$}{
+                        $candidateIndices[a] \leftarrow b$\;
+                        $a \leftarrow a + 1$\;
+                    } 
+                }
+                $candidateIndices_{sorted} \leftarrow$ indices of ascending sort $dispersion(candidateIndices)$\;
+                \gls{ds}$indices \leftarrow candidateIndices_{sorted}[1$ to $11]$\;
+                \For(){$b$ in 1 to length(\gls{ds}$indices$)}{
+                    \For(){$k$ in 1 to rows($hrrp_{RA}$)}{
+                        $product[k][b] = conjugate(hrrp_{RA}[refIndex][b]) \cdot hrrp_{RA}[k][b] $\;
+                    }
+                }
+                \For(){$k$ in 1 to rows($product$)}{
+                    $angle \leftarrow angle(mean(product[k]))$\;
+                    $phaseShift[k] \leftarrow exp(-1i \cdot angle)$
+                }
+                \For(){$k$ in 1 to rows($hrrp_{RA}$)}{
+                    \For(){$n$ in 1 to $columns(hrrp_{RA})$}{
+                        $hrrp_{AF}[k][n] \leftarrow hrrp_{RA}[k][n] \cdot phaseShift[k] $
+                    }
                 }
             }
-          \vspace{0.5cm}
+          \vspace{0.25cm}
         \end{algorithm}
       \end{minipage}
     \end{figure}
-    Note that the original algorithm suggests choosing a number of dominnat scatterers between 6 and 18, optimally 11, however it was found that not all \gls{hrr} profiles contain enough dominant scatterers to fulfill this. An check has been implemented that either uses 11 or otherwise the minimum number of dominant scatterers available. INCLUDE THE IF STATEMENT IN THE PSEUDO CODE.
+
+    The \gls{mdsaf} algorithm was implemented as a stand-alone \textsc{MATLAB} function. The implemented function, \href{}{yuanAF.m}, was validated and verified in this section.
     %***************************************************************************************%
     \subsection{Algorithm Verification}
-    \begin{itemize}
-        \item \textbf{IF this is not a good show of the algorithm, discuss wwhy: limitations of simulator}
-        \item Confirm that dominant scatterer is chosen, calculated image contrast results and visual signs of focused image
-        \item \textbf{Figures} thresholding of scatterers correct and dominant scatterer chosen, ISAR image before and after AF.
-    \end{itemize}
+    Correlation range-aligned simulated \gls{hrr} profiles were used to verify that \autoref{alg:yuan_AF} was implemented correctly in \textsc{MATLAB}.
+    
+    \begin{figure}[H]
+        \centering
+        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/05YuanAF/YuanAF_SCRA_Sim_DS}}
+        \caption{\gls{mdsaf} \gls{ds} selection for Correlation range-aligned simulated \gls{hrr}  profiles.}
+        \label{fig:yuanAF_candidates}
+    \end{figure}
 
-    IC values: SCRA=38.42  and HayRA =50.03 
+    \autoref{fig:yuanAF_candidates} shows the candidate dominant scatterers selected based on the criterion outlined in lines 11-16 of \autoref{alg:yuan_AF}. All scatterers that had a dispersion value below the 0.16 threshold (indicated by the orange line) were selected as candidate scatterers, while those above the threshold line were not chosen. Therefore, the candidate scatterer selection was implemented correctly. 
+
+    In \autoref{alg:yuan_AF}, lines 17 and 18 outline the process for selecting the dominant scatterers as the 11 scatterers with the smallest dispersion value. The larger red circles in \autoref{fig:yuanAF_candidates} show that the smallest 11 dispersion-valued candidate scatterers were chosen as the dominant scatterers as expected. This verifies that the \gls{ds} selection was implemented correctly.
+
+    \begin{figure}[H]
+        \centering
+        \resizebox{0.45\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/05YuanAF/YuanAF_SCRA_Sim_refProfile}}
+        \caption{Reference \gls{hrr} profile selected for use in \gls{mdsaf} using Correlation range-aligned simulated \gls{hrr} profiles.}
+        \label{fig:yuanAF_refProfile}
+    \end{figure}
+
+    In line 22 of \autoref{alg:yuan_AF} a reference profile is used, \cite{yuan_AF} does not clarify how to choose this profile. Rather than selecting it as an arbitrary value, a step was introduced to select the reference profile as the profile in which the sum of powers from all the selected dominant scatterers was the greatest. The reasoning behind this was that thee reference profile would be selected as the profile where the scatterers are the most concentrated and likely their original position so any spreading from that point would be due to motion and should be shifted back to that original position. The implementation of this selection is shown in  \autoref{code:ref_profile}.
+% !!!!!!!!!!!!!! DO NOT INDENT IT MESSES UP THE LATEX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\begin{lstlisting}[caption={\textsc{MATLAB} code for selecting reference profile.},label={code:ref_profile}]
+[~,ref_HRRP_num] = max(sum(abs(RA_HRRP(:,DS_idx)).^2,2));
+\end{lstlisting}
+% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    \autoref{fig:yuanAF_refProfile} shows that the profile with the highest collective \gls{ds} power was the selected reference profile. Therefore, the reference profile selection was implemented correctly.
+
+     \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.45\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/05YuanAF/PhaseAngle/YuanAF_SCRA_Sim_DS1angleBefore}}
+            \caption{Phase angle before correction.} \label{subfig:yuanAF_SCRA_sim_DS1angle_before}
+        \end{subfigure}
+        \hspace{1cm}
+        \begin{subfigure}{0.45\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/05YuanAF/PhaseAngle/YuanAF_SCRA_Sim_DS1angleAfter}}
+            \caption{Phase angle after correction} \label{subfig:yuanAF_SCRA_sim_DS1angle_after}
+        \end{subfigure}
+        \caption{\gls{ds} 1's phase angle before and after \gls{mdsaf} phase correction.\label{subfig:yuanAF_SCRA_sim_DS1angle}}
+    \end{figure}
+    
+    Furthermore, \autoref{subfig:yuanAF_SCRA_sim_DS1angle} shows the phase of one of the eleven selected \gls{ds}s before and after phase correction. \autoref{subfig:yuanAF_SCRA_sim_DS1angle_after} shows that the angle was reduced after phase correction but was not zero. A similar result was seen for all dominant scatterers. As discussed in \cite{yuan_AF}, \autoref{alg:yuan_AF} does not expect the phase to be removed but rather to be reduced. Therefore, since the angles of all the dominant scatterers were smaller after phase correction, the phase correction in lines 25-28 in \autoref{alg:yuan_AF} was implemented correctly. 
+
+    % Grid of the HRRP and ISAR images
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/02CorrRA/SCRA_Sim_ISAR_1mps_6deg}}
+            \caption{Range-aligned image. \label{subfig:yuanAF_SCRA_sim_isar_RA}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/05YuanAF/ISAR/YuanAF_SCRA_Sim_ISAR}}
+            \caption{Autofocused \gls{isar} image. \label{subfig:yuanAF_SCRA_sim_isar_AF}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg}}
+            \caption{'Focused' image.\label{subfig:yuanAF_sim_isar_0mps}}
+        \end{subfigure}
+        \caption{(a) Correlation range-aligned \gls{isar} image, (b) \gls{mdsaf} autofocused \gls{isar} image, (c) \gls{isar} image of simulated object with no translation motion. \label{fig:hayAF_sim}}
+    \end{figure}
+
+    The scatterer coordinates in \autoref{fig:sim_scatterers} illustrate that the simulated ship consisted of a single, thin hull and two masts. However, in \autoref{subfig:yuanAF_SCRA_sim_isar_RA}, there are two prominent groups of scatterers, labelled A and B, giving the false impression of two hull-like features on the simulated object. The duplication of the hull in \autoref{subfig:yuanAF_SCRA_sim_isar_RA} was caused by phase errors in the \gls{hrr} profiles. To address this, \gls{mdsaf} was applied to the Correlation range-aligned profiles. 
+    
+    \autoref{subfig:yuanAF_SCRA_sim_isar_AF} shows a single prominent group of scatterers centered at zero-Doppler which correctly represents the hull. The missing duplication of the hull shows that the image was more focused after applying \gls{mdsaf}. To quantitatively analyse the focus of the image, the \gls{ic} was calculated. Before \gls{af} the \gls{ic} was \textbf{24.73} and after \gls{af} it was \textbf{38.42}. The improvement of the \gls{ic} after \gls{mdsaf} further confirms that the image focus improved. Therefore, \autoref{alg:yuan_AF} was implemented correctly.
+
+    While the implementation was correct, comparing \autoref{subfig:yuanAF_SCRA_sim_isar_AF} to \autoref{subfig:yuanAF_SCRA_sim_isar_0mps} shows that the hull of the ship remained defocused after \gls{af}. In \autoref{subfig:yuanAF_SCRA_sim_isar_AF} the ship's hull and masts appear to have faint scatterer sidelobes which indicate that \gls{mdsaf} did not perfectly correct the scatterer phases. This is attributed to the use of misaligned \gls{hrr} profiles. Nevertheless, the image was more focused after \gls{ra} and \gls{mdsaf} was implemented correctly.
     
     %***************************************************************************************%
     \subsection{Algorithm Validation}
-    \begin{itemize}
-        \item Implementation Revision: Discuss adjustments made to algorithm and why: filtering out noisy scatterers
-        \item pseudo code update
-        \item Discuss chosen Scatterers, calculated image contrast results and visual signs of focused image
-        \item \textbf{Figures} thresholding of scatterers correct and dominant scatterer chosen, ISAR image before and after AF.
-    \end{itemize}
+    In this subsection, measured Correlation range-aligned \gls{hrr} profiles were used to validate that \autoref{alg:yuan_AF} produced a focused \gls{isar} image. 
+    
+    In \autoref{alg:yuan_AF}, 11 \gls{ds}s are selected, however it was found that not all \gls{hrr} profiles contained enough \gls{ds}s to fulfill this requirement. In these cases, the number of \gls{ds}s was chosen as the maximum number possible. To this effect, the implementation was improved as shown in \autoref{code:num_DS_selected}.
+% !!!!!!!!!!!!!! DO NOT INDENT IT MESSES UP THE LATEX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\begin{lstlisting}[caption={\textsc{MATLAB} code for selecting number of \gls{ds}s.},label={code:num_DS_selected}]
+if(size(candidate_scatterers_idx,2)>11)
+    num_scatterers = 11;
+else % use maximum number of scatterers available
+    num_scatterers = size(candidate_scatterers_idx,2); 
+end
+\end{lstlisting}   
+% !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    Additionally, it was found that scatterers outside the object were chosen as candidate \gls{ds}s. The aim of \gls{af} is to focus the object within the image. Selecting scatterers that do not appear on the object can result in degradation of the focus of the image. Scatterers that appear outside of the object are referred to as noisy scatterers. An improvement was made to the implemented algorithm to ensure that only object scatterers were considered for candidate \gls{ds} selection. This was implemented as a filtering technique; first scatterers above the average power were found and then the minimum and maximum values were used find the range of scatterers that represented the image. The implementation is shown in \autoref{code:yuanAF_noise_filter}.
+% !!!!!!!!!!!!!! DO NOT INDENT IT MESSES UP THE LATEX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\begin{lstlisting}[caption={\textsc{MATLAB} code for filtering scatterers used in candidate \gls{ds} selection.},label={code:yuanAF_noise_filter}]
+no_noise_scatterers_idx = find(amplitude_mean>0.5.*mean(amplitude_mean));
+no_noise_scatterers_idx = min(no_noise_scatterers_idx):max(no_noise_scatterers_idx);
+\end{lstlisting}
+
+    \autoref{fig:yuanAF_noise_filtering} shows the noise filtering threshold introduced and that scatterers 31 to 72 are considered to be within the object.
+    \begin{figure}
+        \centering
+        \resizebox{0.4\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/05YuanAF/YuanAF_SCRA_Sim_NoiseFiltering}}
+        \caption{Scatterer amplitudes and object scatterers considered in \gls{mdsaf} of Correlation range-aligned measured \gls{hrr} profiles.} \label{fig:yuanAF_noise_filtering}
+    \end{figure}
+
+    \autoref{subfig:yuanAF_candidates_noise} shows the candidate \gls{ds}s selected before noise filtering was applied. Candidate scatterers outside of the object range of 31 to 72 were erroneously considered and selected as \gls{ds}s. \autoref{subfig:yuanAF_candidates_nonoise} shows the candidate \gls{ds}s selected after noise filtering was applied. Only scatterers within the object were considered as candidates and selected as \gls{ds}s. This indicates that the noise filtering was successful. 
+    
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/05YuanAF/YuanAF_SCRA_Sim_DS_unFiltered}}
+            \caption{Before noise filtering. \label{subfig:yuanAF_candidates_noise}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/05YuanAF/YuanAF_SCRA_Sim_DS_Filtered}}
+            \caption{After noise filtering. \label{subfig:yuanAF_candidates_nonoise}}
+        \end{subfigure}
+        \caption{\gls{mdsaf} \gls{ds} selection for Correlation range-aligned measured \gls{hrr} profiles before and after noise filtering.} \label{subfig:hayAF_corrRA_measured_2}
+    \end{figure}
+
+    The selected \gls{ds}s shown in \autoref{subfig:yuanAF_candidates_nonoise} were used to correct the phase errors introduced by \gls{ra}. 
+    \begin{wrapfigure}{l}{0.4\linewidth}
+        \centering
+        \vspace*{-\baselineskip}
+        \resizebox{\linewidth}{!}{\includegraphics{Figures/04AlgoV&V/Measured/zayyaan.pdf}}
+        \caption{Zay-Yaan KB6 boat structure. Adapted from \cite{zayyaan_data}.}
+        \label{fig:yuanAF_zayyaan}
+        \vspace*{-\baselineskip}
+    \end{wrapfigure}
+    \autoref{subfig:yuanAF_measured_original} shows the unfocused \gls{isar} image. Comparing it to the image of the \autoref{fig:yuanAF_zayyaan}, the mast and antennae features were poorly represented in the \gls{isar} image. Applying \gls{ra}, resulted in the \gls{isar} image in \autoref{subfig:yuanAF_corrRA_measured_RA} which more accurately represents the boat's features; a thin long rectangular cluster of scatterers clearly shows the antennae and the angular bow of the boat is well reflected. However, this image still exhibited Doppler spreading and sidelobes which could be improved by \gls{af}.
+
+    \autoref{subfig:yuanAF_corrRA_measured_AF} exhibits reduced sidelobes which was attributed to the phase correction performed during \gls{mdsaf}. Additionally, the rectangular group of antennae and triangular shape of the mast represent the features in \autoref{fig:yuanAF_zayyaan}. Thus the image was visually more focused after \gls{mdsaf}.
+    
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/01Original/Measured_ISAR_frame2464}}
+            \caption{Unfocused image. \label{subfig:yuanAF_measured_original}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/02CorrRA/SCRA_Measured_ISAR}}
+            \caption{Range-aligned image. \label{subfig:yuanAF_corrRA_measured_RA}}
+        \end{subfigure}
+        \hspace{0.5cm}
+        \begin{subfigure}{0.3\linewidth}
+            \resizebox{\linewidth}{!}{\input{Figures/04AlgoV&V/Measured/05YuanAF/YuanAF_SCRA_Measured_ISAR}}
+            \caption{Autofocused image.\label{subfig:yuanAF_corrRA_measured_AF}}
+        \end{subfigure}
+        \caption{\gls{isar} images formed using the original, Correlation range-aligned and \gls{mdsaf} autofocused \gls{hrr} profiles of a single measured data frame.} \label{subfig:yuanAF_corrRA_measured}
+    \end{figure}
+
+    Additionally, the \gls{ic} values were used to quantitively examine the improvement of image focus. The \gls{ic} values were \textbf{7.0534}, \textbf{8.1803} and \textbf{17.0869} for the images in \autoref{subfig:yuanAF_corrRA_measured}(a),(b) and (c), respectively. The \gls{ic} improvement factor after \gls{ra} and \gls{af} was calculated to be \(\frac{17.0869-8.1803}{8.1803}=108.88\%\) which further indicated that the \gls{mdsaf} improved the focus of the \gls{isar} image.
+
+    Importantly, the focused image in \autoref{subfig:yuanAF_corrRA_measured_AF} still exhibited Doppler spreading which was attributed to sidelobes in the measured data, as discussed in \autoref{theory:sidelobes}. However, the image displayed a good characterisation of the boat's features despite the Doppler spreading.
+
+    Therefore, the improved implementation of the \gls{mdsaf} algorithm produced a more focused image of measured data and was validated for use in this report.
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Optimisation of Implementation to reduce runtime \label{sec:V&V_optimisation}}
-\begin{itemize}
-    \item \textbf{Table} timing before and after optimisation - in APPENDIX
-    \item Discuss time testing and code optimisation approaches
-    \item Emphasise that the results before and after are still the same - not sure that proof is necessary.
-\end{itemize}
-\textsc{MATLAB} is designed to operate on arrays and matrices and has built-in functions that enable multithreaded processing of matrix operations. This eliminates the need for iterative loops required in other programming languages. The implementation of all algorithms used in this report leveraged these capabilities to achieve improved runtime performance.  Additionally, find() was replaced with \textsc{MATLAB} logical indexing \cite{matlab_logical_indexing} where possible. 
+\section{Optimisation of Implementation to Reduce Runtime \label{sec:V&V_optimisation}}
+The algorithms implemented in this chapter are designed for use in a \gls{qlp}. To decrease the runtime of the processor, the algorithm implementations were optimized.
 
-All optimisation changes and adjustments were carefully checked to ensure that the correct results were produced. The tabulated timing results can be found in \autoref{apndxA:optimisation_timing_full}, but the runtime improvement percentage for each algorithm is specified in \ref{tab:optimisation_timing}.
-
-\begin{table}
-    \centering
-    \begin{tabular}{|l|c|}
-        \hline
-        \multicolumn{1}{|c|}{\textbf{Algorithm}} & \textbf{Runtime Improvement (s)} \\
-        \hline
-        Correlation \gls{ra}    & \\
-        \hline
-        Haywood \gls{ra}               & \\
-        \hline
-        Haywood \gls{af}               & \\
-        \hline
-        Yuan \gls{af}                  & \\
-        \hline
-    \end{tabular}
-    \caption{Caption \label{tab:optimisation_timing}}
-\end{table}
-
-
+\textsc{MATLAB} is designed to operate on arrays and matrices and has built-in functions that enable multithreaded processing of matrix operations. This eliminates the need for iterative loops required in other programming languages. The implementation of all algorithms used in this report leveraged these capabilities to achieve improved runtime performance.  Additionally, find() was replaced with \textsc{MATLAB} logical indexing \cite{MATLAB_logical_indexing} where possible. All optimisation changes and adjustments were carefully checked to ensure that the same results were produced. 
 
     %***************************************************************************************%
     \subsection{Correlation Range Alignment Algorithm}
-    Cross-correlation can be performed in the time or frequency domain, \cite{ISARtextbook_Martorella} states that the frequency domain computation is faster. However, \textsc{Matlab} has a built-in two-dimensional time domain cross-correlation function that is optimised for \textsc{Matlab} use. This made the time domain calculation faster than performing multiple steps to do the frequency domain correlation in this \textsc{Matlab} specific implementation. Notably, the final script achieved a x reduction in runtime compared to the initial version.
+    Cross-correlation can be performed in the time or frequency domain, \cite{ISARtextbook_Martorella} states that the frequency domain computation is faster. However, \textsc{MATLAB} has a built-in two-dimensional time domain cross-correlation function that is optimised for \textsc{MATLAB} use. This made the time domain calculation faster than performing multiple steps to do the frequency domain correlation in this \textsc{MATLAB} specific implementation. Notably, the final script achieved a x reduction in runtime compared to the initial version.
     
     %***************************************************************************************%
     \subsection{Haywood Range Alignment Algorithm}
@@ -590,17 +903,55 @@ All optimisation changes and adjustments were carefully checked to ensure that t
 
     %***************************************************************************************%
     \subsection{Yuan Autofocus Algorithm}
-    The \textsc{MATLAB} functions used to calculate values in the algorithm were optimized to use faster alternatives that still yielded correct results. For example, the mink() function, which returns the index of the smallest k values, was replaced by the the sort() function, and the returned array was then indexed. This change was made because sort() is multithreaded, and resulted in runtime improvements. Notably, the final script achieved a x reduction in runtime compared to the initial version.
-    
+    The \textsc{MATLAB} functions used to calculate values in the algorithm were optimized to use faster alternatives that still yielded the correct results. For example, the mink() function, which returns the index of the smallest k values, was replaced by the the sort() function, and the returned array was then indexed. This change was made because sort() is multithreaded, and resulted in runtime improvements. Notably, the final script achieved a x reduction in runtime compared to the initial version.
+    %***************************************************************************************
+    \subsection{Runtime Testing}
+    To ensure that the changes made to each algorithm resulted in runtime improvements, the algorithms before and after optimisation were timed.
+    \subsubsection{Testing Setup}
+    A \textsc{MATLAB} \href{}{timing script} was used to measure the runtime of each algorithm, before and after optimisation. This script was used to execute each algorithm 100 times and the raw timing results were recorded in a CSV file. The timing tests were performed on a single simulated \gls{isar} frame,  which had 32 profiles, each with 256 range bins. A folder containing the testing files is available on \href{}{GitHub}.
+
+    The testing was conducted on a MacBook Pro (2016) with the following hardware specifications:
+    \begin{itemize}
+        \item Processor: 2.9GHz Dual-Core Intel Core i5
+        \item Memory: 8GB 2133MHz LPDDR3
+    \end{itemize}
+
+    \subsubsection{Results}
+    The raw timing results recorded in the \href{}{CSV file} were averaged to determine the effective runtime of each algorithm. \autoref{tab:optimisation_timing} contains the effective runtime of each algorithm before and after runtime optimisation. The runtime improvement was calculated as
+    \begin{equation}
+        Improvement = \frac{Original-Optimised}{Original}
+    \end{equation}
+    and is recorded in \autoref{tab:optimisation_timing}.
+
+    \begin{table}
+        \centering
+        \begin{tabular}{|l|c|c|c|}
+            \hline
+            \multicolumn{1}{|c|}{\textbf{Algorithm}} & \textbf{Original Runtime (s)}&\textbf{Optimised Runtime (s)} &\textbf{Improvement (\%)} \\
+            \hline
+            Correlation \gls{ra}    & 0.009556872 & 0.002843406 & 70.24 \\
+            \hline
+            Haywood \gls{ra}        & 0.011963056 & 0.004136744 & 65.42  \\
+            \hline
+            \gls{sdsaf}             & 0.002407375 & 0.001363729 & 43.35  \\
+            \hline
+            \gls{mdsaf}             & 0.002260847 & 0.001801478 & 20.31 \\
+            \hline
+        \end{tabular}
+        \caption{Algorithm runtime optimisation timing results. \label{tab:optimisation_timing}}
+    \end{table}
+
+    The results recorded in \ref{tab:optimisation_timing} show that for all algorithms the optimisation strategies resulted in improved runtimes.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary}
-The integer bin shifting presented a limitation of \autoref{alg:corr_RA} which prevented perfect aligment of the range profiles in both simulation and when using measured data.
-
-Because Corr Ra only allows integer bin shifts, and in some profiles the object only moves by a fractional bin amount, the range alignment is not perfect. This is a limitation of algorithm which Haywood RA overcomes.
-
-LIn measured data there is often more than one \gls{ds}. A limitation of the Haywood AF is that it uses only one \gls{ds} to phase corrects all profiles and assumes that this \gls{ds} is the cor. This limits how well the image can be focused when using measure data, as shown in the previous section. Yuan AF improves on this by selecting multiple \gls{ds} to use in phase correction.
-
-In measured data there is often more than one \gls{ds}. A limitation of the Haywood AF is that it uses only one \gls{ds} to phase corrects all profiles and assumes that this \gls{ds} is the cor. This limits how well the image can be focused when using measure data, as shown in the previous section. Yuan AF improves on this by selecting multiple \gls{ds} to use in phase correction.
+\begin{itemize}
+    \item The integer bin shifting limitation of the Correlation \gls{ra} algorithm prevented perfect alignment of the \gls{hrr} profiles in both simulated and measured data.
+    \item The Haywood \gls{ra} realised fractional bin shifts and produced range-aligned profiles in both simulated and measured data.
+    \item In measured data, there was often more than one \gls{ds}. A limitation of the \gls{sdsaf} was that it used only one \gls{ds} to focus the \gls{isar} image. This limited how well the image could be focused when using measured data. A \gls{sf} was introduced to ensure a high-power \gls{ds} was selected. This subsequently improved the performance of the algorithm. \gls{sdsaf} produced satisfactorily focused images for measured data.
+    \item \gls{mdsaf} realised the use of multiple \gls{ds}s to focus the image. The algorithm's performance was improved by adding noise filtering and a systematic way of selecting the reference profile. \gls{mdsaf} produced focused images for measured data.
+    \item The processing time of all algorithms was successfully reduced through optimisation of the implementations.
+\end{itemize}
 % ----------------------------------------------------
 \ifstandalone
 \bibliography{../Bibliography/References.bib}

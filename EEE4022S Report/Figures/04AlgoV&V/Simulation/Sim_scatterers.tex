@@ -13,21 +13,22 @@ width=6.028in,
 height=4.754in,
 at={(1.011in,0.642in)},
 scale only axis,
-xmin=-10,
-xmax=10,
+xmin=-15,
+xmax=15,
 xlabel style={font=\fontsize{20}{20}\selectfont\color{black}, yshift = -10},
 xlabel={Length (m)},
-ymin=0,
-ymax=3,
+ymin=-0.5,
+ymax=4,
 ylabel style={font=\fontsize{20}{20}\selectfont\color{black}},
 ylabel={Height (m)},
 axis background/.style={fill=white},
 tick label style={font=\fontsize{15}{11}\selectfont\color{black}},
 ytick distance = 0.5,
+xtick distance = 5,
 axis x line*=bottom,
 axis y line*=left
 ]
-\addplot[only marks, mark=o, mark options={}, mark size=1.5000pt, draw=mycolor1, forget plot] table[row sep=crcr]{%
+\addplot[color=mycolor1, only marks, mark size=3.0pt, mark=*, mark options={solid, fill=mycolor1, mycolor1}] table[row sep=crcr]{%
 x	y\\
 -10	0\\
 -9	0\\

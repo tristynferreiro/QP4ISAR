@@ -159,6 +159,70 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
     \end{minipage}
     \end{figure}
 
+    % Grid of the HRRP and ISAR images SCRA
+    \begin{figure}[H]
+    \vspace*{\baselineskip}
+    \centering
+    \begin{minipage}{0.98\linewidth}
+        \begin{tabular}{@{}ccc@{}}
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/ISAR/HayAF_SCRA_Measured_ISAR_sf1}}
+                \caption{Autofocused \gls{isar} image, \\ sf = 1.\label{subfig:sf1_corrRA_isar}}
+            \end{subfigure}
+            &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/ISAR/HayAF_SCRA_Measured_ISAR_sf5}}
+                \caption{Autofocused \gls{isar} image, \\ sf = 5.\label{subfig:sf5_corrRA_isar}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/ISAR/HayAF_SCRA_Measured_ISAR_sf10}}
+                \caption{Autofocused \gls{isar} image, \\ sf = 10.\label{subfig:sf10_corrRA_isar}}
+            \end{subfigure}
+            \\
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/Power/HayAF_SCRA_Sim_Power}}
+                \caption{Scatterer power, \\ sf = 1.\label{subfig:sf1_corrRA_power}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/Power/HayAF_SCRA_Sim_Power_SF5}}
+                \caption{Scatterer power, \\ sf = 5.\label{subfig:sf5_corrRA_power}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/Power/HayAF_SCRA_Sim_Power_SF10}}
+                \caption{Scatterer power, \\ sf = 10.\label{subfig:sf10_corrRA_power}}
+            \end{subfigure}
+            \\
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/Power/HayAF_SCRA_Sim_Var}}
+                \caption{Scatterer amplitude variance, \\ sf = 1.\label{subfig:sf1_corrRA_var}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/Variance/HayAF_SCRA_Sim_Var_SF5}}
+                \caption{Scatterer amplitude variance, \\ sf = 5.\label{subfig:sf5_corrRA_var}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/CorrRA/Variance/HayAF_SCRA_Sim_Var_SF10}}
+                \caption{Scatterer amplitude variance, \\ sf = 10.\label{subfig:sf10_corrRA_var}}
+            \end{subfigure}
+        \end{tabular}
+        \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Correlation \gls{ra} measured data \gls{hrr} profiles.\label{fig:sf_corrRA}}
+    \end{minipage}
+    \end{figure}
+
     %***************************************************************************************%   
     \subsection{Using Haywood Range-aligned Profiles}
     The Haywood range-aligned \gls{isar} image, as shown in \autoref{fig:sf_hayRA_isar}, is included for comparison to the autofocused \gls{isar} images, \autoref{fig:sf_hayRA}(a)-(c). Additionally, the \gls{isar} image generated when the object had no translational motion, as shown in \autoref{subfig:sf_focused_isar}, is a reference for the expected appearance of a focused image.
@@ -252,6 +316,71 @@ candidate_scatterers_idx = find(power_scatterers>scaling_factor*average_power_sc
         \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Haywood \gls{ra} \gls{hrr} profiles.\label{fig:sf_hayRA}}
     \end{minipage}
     \end{figure}
+
+    % Grid of the HRRP and ISAR images HaywoodRA
+    \begin{figure}[H]
+    \centering
+    \begin{minipage}{0.98\linewidth}
+        \begin{tabular}{@{}ccc@{}}
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/ISAR/HayAF_HayRA_Measured_ISAR_sf1}}
+                \caption{Autofocused \gls{isar} image, \\ sf = 1.\label{subfig:sf1_hayRA_isar}}
+            \end{subfigure}
+            &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/ISAR/HayAF_HayRA_Measured_ISAR_sf5}}
+                \caption{Autofocused \gls{isar} image, \\ sf = 5.\label{subfig:sf5_hayRA_isar}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/ISAR/HayAF_HayRA_Measured_ISAR_sf10}}
+                \caption{Autofocused \gls{isar} image, \\ sf = 10.\label{subfig:sf10_hayRA_isar}}
+            \end{subfigure}
+            \\
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/Power/HayAF_HayRA_Sim_Power}}
+                \caption{Scatterer power, \\ sf = 1.\label{subfig:sf1_hayRA_power}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/Power/HayAF_HayRA_Sim_Power_SF5}}
+                \caption{Scatterer power, \\ sf = 5.\label{subfig:sf5_hayRA_power}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/Power/HayAF_HayRA_Sim_Power_SF10}}
+                \caption{Scatterer power, \\ sf = 10.\label{subfig:sf10_hayRA_power}}
+            \end{subfigure}
+            \\
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/Variance/HayAF_HayRA_Sim_Var}}
+                \caption{Scatterer amplitude variance, \\ sf = 1.\label{subfig:sf1_hayRA_var}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/Variance/HayAF_HayRA_Sim_Var_SF5}}
+                \caption{Scatterer amplitude variance, \\ sf = 5.\label{subfig:sf5_hayRA_var}}
+            \end{subfigure}
+             &
+            \begin{subfigure}{0.33\linewidth}
+                \centering
+                \resizebox{\linewidth}{!}{\input{Figures/09Appendix/ScalingFactor/Measured/HayRA/Variance/HayAF_HayRA_Sim_Var_SF10}}
+                \caption{Scatterer amplitude variance, \\ sf = 10.\label{subfig:sf10_hayRA_var}}
+            \end{subfigure}
+        \end{tabular}
+        \caption{\gls{ds} selection and autofocused \gls{isar} images for different scaling factors using Haywood \gls{ra} measured data \gls{hrr} profiles.\label{fig:sf_hayRA}}
+    \end{minipage}
+    \end{figure}
+
+    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Number of Dominant Scatterers Selected \label{apndxA:num_DS_effect}}

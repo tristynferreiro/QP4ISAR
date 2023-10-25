@@ -3,14 +3,27 @@
 % ----------------------------------------------------
 \documentclass[class=report,11pt,crop=false]{standalone}
 \input{../Style/ChapterStyle.tex}
-\input{../FrontMatter/Glossary.tex}
+\input{../FrontMatter/Abbreviations.tex}
 \begin{document}
 % ----------------------------------------------------
 \chapter{Recommendations \label{ch:recommendations}}
-\epigraph{It is for us the living, rather, to be dedicated here to the unfinished work which they who fought here have thus far so nobly advanced.}%
-    {\emph{---Abraham Lincoln}}
-\vspace{0.5cm}
 % ----------------------------------------------------
+The time constraints of this project have prevented a holistic investigation into the work discussed in this report. Recommendations for future work on this project are briefly summarised in this chapter.
+
+\section{Algorithms}
+\begin{itemize}
+    \item Other low computation \gls{tmc} algorithms should be investigated and tested.
+    \item The effect of the \gls{cpi} on algorithm performance should be investigated. In this report, the value was kept constant.
+    \item Low computation \gls{rmc} algorithms should be investigated to improve the images produced, whilst still meeting the timing requirements.
+    \item Use a wider variety of data to test algorithm performance to ensure a more robust \gls{qlp}.
+\end{itemize}
+\section{Quick-look Processor}
+\begin{itemize}
+    \item Investigate the processor's performance on other datasets of objects other than sea vessels to determine if it can be used in other applications.
+    \item Improve the processor's robustness by facilitating the use of other \gls{isar} data types, not only \gls{sfw}.
+    \item The developed \textsc{MATLAB} code should be implemented in a non-licensed programming language like C++ to increase accessibility and possibly performance.
+    \item Improve the functionality of the \gls{qlp} app by adding additional features and error handling.
+\end{itemize}
 
 
 % ----------------------------------------------------

@@ -23,7 +23,11 @@ ylabel style={font=\fontsize{25}{20}\selectfont\color{black}, yshift=10pt},
 ylabel={Phase Angle},
 axis background/.style={fill=white},
 xtick distance = 4,
-tick label style={font=\fontsize{20}{11}\selectfont\color{black}}
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
+grid=both,  % Enables major grids
+minor tick num=3,  % Sets the number of minor grid lines between major lines
+grid style={dashed,gray!50},  % Style for major grids
+minor grid style={dotted,gray!50} % Style for minor grids
 ]
 \addplot [color=mycolor1, forget plot]
   table[row sep=crcr]{%

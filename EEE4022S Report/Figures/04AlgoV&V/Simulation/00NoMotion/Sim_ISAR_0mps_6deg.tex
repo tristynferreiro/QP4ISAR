@@ -29,6 +29,16 @@ colormap/jet,
 colorbar
 ]
 \addplot [forget plot] graphics [xmin=-0.0732421875, xmax=37.4267578125, ymin=-32.2265625, ymax=30.2734375] {Figures/04AlgoV&V/Simulation/00NoMotion/Sim_ISAR_0mps_6deg.png};
+
+% Labels
+\draw[white, thick] (7,0.5) -- (7,-5) -- (29,-1.5) -- (29,3.5) -- (7,0.5);
+\draw[->, white, line width=1.5pt] (30, -10) -- (28, -3);
+\node[right] at (30, -10) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Hull};};
+
+\draw[<-, white, line width=1.5pt] (22, 15) -- (26, 15);
+\draw[<-, white, line width=1.5pt] (16, 20) -- (26, 15);
+\node[right] at (26, 15) {\tikz[baseline] \node[fill=white,inner sep=2pt] {Masts};};
+
 \end{axis}
 
 \end{tikzpicture}%

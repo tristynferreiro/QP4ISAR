@@ -10,7 +10,7 @@
 \tableofcontents
 \fi
 % ----------------------------------------------------
-\chapter{QLP design \label{ch:QLPdesign}}
+\chapter{Quick-look Processor design \label{ch:QLPdesign}}
 
 % ----------------------------------------------------
 % Characteristics of the design section
@@ -41,58 +41,152 @@
 
 \emph{Chapter introduction: Clear motivations provided in selecting the approach used to solve the problem}
 
-\section{User Requirements}
-\begin{itemize}
-    \item Develop clear image that is a good representation of the reference object
-    \item Must be fast
-    \item Easy to use
-\end{itemize}
-% User requirements:
-% 1 - Develop clear image that is a good representation of the reference object
-% 2 - Must be fast: worst case must be a 1:1 time frame i.e. the data recording time = data processing time
-% 3 - Easy to use: runs like a one button click program and we get the finished product.
-
 \section{Technical Requirements}
-\begin{itemize}
-    \item IC value before TMC is better than after
-    \item worst case must be a 1:1 time frame i.e. the data recording time = data processing
-    \item User-friendly design
-\end{itemize}
 
-\section{QLP Design}
-\begin{itemize}
-    \item \textbf{Diagram} Showing system flow and interactions
-\end{itemize}
+\begin{table}[H]
+    \centering
+    \resizebox{\linewidth}{!}{%
+        \begin{tabular}{|c|l|}
+            \hline
+            \textbf{Number}  & \textbf{Description} \\
+            \hline
+            TR01 & The \gls{qlp} should process the data in a shorter time than the measurement time of the data.  \\
+            \hline
+            TR02 & The \gls{qlp} should produce a more focused \gls{isar} image after motion compensation. \\
+            \hline
+            TR03 & The \gls{qlp} should be user-friendly.\\
+            \hline
+        \end{tabular}
+    }
+    \caption{Technical requirements considered when designing the \gls{qlp}.}
+    \label{tab:technical_requirements}
+\end{table}
 
-\section{Image Focus}
-\begin{itemize}
-    \item Explain experimental setup
-    \item \textbf{Table} summarising contrast results of all algorithms in simulation and measured data
-    \item \textbf{Figures} focused ISAR images (measured data) after all combinations of algorithms: 4 images in total
-    \item Compare results based on contrast value
-    \item Conclude on best algorithm combination
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Design Implementation}
+\begin{figure}[H]
+    \centering
+    \resizebox{0.95\linewidth}{!}{\includegraphics{Figures/05QLPDesign/FlowCharts/CandidateQLPDesigns.pdf}}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+    %***************************************************************************************
+    \subsection{Frame Extraction}
+        \begin{itemize}
+            \item explain why needed and CPTWL value
+            \item pseudo code
+        \end{itemize}
 
-\section{CPI Implementation}
-\begin{itemize}
-    \item explain why needed and CPTWL value
-    \item pseudo code
-\end{itemize}
-\subsection{Effect of CPTWL on Image Focus}
-\begin{itemize}
-    \item \textbf{Table} IC values: all algorithms with different CPTWL sizes
-    % Increase/decrease size of frame discretely and see effects
-\end{itemize}
+    %***************************************************************************************
+    \subsection{Algorithms}
+    The \gls{ra} and \gls{af} algorithms that were validated and verified in \autoref{ch:algorithmV&V} were considered for use in the final \gls{qlp}. The four candidate designs are listed in \autoref{tab:candidate_qlp_designs}. 
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|l|l|}
+                \hline
+                \textbf{Candidate Design} & \textbf{\gls{ra} Algorithm} & \textbf{\gls{af} Algorithm}\\
+                \hline
+                 1  &  Correlation    & Single Dominant Scatterer\\
+                 \hline
+                 2  &  Correlation    & Single Dominant Scatterer\\
+                 \hline
+                 3  &  Haywood        & Multiple Dominant Scatterer\\
+                 \hline
+                 4  &  Haywood        & Multiple Dominant Scatterer\\
+                 \hline
+            \end{tabular}
+            \caption{Candidate \gls{qlp} Designs}
+            \label{tab:candidate_qlp_designs}
+        \end{table}
 
-\section{Timing}
-% Use the suitable CPTWL sizes found in the previous section
-\begin{itemize}
-    \item explain experimental setup
-    \item \textbf{Table} IC values: all algorithms with different CPTWL sizes
-\end{itemize}
+    To determine the most suitable candidate design, all designs were validated against the respecrequirements and specifications in tables \autoref{tab:requirements} and \autoref{tab:specifications}.
+    
+\section{Experimental Setup}
+
+    %***************************************************************************************
+    \subsection{Runtime Testing}
+    A \textsc{MATLAB} \href{}{timing script} was used to measure the runtime of each candidate \gls{qlp} design. The script was used to run each candidate design 100 times and the raw timing results were recorded in a CSV file. The timing tests were performed using a single measured dataset. A folder containing the testing files is available on \href{}{GitHub}.
+
+    The testing was conducted on a MacBook Pro (2016) with the following hardware specifications:
+    \begin{itemize}
+        \item Processor: 2.9GHz Dual-Core Intel Core i5
+        \item Memory: 8GB 2133MHz LPDDR3
+    \end{itemize}
+
+    %***************************************************************************************
+    \subsection{Image Contrast Testing}
+    
+\section{Results and Discussion}
+    %***************************************************************************************
+    \subsection{Runtime Testing}
+    The raw timing results recorded in the \href{}{CSV file} were averaged to determine the effective runtime of each candidate design. \autoref{tab:candidate_qlp_timing} contains the effective runtimes.
+        
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|}
+                \hline
+                \textbf{Candidate Design}&\textbf{Runtime (s)}\\ 
+                \hline
+                1   & 21.12224 \\
+                \hline
+                2   & 21.1687  \\ 
+                \hline
+                3   & 21.14347 \\ 
+                \hline
+                4   & 21.22064 \\ 
+                \hline
+            \end{tabular}
+            \caption{Effective runtimes of each candidate \gls{qlp} design for a single measured data set.}
+            \label{tab:candidate_qlp_timing}
+        \end{table}
+    The data acquisition time for the data set used for time testing was 25.4138s. To meet SP02, the time it takes for the \gls{qlp} to do data processing needed to be less than the data acquisition time. The results presented in \autoref{tab:candidate_qlp_timing} show that all candidate designs had runtimes of less than 25.4138 seconds. While there were variations in the speed of these designs, the difference between the fastest and slowest design was 0.1 seconds. This shows that the differences in speed between designs were marginal. Therefore, all candidate designs met specification 1 and, based on their runtimes, were suitable for use in the final \gls{qlp}.
+
+    %***************************************************************************************
+    \subsection{Image Focus}
+    The \gls{ic} values before and after \gls{tmc}.
+
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|lllll|}
+            \cline{2-6}
+                                                 & \multicolumn{5}{c|}{\textbf{Image Contrast}}            \\ \hline
+            \multicolumn{1}{|l|}{\textbf{Frame}} & \multicolumn{1}{l|}{\textbf{Unfocused}} & \multicolumn{1}{l|}{\textbf{Design 1}} & \multicolumn{1}{l|}{\textbf{Design 2}}              & \multicolumn{1}{l|}{\textbf{Design 3}} & \textbf{Design 4}              \\ \hline
+            \multicolumn{1}{|l|}{1}              & \multicolumn{1}{l|}{7.0534}             & \multicolumn{1}{l|}{10.434}            & \multicolumn{1}{l|}{\cellcolor[HTML]{EFEFEF}17.087} & \multicolumn{1}{l|}{11.943}            & 14.349                         \\ \hline
+            \multicolumn{1}{|l|}{2}              & \multicolumn{1}{l|}{7.284}              & \multicolumn{1}{l|}{7.3152}            & \multicolumn{1}{l|}{8.197}                          & \multicolumn{1}{l|}{8.5321}            & \cellcolor[HTML]{EFEFEF}12.103 \\ \hline
+            \multicolumn{1}{|l|}{3}              & \multicolumn{1}{l|}{9.3845}             & \multicolumn{1}{l|}{9.8697}            & \multicolumn{1}{l|}{11.867}                         & \multicolumn{1}{l|}{10.659}            & \cellcolor[HTML]{EFEFEF}12.746 \\ \hline
+            \multicolumn{1}{|l|}{4}              & \multicolumn{1}{l|}{7.739}              & \multicolumn{1}{l|}{9.9822}            & \multicolumn{1}{l|}{13.596}                         & \multicolumn{1}{l|}{12.571}            & \cellcolor[HTML]{EFEFEF}14.006 \\ \hline
+        \end{tabular}
+        \caption{The \gls{ic} values of the \gls{isar} image produced by each candidate \gls{qlp} design for multiple frames of measured data.}
+        \label{tab:candidate_qlp_ic}
+    \end{table}
+    
+    The \gls{ic} improvement was calculated as 
+    \begin{equation}
+        Improvement = \frac{Unfocused \hspace{0.1cm} \gls{ic}-Focused \hspace{0.1cm} \gls{ic}}{Unfocused \hspace{0.1cm} \gls{ic}}
+    \end{equation}
+    where \emph{Focused \gls{ic}} is the \gls{ic} value of the \gls{isar} image produced by each candidate design. The values in \autoref{tab:candidate_qlp_ic} were used to calculate the values in \autoref{tab:candidate_qlp_ic_improvement}.
+    
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{c|llll|}
+            \cline{2-5}
+            & \multicolumn{4}{c|}{\textbf{Image Contrast Improvement (\%)}}                                                \\ \hline
+            \multicolumn{1}{|c|}{\textbf{Frame}} & \multicolumn{1}{c|}{\textbf{Design 1}} & \multicolumn{1}{c|}{\textbf{Design 2}}             & \multicolumn{1}{c|}{\textbf{Design 3}} & \textbf{Design 4}             \\ \hline
+            \multicolumn{1}{|c|}{1}              & \multicolumn{1}{c|}{47.92}             & \multicolumn{1}{c|}{\cellcolor[HTML]{EFEFEF}142.3} & \multicolumn{1}{c|}{69.32}             & 103.4                         \\ \hline
+            \multicolumn{1}{|c|}{2}              & \multicolumn{1}{c|}{0.4283}            & \multicolumn{1}{c|}{12.53}                         & \multicolumn{1}{c|}{17.13}             & \cellcolor[HTML]{EFEFEF}66.16 \\ \hline
+            \multicolumn{1}{|c|}{3}              & \multicolumn{1}{c|}{5.170}             & \multicolumn{1}{c|}{26.45}                         & \multicolumn{1}{c|}{13.58}             & \cellcolor[HTML]{EFEFEF}35.82 \\ \hline
+            \multicolumn{1}{|c|}{4}              & \multicolumn{1}{c|}{28.99}             & \multicolumn{1}{c|}{75.68}                         & \multicolumn{1}{c|}{62.44}             & \cellcolor[HTML]{EFEFEF}80.98 \\ \hline
+        \end{tabular}
+        \caption{The \gls{ic} improvement of the \gls{isar} image produced by each candidate \gls{qlp} design compared to the \gls{ic} of the unfocused image for multiple frames of measured data.}
+        \label{tab:candidate_qlp_ic_improvement}
+    \end{table}
+
+    
 
 
-\section{Analysis of Results}
+    \subsection{Summary of Findings}
+    Conclude which design to use.
+
 \begin{itemize}
     \item Discuss with reference to user and system requirements which algorithms and CPTWL value(s) are chosen and chosen and why:
     \begin{itemize}
@@ -102,11 +196,19 @@
 \end{itemize} 
 
 \section{Final Design}
+\begin{figure}[H]
+    \centering
+    \resizebox{0.95\linewidth}{!}{\includegraphics{Figures/05QLPDesign/FlowCharts/QLPDesign.pdf}}
+    \caption{Caption}
+    \label{fig:enter-label}
+\end{figure}
+
 \begin{itemize}
     \item \textbf{Diagram} Flow chart/UML of final system
     \item Link back to user and functional requirements
 \end{itemize}
 \subsection{App design}
+UML DIAGRAM
 \begin{itemize}
     \item Link to User requirement of easy use
     \item Show image of app and explain basic functionality and, briefly, design decisions.

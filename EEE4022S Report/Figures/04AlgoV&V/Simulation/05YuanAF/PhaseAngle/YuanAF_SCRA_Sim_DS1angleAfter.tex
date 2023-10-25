@@ -1,0 +1,68 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=6.028in,
+height=4.754in,
+at={(1.011in,0.642in)},
+scale only axis,
+xmin=0,
+xmax=32,
+xlabel style={font=\color{white!15!black}},
+xlabel={Profile Number},
+ymin=-3,
+ymax=3,
+ylabel style={font=\color{white!15!black}},
+ylabel={Phase Angle},
+axis background/.style={fill=white},
+xtick distance = 4,
+tick label style={font=\fontsize{20}{11}\selectfont\color{black}},
+grid=both,  % Enables major grids
+minor tick num=3,  % Sets the number of minor grid lines between major lines
+grid style={dashed,gray!50},  % Style for major grids
+minor grid style={dotted,gray!50} % Style for minor grids
+]
+\addplot [color=mycolor1, forget plot]
+  table[row sep=crcr]{%
+1	-1.95901355646046\\
+2	-2.07795876275664\\
+3	-2.18194091915065\\
+4	-1.00885370792138\\
+5	-1.16648604326535\\
+6	-1.33484748317824\\
+7	-1.49072642757486\\
+8	-1.66209549584548\\
+9	-1.80339251699049\\
+10	-1.87234511913683\\
+11	-2.01448973310725\\
+12	-2.13530221258532\\
+13	-2.1612228750763\\
+14	-1.08128874689433\\
+15	-1.20616593247558\\
+16	-1.37372990597741\\
+17	-1.51627876424536\\
+18	-1.6249057055567\\
+19	-1.70232015215579\\
+20	-1.86700518337915\\
+21	-2.00819536904579\\
+22	-2.01406360729894\\
+23	-0.929356037681109\\
+24	-1.01982297293104\\
+25	-1.17315913437421\\
+26	-1.24031417234582\\
+27	-1.33425589410965\\
+28	-1.46399043617345\\
+29	-1.55816774231316\\
+30	-1.7316676438449\\
+31	-1.79779187210691\\
+32	-0.655754855397727\\
+};
+\end{axis}
+\end{tikzpicture}%
