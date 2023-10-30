@@ -1,0 +1,91 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="2856716561" file="/Users/tris/Documents/MATLAB/01  Zayaan 1 revision 1/APP/ISAR Quick-look Processor.prj" location="/Users/tris/Documents/MATLAB/01  Zayaan 1 revision 1/APP" name="ISAR Quick-look Processor" target="target.mlapps" target-name="Package App">
+    <param.appname>ISAR Quick-look Processor</param.appname>
+    <param.authnamewatermark>Tristyn Ferreiro</param.authnamewatermark>
+    <param.email>frrtri001@myuct.ac.za</param.email>
+    <param.company>University of Cape Town</param.company>
+    <param.icon>${PROJECT_ROOT}/ISAR Quick-look Processor_resources/icon_24.png</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}/ISAR Quick-look Processor_resources/icon_48.png</file>
+      <file>${PROJECT_ROOT}/ISAR Quick-look Processor_resources/icon_24.png</file>
+      <file>${PROJECT_ROOT}/ISAR Quick-look Processor_resources/icon_16.png</file>
+    </param.icons>
+    <param.summary>Range-aligns and autofocuses ISAR HRR profiles and produces the final ISAR image.</param.summary>
+    <param.description>This app was created to provide a quick way to verify data collected in the field.
+High Resolution Range (HRR) profiles can be inputed into the processor and will
+be used to produce an ISAR video. Using the video, the data collection setup can 
+be visually verified.
+
+It requires a MATLAB structure containing preconstructured HRR profiles and will ouput the video as a Mj2 file which can then easily be viewed using the MATLAB VideoViewer.
+
+The app allows basic functionality such as generation, replay and playback speed. The source code can be found on &lt;a href="https://github.com/tristynferreiro/QP4ISAR"&gt; GitHub&lt;/a&gt;.</param.description>
+    <param.screenshot>/private/var/folders/_l/0s536kwn7r1c4z6wsq1ygc780000gn/T/tp9ad5ec5f_d221_46cc_a248_49b1484361ed.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name>
+      <item>MATLAB</item>
+      <item>Signal Processing Toolbox</item>
+      <item>Statistics and Machine Learning Toolbox</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+      <item>8</item>
+      <item>19</item>
+    </param.products.id>
+    <param.products.version>
+      <item>9.14</item>
+      <item>9.2</item>
+      <item>12.5</item>
+    </param.products.version>
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>06a50bad-af99-4057-9f42-0b47ecef48e9</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}/ISAR_QLP.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}/HaywoodRA.m</file>
+      <file>${PROJECT_ROOT}/Normalise_limitDynamicRange_ISAR_dB.m</file>
+      <file>${PROJECT_ROOT}/YuanAF.m</file>
+      <file>${PROJECT_ROOT}/background.png</file>
+      <file>${PROJECT_ROOT}/icon_browse.png</file>
+      <file>${PROJECT_ROOT}/icon_cancel.png</file>
+      <file>${PROJECT_ROOT}/icon_pause.png</file>
+      <file>${PROJECT_ROOT}/icon_play.png</file>
+      <file>${PROJECT_ROOT}/imageContrast.m</file>
+      <file>${PROJECT_ROOT}/logo3.png</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="/Users/tris/Documents/MATLAB/01 Zayaan 1 revision 1" name="APP" optional="false">/Users/tris/Documents/MATLAB/01 Zayaan 1 revision 1/APP</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/Applications/MATLAB_R2023a.app</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>true</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>12.6.6</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>maci64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
