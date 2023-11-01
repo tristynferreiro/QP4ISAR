@@ -8,5 +8,4 @@ The app has the functionality as illustrated in the image below
 ![QLP GUI system Interactions](https://github.com/tristynferreiro/QP4ISAR/blob/main/docs/UXAppDesign.png)
 the number in the image corresponds to the functionality described in the table below
 
-![Table explaining app functionality](https://github.com/tristynferreiro/QP4ISAR/blob/main/docs/AppFunctionalityTable.png)https://github.com/tristynferreiro/QP4ISAR/blob/main/docs/AppFunctionalityTable.png)
-
+![Table explaining app functionality](https://github.com/tristynferreiro/QP4ISAR/blob/main/docs/AppFunctionalityTable.png)
