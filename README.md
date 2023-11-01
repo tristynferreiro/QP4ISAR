@@ -4,11 +4,12 @@ A QLP is a radar data processing tool that produces a focused ISAR image from me
 >The report detailing this process is available: [report](./docs/Final_Report.pdf/).
 
 The general idea is that HRR ISAR radar data is processed into frames, each frame is motion compensated using a Range Alignment and Autofocus algorithm and then the frames are collated into a video for easy viewing.
-![Final QLP Design](./docs/QLPDesign.pdf/).
+
+![Final QLP Design](https://github.com/tristynferreiro/QP4ISAR/blob/main/docs/QLPDesign.png)
 
 ## /app
 This folder contains the MATLAB package that can be installed into MATLAB for easy use. Screenshots of the app's GUI are used to describe the app's design and functionality below.
-![QLP GUI system Interactions](./docs/UXAppDesign.pdf/)
+![QLP GUI system Interactions](https://github.com/tristynferreiro/QP4ISAR/blob/main/docs/UXAppDesign.png)
 
 ## /src
 This folder contains all MATLAB source code that was used in the development of the QLP. Various versions of the source code are available along with the final implementations. 
