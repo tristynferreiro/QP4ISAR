@@ -24,8 +24,6 @@ This folder contains all the necessary files to run the simulator and test the a
 
 > The ISAR_Simulator_with_RA_AF.m is an extension of the ISAR_simulator.m which includes the RA and AF algorithms to streamline testing. The CLI has been updated to allow users to select which algorithms, if any, to apply to the simulated profiles.
 
-Additionally, it incorporates a package that allows for the MATLAB plots to be saved as LaTeX-compatible file formats.
-
 ## Matlab2Tikz
 The [matlab2tikz](http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz?download=true) package was used to save the MATLAB plots in LaTeX-compatible file formats
 > When dealing with imagesc() plots, follow these steps:
