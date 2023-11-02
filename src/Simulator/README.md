@@ -3,7 +3,7 @@ This folder contains all the files and versions used to create the final simulat
 
 > All scripts require additional functions which are available in the [algorithms/](https://github.com/tristynferreiro/QP4ISAR/tree/main/src/algorithms) and [helper functions/](https://github.com/tristynferreiro/QP4ISAR/tree/main/src/helper%20functions) folders. These need to be copied into the same path as the QLP scripts for them to work.
 
-### ISAR_Simulator.m
+#### ISAR_Simulator.m
 This script is the **only** the ISAR simulator :
 
 1. Customizable Scatterer Amplitudes: In addition to x-y coordinates, you can now set scatterer amplitudes either manually or by utilizing a Gaussian-like distribution.
@@ -13,7 +13,7 @@ This script is the **only** the ISAR simulator :
 
 There are many other parameters that can be set by changing the code. The CLI was added with the idea of making repetitive testing simpler and is very simplistic in nature.
 
-### ISAR_Simulator_with_RA_and_AF.m
+#### ISAR_Simulator_with_RA_and_AF.m
 This script is similar to ISAR_Simulator.m, however it also uses the range-alignment and autofocus algorithms to streamline testing. The algorithms to use on the data can be selected in the CLI.
 
 ## Simulator Development/
