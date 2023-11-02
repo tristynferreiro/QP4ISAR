@@ -1,7 +1,7 @@
 # Simple ISAR Simulator Files
 This folder contains all the files and versions used to create the final simulator, which was used to generate simulated ISAR data and images. It uses a stepped frequency pulsed waveform and allows scatterer co-ordinates, amplitude and object motion to be configured.
 
-> All scripts require additional functions which are available in the (algorithms/)[https://github.com/tristynferreiro/QP4ISAR/tree/main/src/algorithms] and (helper functions/)[https://github.com/tristynferreiro/QP4ISAR/tree/main/src/helper%20functions] folders. These need to be copied into the same path as the QLP scripts for them to work.
+> All scripts require additional functions which are available in the [algorithms/](https://github.com/tristynferreiro/QP4ISAR/tree/main/src/algorithms) and [helper functions/](https://github.com/tristynferreiro/QP4ISAR/tree/main/src/helper%20functions) folders. These need to be copied into the same path as the QLP scripts for them to work.
 
 ## ISAR_Simulator.m
 This script is the **only** the ISAR simulator :
